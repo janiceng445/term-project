@@ -2,6 +2,7 @@
 
 Enemy::Enemy(sf::RenderWindow* renWin)
 {
+	std::cout << "testing" << std::endl;
 	// Changeable Attributes
 	this->speed = 0.5f;
 	this->health = 100;
