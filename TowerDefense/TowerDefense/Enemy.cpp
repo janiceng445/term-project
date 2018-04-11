@@ -1,12 +1,11 @@
 #include "Enemy.h"
 
-Enemy::Enemy(sf::RenderWindow* renWin)
+Enemy::Enemy(sf::RenderWindow* renWin, float hp, int atk, float spd)
 {
-	std::cout << "testing" << std::endl;
 	// Changeable Attributes
-	this->speed = 0.5f;
-	this->health = 100;
-	this->atk = 5;
+	this->health = hp;
+	this->atk = atk;
+	this->speed = spd;
 
 	// Default
 	this->isAlive = true;
@@ -27,13 +26,12 @@ Enemy::Enemy(sf::RenderWindow* renWin)
 
 	draw();
 }
-
-
 Enemy::~Enemy()
 {
 
 
 }
+/////////////////////////// Graphics ///////////////////////////
 // Sets window
 void Enemy::assignWindow(sf::RenderWindow* renWin) {
 	this->renWin = renWin;
@@ -56,16 +54,60 @@ void Enemy::draw() {
 		drawHealthBar();
 	}
 }
-// Moves Enemy p amount of pixels
-void Enemy::moveX() {
-	if (this->posX < windowWidth - spriteWidth) {
-		this->sprite.move(0.1f, 0);
-	}
-	draw();
+// Healthbar
+void Enemy::drawHealthBar() {
+	// Formula for calculating % health
+	float hp = this->health / 100 * this->healthWidth;
+
+	// Changing color of bar if < 50%
+	sf::Color color;
+	hp > 0.50 * this->healthWidth ?
+		this->bar.setFillColor(sf::Color::Green) :
+		this->bar.setFillColor(sf::Color::Red);
+
+	// Updates healthbar according to amount of hp
+	this->bar.setSize(sf::Vector2f(hp, 5));
+
+	// Appearance of health bar
+	this->bar.setOutlineColor(sf::Color::Black);
+	this->bar.setOutlineThickness(1);
+	this->bar.setPosition(this->posX, this->posY - 10);
+
+	// Draws healthbar
+	this->renWin->draw(bar);
 }
 
-// Fighting functions
-int Enemy::getHealth() {
+/////////////////////////// Location ///////////////////////////
+// Set sprite's x and y coordinates
+void Enemy::setX() {
+	this->posX = this->sprite.getPosition().x;
+}
+void Enemy::setY() {
+	this->posY = this->sprite.getPosition().y;
+}
+
+// Get sprite's x coordinate
+float Enemy::getX() {
+	return posX;
+}
+
+// Know if enemy reached boundary line
+bool Enemy::withinBounds() { // Lines that divide the screen
+	if (this->posX > this->currentBound) {	 // and stops enemy from moving further
+		return true;
+	}
+	return false;
+}
+void Enemy::changeBound(int x) {
+	this->currentBound = x;
+}
+
+///////////////////////////// Data //////////////////////////////
+// Main Functions
+bool collision() {
+	return false;
+}
+float Enemy::getHealth() {
 	return this->health;
 }
 int Enemy::getAtkDmg() {
@@ -80,39 +122,12 @@ void Enemy::takeDamage(int dmg) {
 void Enemy::die() {
 	this->isAlive = false;
 }
-
-// Healthbar
-void Enemy::drawHealthBar() {
-	// Formula for calculating % health
-	float hp = this->health / 100 * this->healthWidth;
-
-	// Changing color of bar if < 50%
-	sf::Color color;
-	hp > 0.50 * this->healthWidth ?
-		this->bar.setFillColor(sf::Color::Green) : 
-		this->bar.setFillColor(sf::Color::Red);
-
-	// Updates healthbar according to amount of hp
-	this->bar.setSize(sf::Vector2f(hp, 5));
-	
-	// Appearance of health bar
-	this->bar.setOutlineColor(sf::Color::Black);
-	this->bar.setOutlineThickness(1);
-	this->bar.setPosition(this->posX, this->posY - 10);
-
-	// Draws healthbar
-	this->renWin->draw(bar);
+void Enemy::moveX() {
+	// Stop at boundary
+	if (this->posX + this->spriteWidth < this->currentBound) {
+		this->sprite.move(0.1f, 0);
+	}
+	draw();
 }
 
-// Set sprite's x and y
-void Enemy::setX() {
-	this->posX = this->sprite.getPosition().x;
-}
-void Enemy::setY() {
-	this->posY = this->sprite.getPosition().y;
-}
 
-// Get sprite's x coordinate
-float Enemy::getX() {
-	return posX;
-}

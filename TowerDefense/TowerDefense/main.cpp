@@ -31,7 +31,7 @@ int main()
 
 	////////////////////////////// Temporary Placement ///////////////////////////////
 	
-	Enemy newEnemy(&window);
+	Enemy newEnemy(&window, 100, 5, 0.5f);
 
 	////////////////////////////////  Temporary Timer ////////////////////////////////
 	int startTime = 0;
@@ -58,7 +58,7 @@ int main()
 		joeSprite.setPosition(630, 210);
 		armSprite.setTexture(armTexture);
 		armSprite.setPosition(650, 248);
-		armSprite.setOrigin(19, 4);
+		armSprite.setOrigin(20, 4);
 		armSprite.setRotation((180.0 / PI) * atan2(248 - sf::Mouse::getPosition(window).y, 550 - sf::Mouse::getPosition(window).x));
 		//sets rotation of arm based on mouse location (gun points at mouse pointer)
 		bulletSprite.setTexture(bulletTexture);
@@ -71,7 +71,7 @@ int main()
 		///////////////////////////////////////////// Janice /////////////////////////////////////////////
 		// Enemy Class (Temporary Placement)
 		newEnemy.moveX();
-		newEnemy.draw();
+		newEnemy.changeBound(300);
 
 		// Timer & Cheat code
 		++currentTime;

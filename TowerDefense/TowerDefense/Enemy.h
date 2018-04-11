@@ -25,13 +25,14 @@ private:
 	sf::Texture texture;
 	float spriteWidth;
 	sf::RectangleShape bar;
+	int currentBound;
 
 	// Window
 	sf::RenderWindow* renWin;
 	int windowWidth;
 	
 public:
-	Enemy(sf::RenderWindow* renWin);
+	Enemy(sf::RenderWindow* renWin, float hp, int atk, float spd);
 	
 	// Graphics
 	void assignWindow(sf::RenderWindow* renWin);
@@ -40,7 +41,7 @@ public:
 
 	// Attributes
 	void moveX();
-	int getHealth();
+	float getHealth();
 	int getAtkDmg();
 	void takeDamage(int dmg);
 	void die();
@@ -51,6 +52,9 @@ public:
 	// Positioning
 	void setX();
 	void setY();
+	bool withinBounds();
+	void changeBound(int x);
+	bool collision();
 
 	// Others
 	float getX();
