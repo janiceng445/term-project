@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
-#include "enemy.h"
+#include "Enemy.h"
+#include "Timer.h"
 #include <thread>
 #include <chrono>
 #include <iostream>
@@ -37,6 +38,10 @@ int main()
 	int startTime = 0;
 	int currentTime = 0;
 	int delay = 10;
+
+	// Custom timer
+	Timer timer_attackPulse(500);
+	float tempTowerHealth = 1000;
 	//////////////////////////////////////////////////////////////////////////////////
 
 	while (window.isOpen())
@@ -71,7 +76,17 @@ int main()
 		///////////////////////////////////////////// Janice /////////////////////////////////////////////
 		// Enemy Class (Temporary Placement)
 		newEnemy.moveX();
-		newEnemy.changeBound(300);
+		newEnemy.changeBound(200);
+		if (newEnemy.withinBounds()) {
+			float& target = tempTowerHealth; // Change target here
+			timer_attackPulse.startTimer();
+			timer_attackPulse.runTimer();
+			if(timer_attackPulse.isReady()) newEnemy.attack(target);
+		}
+		else {
+			timer_attackPulse.restartTimer();
+			timer_attackPulse.stopTimer();
+		}
 
 		// Timer & Cheat code
 		++currentTime;

@@ -3,6 +3,8 @@
 #include <iostream>
 #pragma once
 
+const int DECAY_TIMER = 500;
+
 class Enemy
 {
 private:
@@ -17,6 +19,9 @@ private:
 	float speed; 
 	bool isAlive;
 
+	// Timer
+	int timer;
+
 	// Healthbar
 	float healthWidth;
 
@@ -24,8 +29,19 @@ private:
 	sf::Sprite sprite;
 	sf::Texture texture;
 	float spriteWidth;
+	float spriteHeight;
 	sf::RectangleShape bar;
+	sf::RectangleShape hitbox;
 	int currentBound;
+	float hitboxWidth;
+	float hitboxHeight;
+	bool stopDrawing;
+
+	// Texture paths
+	std::string texturePath_idle;
+	std::string texturePath_attack;
+	std::string texturePath_death;
+	std::string texturePath_special;
 
 	// Window
 	sf::RenderWindow* renWin;
@@ -37,7 +53,15 @@ public:
 	// Graphics
 	void assignWindow(sf::RenderWindow* renWin);
 	void assignTexture();
+	void changeTexture(sf::Texture);
 	void draw();
+	void setHitboxWidth(float w);
+	void setHitBoxHeight(float h);
+	void setTexturePathIdle(std::string name);
+	void setTexturePathAttack(std::string name);
+	void setTexturePathDeath(std::string name);
+	void setTexturePathSpecial(std::string name);
+	void testTextures();
 
 	// Attributes
 	void moveX();
@@ -48,13 +72,15 @@ public:
 
 	// Healthbar
 	void drawHealthBar();
+	// Hitbox
+	void drawHitbox();
 
 	// Positioning
 	void setX();
 	void setY();
 	bool withinBounds();
 	void changeBound(int x);
-	bool collision();
+	void attack(float& targetHealth);
 
 	// Others
 	float getX();
