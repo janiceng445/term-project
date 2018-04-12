@@ -10,7 +10,7 @@ Enemy::Enemy(sf::RenderWindow* renWin, float hp, int atk, float spd, float as, s
 
 	// Default
 	this->alive = true;
-	this->initX = 0;
+	this->initX = -10;
 	this->initY = 350;
 	this->posX = initX;
 	this->posY = initY;
@@ -102,8 +102,15 @@ void Enemy::draw() {
 				else rectSrcSprite.left += 40;
 			}
 			else if (isAlive() && this->attacking) {
-				if (rectSrcSprite.left == 160) rectSrcSprite.left = 0;
-				else rectSrcSprite.left += 40;
+				if (rectSrcSprite.left == 80) {
+					attack(this->targetHealth);
+				}
+				if (rectSrcSprite.left == 160) {
+					rectSrcSprite.left = 0;
+				}
+				else {
+					rectSrcSprite.left += 40;
+				}
 			}
 			else {
 				if (rectSrcSprite.left < 160) rectSrcSprite.left += 40;
@@ -182,12 +189,10 @@ void Enemy::setX() {
 void Enemy::setY() {
 	this->posY = this->sprite.getPosition().y;
 }
-
 // Get sprite's x coordinate
 float Enemy::getX() {
 	return posX;
 }
-
 // Know if enemy reached boundary line (width of sprite itself)
 bool Enemy::withinBounds() { // Lines that divide the screen
 	if (this->posX + this->spriteWidth > this->currentBound - 5) {	 // and stops enemy from moving further
@@ -201,32 +206,25 @@ void Enemy::changeBound(int x) {
 
 ///////////////////////////// Data //////////////////////////////
 // Main Functions
-void Enemy::attack(float& targetHealth) {
-	this->attacking = true;
-	if (clock.getElapsedTime().asSeconds() > this->as) {
-		targetHealth -= getAtkDmg();
-		sf::Texture t;
-		t = texturePath_attack;
-		changeTexture(t);
-		clock.restart();
-	}
+// Offense
+void Enemy::attack(float* targetHealth) {
+	*targetHealth -= getAtkDmg();
 }
-float Enemy::getHealth() {
-	return this->health;
+void Enemy::setTarget(int boundary, float* targetHealth) {
+	changeBound(boundary);
+	this->targetHealth = targetHealth;
 }
-int Enemy::getAtkDmg() {
-	return this->atk;
-}
+// Self Status
 void Enemy::takeDamage(int dmg) {
+	std::cout << "Taking dmg" << std::endl;
 	if (this->health != 0) {
 		this->health -= dmg;
-		if (this->health <= 0) {
-			this->health = 0;
+		if (this->health <= 0)
 			die();
-		}
 	}
 }
 void Enemy::die() {
+	this->health = 0;
 	this->attacking = false;
 	this->rectSrcSprite.left = 0;
 	sf::Texture t;
@@ -235,19 +233,40 @@ void Enemy::die() {
 	this->alive = false;
 }
 void Enemy::moveX() {
-	// Stop at boundary
-	if (this->posX + this->spriteWidth < this->currentBound && isAlive()) {
-		this->sprite.move(0.05f, 0);
-	}
-	if (withinBounds()) {
-		attack(this->targetHealth);
+	sf::Texture t;
+	if (this->alive) {
+		// Move
+		if (this->posX + this->spriteWidth < this->currentBound && isAlive()) {
+			this->sprite.move(0.05f, 0);
+		}
+		// Stop at bounds and change texture to attack
+		if (withinBounds()) {
+			this->attacking = true;
+			t = texturePath_attack;
+			changeTexture(t);
+		}
+		// Change texture back to walk
+		else {
+			this->attacking = false;
+			t = texturePath_idle;
+			changeTexture(t);
+		}
 	}
 	draw();
 }
 bool Enemy::isAlive() {
 	return this->alive;
 }
-void Enemy::setTarget(int boundary, float targetHealth) {
-	changeBound(boundary);
-	this->targetHealth = targetHealth;
+// Get methods
+float Enemy::getHealth() {
+	return this->health;
+}
+int Enemy::getAtkDmg() {
+	return this->atk;
+}
+float Enemy::getAtkSpeed() {
+	return this->as;
+}
+float Enemy::getTargetHealth() {
+	return *this->targetHealth;
 }

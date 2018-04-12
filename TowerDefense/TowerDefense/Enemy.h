@@ -4,7 +4,7 @@
 #include <vector>
 #pragma once
 
-const int DECAY_TIMER = 20000;
+const int DECAY_TIMER = 2000;
 
 class Enemy
 {
@@ -23,7 +23,7 @@ private:
 	bool attacking;
 	std::string type;
 	bool hitbox_visibility;
-	float targetHealth;
+	float* targetHealth;
 
 	// Timer
 	int timer;
@@ -77,10 +77,12 @@ public:
 	void moveX();
 	float getHealth();
 	int getAtkDmg();
+	float getAtkSpeed();
 	void takeDamage(int dmg);
 	void die();
 	bool isAlive();
-	void setTarget(int boundary, float targetHealth);
+	void setTarget(int boundary, float* targetHealth);
+	float getTargetHealth();
 
 	// Healthbar
 	void drawHealthBar();
@@ -92,7 +94,7 @@ public:
 	void setY();
 	bool withinBounds();
 	void changeBound(int x);
-	void attack(float& targetHealth);
+	void attack(float* targetHealth);
 
 	// Others
 	float getX();
