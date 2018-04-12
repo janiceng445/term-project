@@ -51,14 +51,9 @@ int main()
 	else texturePack.push_back(skelly_texture);
 
 	// Wave of enemies
-	std::vector<Enemy> myVector;
-	std::cout << "outside: " << &texturePack[0] << std::endl;
-
-	// TEMP TEST
-	//Enemy newEnemy(&window, 100, 5, 0.3f, &texturePack);
-
-	///////////////////////////////////// Wave 1 /////////////////////////////////////
-	
+	std::vector<std::vector<Enemy>> waveList;
+	int waveRound = 0;
+	std::vector<Enemy> wave;
 
 	////////////////////////////////  Temporary Timer ////////////////////////////////
 	int startTime = 0;
@@ -100,32 +95,17 @@ int main()
 		window.draw(bulletSprite);
 
 		///////////////////////////////////////////// Janice /////////////////////////////////////////////
-		// Enemy Class (Temporary Placement)
-		/*newEnemy.moveX();
-		newEnemy.changeBound(100);
-		if (newEnemy.withinBounds() && newEnemy.isAlive()) {
-			float& target = tempTowerHealth; // Change target here
-			timer_attackPulse.startTimer();
-			timer_attackPulse.runTimer();
-			if(timer_attackPulse.isReady()) newEnemy.attack(target);
-		}
-		else {
-			timer_attackPulse.restartTimer();
-			timer_attackPulse.stopTimer();
-		}*/
 
-		if (clock.getElapsedTime().asSeconds() > 1.0f) {
-			if (myVector.size() == 1) break;
-			Enemy newEnemy(&window, 100, 5, 0.3f, &texturePack);
-			newEnemy.changeBound(720);
+		if (clock.getElapsedTime().asSeconds() > 3.0f) {
+			Enemy newEnemy(&window, 100, 5, 0.3f, 0.5f, &texturePack);
+			newEnemy.setTarget(200, 1000);
 			newEnemy.draw();
-			myVector.push_back(newEnemy);
+			wave.push_back(newEnemy);
 			clock.restart();
 		}
 
-		for (unsigned int i = 0; i < myVector.size(); i++) {
-			myVector[i].getAddress();
-			myVector[i].moveX();
+		for (unsigned int i = 0; i < wave.size(); i++) {
+			wave[i].moveX();
 		}
 
 		// Timer & Cheat code

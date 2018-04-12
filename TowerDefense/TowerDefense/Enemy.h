@@ -12,6 +12,7 @@ private:
 	// Attributes
 	float health;
 	int atk;
+	float as; // Attack speed
 	int defense;
 	float initX;
 	float initY;
@@ -22,17 +23,18 @@ private:
 	bool attacking;
 	std::string type;
 	bool hitbox_visibility;
+	float targetHealth;
 
 	// Timer
 	int timer;
+	sf::Clock clock;
 
 	// Healthbar
 	float healthWidth;
 
 	// Graphic
 	sf::Sprite sprite;
-	sf::Texture* texture;
-	sf::Clock clock;
+	sf::Texture texture;
 	sf::IntRect rectSrcSprite;
 	float spriteWidth;
 	float spriteHeight;
@@ -45,19 +47,18 @@ private:
 	float animationSpeed;
 
 	// Texture paths
-	sf::Texture* texturePath_idle;
+	sf::Texture texturePath_idle;
 	sf::Texture texturePath_attack;
 	sf::Texture texturePath_death;
 	sf::Texture texturePath_special;
-	std::vector<sf::Texture> texturePack;
+	std::vector<sf::Texture>* texturePack;
 
 	// Window
 	sf::RenderWindow* renWin;
 	int windowWidth;
 	
 public:
-	Enemy();
-	Enemy(sf::RenderWindow* renWin, float hp, int atk, float spd, std::vector<sf::Texture>* texturePack);
+	Enemy(sf::RenderWindow* renWin, float hp, int atk, float spd, float as, std::vector<sf::Texture>* texturePack);
 	
 	// Graphics
 	void assignWindow(sf::RenderWindow* renWin);
@@ -70,7 +71,6 @@ public:
 	void setTexturePathAttack(sf::Texture texture);
 	void setTexturePathDeath(sf::Texture texture);
 	void setTexturePathSpecial(sf::Texture texture);
-	void testTextures();
 	void showHitbox();
 
 	// Attributes
@@ -80,6 +80,7 @@ public:
 	void takeDamage(int dmg);
 	void die();
 	bool isAlive();
+	void setTarget(int boundary, float targetHealth);
 
 	// Healthbar
 	void drawHealthBar();
@@ -95,7 +96,6 @@ public:
 
 	// Others
 	float getX();
-	void getAddress();
 	~Enemy();
 };
 
