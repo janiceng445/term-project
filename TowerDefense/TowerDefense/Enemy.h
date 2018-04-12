@@ -3,7 +3,7 @@
 #include <iostream>
 #pragma once
 
-const int DECAY_TIMER = 500;
+const int DECAY_TIMER = 20000;
 
 class Enemy
 {
@@ -17,7 +17,10 @@ private:
 	float posX;
 	float posY;
 	float speed; 
-	bool isAlive;
+	bool alive;
+	bool attacking;
+	std::string type;
+	bool hitbox_visibility;
 
 	// Timer
 	int timer;
@@ -28,6 +31,8 @@ private:
 	// Graphic
 	sf::Sprite sprite;
 	sf::Texture texture;
+	sf::Clock clock;
+	sf::IntRect rectSrcSprite;
 	float spriteWidth;
 	float spriteHeight;
 	sf::RectangleShape bar;
@@ -36,6 +41,7 @@ private:
 	float hitboxWidth;
 	float hitboxHeight;
 	bool stopDrawing;
+	float animationSpeed;
 
 	// Texture paths
 	std::string texturePath_idle;
@@ -48,7 +54,7 @@ private:
 	int windowWidth;
 	
 public:
-	Enemy(sf::RenderWindow* renWin, float hp, int atk, float spd);
+	Enemy(sf::RenderWindow* renWin, float hp, int atk, float spd, std::string type);
 	
 	// Graphics
 	void assignWindow(sf::RenderWindow* renWin);
@@ -62,6 +68,7 @@ public:
 	void setTexturePathDeath(std::string name);
 	void setTexturePathSpecial(std::string name);
 	void testTextures();
+	void showHitbox();
 
 	// Attributes
 	void moveX();
@@ -69,6 +76,7 @@ public:
 	int getAtkDmg();
 	void takeDamage(int dmg);
 	void die();
+	bool isAlive();
 
 	// Healthbar
 	void drawHealthBar();

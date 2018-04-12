@@ -4,6 +4,7 @@
 #include <thread>
 #include <chrono>
 #include <iostream>
+#include <vector>
 
 const double PI = 3.141592653589793238463;
 
@@ -31,8 +32,9 @@ int main()
 	}
 
 	////////////////////////////// Temporary Placement ///////////////////////////////
-	
-	Enemy newEnemy(&window, 100, 5, 0.5f);
+	sf::Clock clock;
+	Enemy newEnemy(&window, 100, 5, 0.3f, "skelly");
+	std::vector<Enemy> myVector;
 
 	////////////////////////////////  Temporary Timer ////////////////////////////////
 	int startTime = 0;
@@ -75,9 +77,9 @@ int main()
 
 		///////////////////////////////////////////// Janice /////////////////////////////////////////////
 		// Enemy Class (Temporary Placement)
-		newEnemy.moveX();
-		newEnemy.changeBound(200);
-		if (newEnemy.withinBounds()) {
+		/*newEnemy.moveX();
+		newEnemy.changeBound(100);
+		if (newEnemy.withinBounds() && newEnemy.isAlive()) {
 			float& target = tempTowerHealth; // Change target here
 			timer_attackPulse.startTimer();
 			timer_attackPulse.runTimer();
@@ -86,6 +88,17 @@ int main()
 		else {
 			timer_attackPulse.restartTimer();
 			timer_attackPulse.stopTimer();
+		}*/
+
+		if (clock.getElapsedTime().asSeconds() > 1.0f) {
+			Enemy newEnemy(&window, 100, 5, 0.3f, "skelly");
+			newEnemy.changeBound(720);
+			myVector.push_back(newEnemy);
+			clock.restart();
+		}
+
+		for (unsigned int i = 0; i < myVector.size(); i++) {
+			myVector[i].moveX();
 		}
 
 		// Timer & Cheat code

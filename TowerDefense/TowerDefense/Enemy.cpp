@@ -1,30 +1,41 @@
 #include "Enemy.h"
 
-Enemy::Enemy(sf::RenderWindow* renWin, float hp, int atk, float spd)
+Enemy::Enemy(sf::RenderWindow* renWin, float hp, int atk, float spd, std::string type)
 {
+	std::cout << "Skelly created" << std::endl;
 	// Changeable Attributes
 	this->health = hp;
 	this->atk = atk / 2; // explanation: the timer ticks causes 2x amount of dmg
 	this->speed = spd;
 
 	// Default
-	this->isAlive = true;
-	this->initX = 100;
-	this->initY = 100;
+	this->alive = true;
+	this->initX = 0;
+	this->initY = 350;
 	this->posX = initX;
 	this->posY = initY;
+	this->hitbox_visibility = false;
+	this->animationSpeed = 0.17f;
 
 	// Texture paths
-	this->texturePath_idle = "images/enemies/duck.png";
-	this->texturePath_attack = "images/enemies/duck_attack.png";
-	this->texturePath_death = "images/enemies/duck_death.png";
-	this->texturePath_special = "images/enemies/duck_special.png";
+	this->texturePath_idle = "images/enemies/" + type + ".png";
+	this->texturePath_attack = "images/enemies/" + type + "_attack.png";
+	this->texturePath_death = "images/enemies/" + type + "_death.png";
+	//this->texturePath_special = "images/enemies/" + type + "_special.png";
 	testTextures();
 
 	// Graphic
 	assignTexture();
 	assignWindow(renWin);
+
+	// Animation idle
 	this->sprite.setTexture(this->texture);
+	this->rectSrcSprite.left = 40;
+	this->rectSrcSprite.top = 0;
+	this->rectSrcSprite.width = 40;
+	this->rectSrcSprite.height = 49;
+	this->sprite.setTextureRect(rectSrcSprite);
+
 	this->sprite.setPosition(posX, posY);
 	this->spriteWidth = this->sprite.getGlobalBounds().width;
 	this->spriteHeight = this->sprite.getGlobalBounds().height;
@@ -34,8 +45,6 @@ Enemy::Enemy(sf::RenderWindow* renWin, float hp, int atk, float spd)
 
 	// Healthbar
 	healthWidth = spriteWidth;
-
-	// Timer
 
 	draw();
 }
@@ -69,9 +78,9 @@ void Enemy::testTextures() {
 	if (!temp.loadFromFile(this->texturePath_death)) {
 		std::cout << "Death_texture missing." << std::endl;
 	}
-	if (!temp.loadFromFile(this->texturePath_special)) {
-		std::cout << "Special_texture missing." << std::endl;
-	}
+	//if (!temp.loadFromFile(this->texturePath_special)) {
+		//std::cout << "Special_texture missing." << std::endl;
+	//}
 }
 // Sets window
 void Enemy::assignWindow(sf::RenderWindow* renWin) {
@@ -82,7 +91,6 @@ void Enemy::assignWindow(sf::RenderWindow* renWin) {
 void Enemy::assignTexture() {
 	sf::Texture t;
 	t.loadFromFile(this->texturePath_idle);
-	
 	this->texture = t;
 }
 // Changes texture/animation
@@ -96,12 +104,36 @@ void Enemy::draw() {
 		setX();
 		setY();
 		// Draw elements
+		if (!this->attacking) {
+			this->animationSpeed = 0.17f;
+		}
+
+		// Draw animation
+		if (clock.getElapsedTime().asSeconds() > this->animationSpeed) {
+			if (isAlive() && !this->attacking) {
+				if (rectSrcSprite.left == 160) rectSrcSprite.left = 0;
+				else rectSrcSprite.left += 40;
+			}
+			else if (isAlive() && this->attacking) {
+				if (rectSrcSprite.left == 160) rectSrcSprite.left = 0;
+				else rectSrcSprite.left += 40;
+			}
+			else {
+				if (rectSrcSprite.left < 160) rectSrcSprite.left += 40;
+			}
+			this->sprite.setTextureRect(rectSrcSprite);
+			clock.restart();
+		}
+
+		// Draw sprite
 		this->renWin->draw(this->sprite);
+
+		// Draw others
 		drawHealthBar();
-		drawHitbox();
+		if(hitbox_visibility) drawHitbox();
 	}
 
-	if (!this->isAlive) {
+	if (!this->alive) {
 		timer++;
 		if (timer == DECAY_TIMER) {
 			timer = 0;
@@ -125,7 +157,7 @@ void Enemy::drawHealthBar() {
 
 	// Appearance of health bar
 	this->bar.setOutlineColor(sf::Color::Black);
-	this->bar.setOutlineThickness(1);
+	//this->bar.setOutlineThickness(1);
 	this->bar.setPosition(this->posX, this->posY - 10);
 
 	// Draws healthbar
@@ -145,8 +177,13 @@ void Enemy::drawHitbox() {
 	this->hitbox.setOutlineColor(sf::Color::Red);
 	this->hitbox.setOutlineThickness(1);
 	this->hitbox.setSize(sf::Vector2f(this->hitboxWidth, this->hitboxHeight));
-	this->hitbox.setPosition(this->posX + 0.1f * this->spriteWidth, this->posY);
+	this->hitbox.setOrigin(-(this->hitbox.getGlobalBounds().width / 4), 0);
+	this->hitbox.setPosition(this->posX, this->posY);
 	this->renWin->draw(hitbox);
+}
+// Hide hitbox
+void Enemy::showHitbox() {
+	this->hitbox_visibility = true;
 }
 
 /////////////////////////// Location ///////////////////////////
@@ -178,6 +215,10 @@ void Enemy::changeBound(int x) {
 // Main Functions
 void Enemy::attack(float& targetHealth) {
 	targetHealth -= getAtkDmg();
+	sf::Texture t;
+	t.loadFromFile(this->texturePath_attack);
+	changeTexture(t);
+	this->attacking = true;
 }
 float Enemy::getHealth() {
 	return this->health;
@@ -186,23 +227,30 @@ int Enemy::getAtkDmg() {
 	return this->atk;
 }
 void Enemy::takeDamage(int dmg) {
-	this->health -= dmg;
-	if (this->health <= 0) {
-		die();
+	if (this->health != 0) {
+		this->health -= dmg;
+		if (this->health <= 0) {
+			this->health = 0;
+			die();
+		}
 	}
 }
 void Enemy::die() {
+	this->attacking = false;
+	this->rectSrcSprite.left = 0;
 	sf::Texture t;
 	t.loadFromFile(this->texturePath_death);
 	changeTexture(t);
-	this->isAlive = false;
+	this->alive = false;
 }
 void Enemy::moveX() {
 	// Stop at boundary
-	if (this->posX + this->spriteWidth < this->currentBound) {
-		this->sprite.move(0.1f, 0);
+	if (this->posX + this->spriteWidth < this->currentBound && isAlive()) {
+		this->sprite.move(0.05f, 0);
 	}
 	draw();
 }
-
+bool Enemy::isAlive() {
+	return this->alive;
+}
 
