@@ -1,7 +1,12 @@
 #include "Enemy.h"
 
-Enemy::Enemy(sf::RenderWindow* renWin, float hp, int atk, float spd, std::string type)
+Enemy::Enemy() {
+
+}
+
+Enemy::Enemy(sf::RenderWindow* renWin, float hp, int atk, float spd, std::vector<sf::Texture>* texturePack)
 {
+	std::cout << "inside: " << &texturePack->at(0) << std::endl;
 	std::cout << "Skelly created" << std::endl;
 	// Changeable Attributes
 	this->health = hp;
@@ -16,11 +21,12 @@ Enemy::Enemy(sf::RenderWindow* renWin, float hp, int atk, float spd, std::string
 	this->posY = initY;
 	this->hitbox_visibility = false;
 	this->animationSpeed = 0.17f;
-
+	
 	// Texture paths
-	this->texturePath_idle = "images/enemies/" + type + ".png";
-	this->texturePath_attack = "images/enemies/" + type + "_attack.png";
-	this->texturePath_death = "images/enemies/" + type + "_death.png";
+	//this->texturePack = texturePack;
+	this->texturePath_idle = &texturePack->at(0);
+	//this->texturePath_attack = this->texturePack[1];
+	//this->texturePath_death = this->texturePack[2];
 	//this->texturePath_special = "images/enemies/" + type + "_special.png";
 	testTextures();
 
@@ -28,17 +34,19 @@ Enemy::Enemy(sf::RenderWindow* renWin, float hp, int atk, float spd, std::string
 	assignTexture();
 	assignWindow(renWin);
 
-	// Animation idle
-	this->sprite.setTexture(this->texture);
+	// Animation idle as default
+	this->sprite.setTexture(*texture);
 	this->rectSrcSprite.left = 40;
 	this->rectSrcSprite.top = 0;
 	this->rectSrcSprite.width = 40;
 	this->rectSrcSprite.height = 49;
 	this->sprite.setTextureRect(rectSrcSprite);
 
+	// Sprite settings and dimensions
 	this->sprite.setPosition(posX, posY);
 	this->spriteWidth = this->sprite.getGlobalBounds().width;
 	this->spriteHeight = this->sprite.getGlobalBounds().height;
+	// Hitbox
 	this->hitboxWidth = this->spriteWidth * 0.7f;
 	this->hitboxHeight = this->spriteHeight;
 	this->stopDrawing = false;
@@ -55,21 +63,21 @@ Enemy::~Enemy()
 }
 /////////////////////////// Graphics ///////////////////////////
 // Textures
-void Enemy::setTexturePathIdle(std::string name) {
-	this->texturePath_idle = name;
+void Enemy::setTexturePathIdle(sf::Texture texture) {
+	//this->texturePath_idle = texture;
 }
-void Enemy::setTexturePathAttack(std::string name) {
-	this->texturePath_attack = name;
+void Enemy::setTexturePathAttack(sf::Texture texture) {
+	this->texturePath_attack = texture;
 }
-void Enemy::setTexturePathDeath(std::string name) {
-	this->texturePath_death = name;
+void Enemy::setTexturePathDeath(sf::Texture texture) {
+	this->texturePath_death = texture;
 }
-void Enemy::setTexturePathSpecial(std::string name) {
-	this->texturePath_special = name;
+void Enemy::setTexturePathSpecial(sf::Texture texture) {
+	this->texturePath_special = texture;
 }
 void Enemy::testTextures() {
 	sf::Texture temp;
-	if (!temp.loadFromFile(this->texturePath_idle)) {
+	/*if (!temp.loadFromFile(this->texturePath_idle)) {
 		std::cout << "Idle_texture missing." << std::endl;
 	}
 	if (!temp.loadFromFile(this->texturePath_attack)) {
@@ -80,7 +88,7 @@ void Enemy::testTextures() {
 	}
 	//if (!temp.loadFromFile(this->texturePath_special)) {
 		//std::cout << "Special_texture missing." << std::endl;
-	//}
+	//}*/
 }
 // Sets window
 void Enemy::assignWindow(sf::RenderWindow* renWin) {
@@ -89,13 +97,15 @@ void Enemy::assignWindow(sf::RenderWindow* renWin) {
 }
 // Sets texture
 void Enemy::assignTexture() {
-	sf::Texture t;
-	t.loadFromFile(this->texturePath_idle);
-	this->texture = t;
+	//sf::Texture t;
+	//t = this->texturePath_idle;
+	//this->texture = t;
+	this->texture = this->texturePath_idle;
+	std::cout << "Texture assigned" << std::endl;
 }
 // Changes texture/animation
 void Enemy::changeTexture(sf::Texture t) {
-	this->texture = t;
+	//this->texture = t;
 }
 // Draw everything
 void Enemy::draw() {
@@ -216,7 +226,7 @@ void Enemy::changeBound(int x) {
 void Enemy::attack(float& targetHealth) {
 	targetHealth -= getAtkDmg();
 	sf::Texture t;
-	t.loadFromFile(this->texturePath_attack);
+	t = texturePath_attack;
 	changeTexture(t);
 	this->attacking = true;
 }
@@ -239,7 +249,7 @@ void Enemy::die() {
 	this->attacking = false;
 	this->rectSrcSprite.left = 0;
 	sf::Texture t;
-	t.loadFromFile(this->texturePath_death);
+	t = texturePath_death;
 	changeTexture(t);
 	this->alive = false;
 }
@@ -254,3 +264,6 @@ bool Enemy::isAlive() {
 	return this->alive;
 }
 
+void Enemy::getAddress() {
+	std::cout << "inside: " << &texturePack[0] << std::endl;
+}

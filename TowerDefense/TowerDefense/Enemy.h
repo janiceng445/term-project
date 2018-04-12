@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <ctime>
 #include <iostream>
+#include <vector>
 #pragma once
 
 const int DECAY_TIMER = 20000;
@@ -30,7 +31,7 @@ private:
 
 	// Graphic
 	sf::Sprite sprite;
-	sf::Texture texture;
+	sf::Texture* texture;
 	sf::Clock clock;
 	sf::IntRect rectSrcSprite;
 	float spriteWidth;
@@ -44,17 +45,19 @@ private:
 	float animationSpeed;
 
 	// Texture paths
-	std::string texturePath_idle;
-	std::string texturePath_attack;
-	std::string texturePath_death;
-	std::string texturePath_special;
+	sf::Texture* texturePath_idle;
+	sf::Texture texturePath_attack;
+	sf::Texture texturePath_death;
+	sf::Texture texturePath_special;
+	std::vector<sf::Texture> texturePack;
 
 	// Window
 	sf::RenderWindow* renWin;
 	int windowWidth;
 	
 public:
-	Enemy(sf::RenderWindow* renWin, float hp, int atk, float spd, std::string type);
+	Enemy();
+	Enemy(sf::RenderWindow* renWin, float hp, int atk, float spd, std::vector<sf::Texture>* texturePack);
 	
 	// Graphics
 	void assignWindow(sf::RenderWindow* renWin);
@@ -63,10 +66,10 @@ public:
 	void draw();
 	void setHitboxWidth(float w);
 	void setHitBoxHeight(float h);
-	void setTexturePathIdle(std::string name);
-	void setTexturePathAttack(std::string name);
-	void setTexturePathDeath(std::string name);
-	void setTexturePathSpecial(std::string name);
+	void setTexturePathIdle(sf::Texture texture);
+	void setTexturePathAttack(sf::Texture texture);
+	void setTexturePathDeath(sf::Texture texture);
+	void setTexturePathSpecial(sf::Texture texture);
 	void testTextures();
 	void showHitbox();
 
@@ -92,6 +95,7 @@ public:
 
 	// Others
 	float getX();
+	void getAddress();
 	~Enemy();
 };
 

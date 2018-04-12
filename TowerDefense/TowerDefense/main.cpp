@@ -30,11 +30,35 @@ int main()
 	if (!bulletTexture.loadFromFile("images/bullet.png")) {
 		return -1;
 	}
+	
 
 	////////////////////////////// Temporary Placement ///////////////////////////////
 	sf::Clock clock;
-	Enemy newEnemy(&window, 100, 5, 0.3f, "skelly");
+	// Load texture and push into pack
+	sf::Texture skelly_texture;
+	std::vector<sf::Texture> texturePack;
+	if (!skelly_texture.loadFromFile("images/enemies/skelly.png"))
+		std::cout << "Error loading skelly texture" << std::endl;
+	else texturePack.push_back(skelly_texture);
+	if (!skelly_texture.loadFromFile("images/enemies/skelly_attack.png"))
+		std::cout << "Error loading skelly attack texture" << std::endl;
+	else texturePack.push_back(skelly_texture);
+	if (!skelly_texture.loadFromFile("images/enemies/skelly_death.png"))
+		std::cout << "Error loading skelly death texture" << std::endl;
+	else texturePack.push_back(skelly_texture);
+	if (!skelly_texture.loadFromFile("images/enemies/skelly_special.png"))
+		std::cout << "Error loading skelly special texture" << std::endl;
+	else texturePack.push_back(skelly_texture);
+
+	// Wave of enemies
 	std::vector<Enemy> myVector;
+	std::cout << "outside: " << &texturePack[0] << std::endl;
+
+	// TEMP TEST
+	//Enemy newEnemy(&window, 100, 5, 0.3f, &texturePack);
+
+	///////////////////////////////////// Wave 1 /////////////////////////////////////
+	
 
 	////////////////////////////////  Temporary Timer ////////////////////////////////
 	int startTime = 0;
@@ -91,13 +115,16 @@ int main()
 		}*/
 
 		if (clock.getElapsedTime().asSeconds() > 1.0f) {
-			Enemy newEnemy(&window, 100, 5, 0.3f, "skelly");
+			if (myVector.size() == 1) break;
+			Enemy newEnemy(&window, 100, 5, 0.3f, &texturePack);
 			newEnemy.changeBound(720);
+			newEnemy.draw();
 			myVector.push_back(newEnemy);
 			clock.restart();
 		}
 
 		for (unsigned int i = 0; i < myVector.size(); i++) {
+			myVector[i].getAddress();
 			myVector[i].moveX();
 		}
 
@@ -106,7 +133,7 @@ int main()
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && (currentTime - startTime > delay)) {
 			startTime = currentTime;
 			currentTime = 0;
-			newEnemy.takeDamage(25);
+			//newEnemy.takeDamage(25);
 		}
 		//////////////////////////////////////////////////////////////////////////////////////////////////
 
