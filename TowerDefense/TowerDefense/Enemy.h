@@ -24,6 +24,8 @@ private:
 	std::string type;
 	bool hitbox_visibility;
 	float* targetHealth;
+	int singleSpriteWidth;
+	int singleSpriteHeight;
 
 	// Timer
 	int timer;
@@ -58,7 +60,8 @@ private:
 	int windowWidth;
 	
 public:
-	Enemy(sf::RenderWindow* renWin, float hp, int atk, float spd, float as, std::vector<sf::Texture>* texturePack);
+	Enemy();
+	Enemy(sf::RenderWindow* renWin, float hp, int atk, float spd, float as, std::vector<sf::Texture>* texturePack, int type);
 	
 	// Graphics
 	void assignWindow(sf::RenderWindow* renWin);

@@ -1,7 +1,15 @@
 #include "Enemy.h"
+Enemy::Enemy() {
 
-Enemy::Enemy(sf::RenderWindow* renWin, float hp, int atk, float spd, float as, std::vector<sf::Texture>* texturePack)
+}
+Enemy::Enemy(sf::RenderWindow* renWin, float hp, int atk, float spd, float as, std::vector<sf::Texture>* texturePack, int type)
 {
+	// Types
+	// 1 - Small, 2 - Medium, 3 - Large
+	if (type == 1) { singleSpriteWidth = 40;  singleSpriteHeight = 49; }
+	else if (type == 2) { singleSpriteWidth = 60;  singleSpriteHeight = 69; }
+	else if (type == 3) { singleSpriteWidth = 80;  singleSpriteHeight = 89; }
+
 	// Changeable Attributes
 	this->health = hp;
 	this->atk = atk / 2; // explanation: the timer ticks causes 2x amount of dmg
@@ -30,10 +38,10 @@ Enemy::Enemy(sf::RenderWindow* renWin, float hp, int atk, float spd, float as, s
 
 	// Animation idle as default
 	this->sprite.setTexture(texture);
-	this->rectSrcSprite.left = 40;
+	this->rectSrcSprite.left = singleSpriteWidth;
 	this->rectSrcSprite.top = 0;
-	this->rectSrcSprite.width = 40;
-	this->rectSrcSprite.height = 49;
+	this->rectSrcSprite.width = singleSpriteWidth;
+	this->rectSrcSprite.height = singleSpriteHeight;
 	this->sprite.setTextureRect(rectSrcSprite);
 
 	// Sprite settings and dimensions
@@ -217,7 +225,6 @@ void Enemy::setTarget(int boundary, float* targetHealth) {
 }
 // Self Status
 void Enemy::takeDamage(int dmg) {
-	std::cout << "Taking dmg" << std::endl;
 	if (this->health != 0) {
 		this->health -= dmg;
 		if (this->health <= 0)
@@ -238,7 +245,7 @@ void Enemy::moveX() {
 	if (this->alive) {
 		// Move
 		if (this->posX + this->spriteWidth < this->currentBound && isAlive()) {
-			this->sprite.move(0.05f, 0);
+			this->sprite.move(0.1f, 0);
 		}
 		// Stop at bounds and change texture to attack
 		if (withinBounds()) {

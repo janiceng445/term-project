@@ -57,10 +57,12 @@ int main()
 		std::cout << "Error loading skelly special texture" << std::endl;
 	else texturePack.push_back(skelly_texture);
 
-	// Wave of enemies
+	//////////////////////////////// Wave of enemies /////////////////////////////////
 	std::vector<std::vector<Enemy>> waveList;
 	int waveRound = 0;
 	std::vector<Enemy> wave;
+	Enemy* waveEnemies = new Enemy[5];
+	unsigned int e = 0;
 
 	////////////////////////////////  Temporary Timer ////////////////////////////////
 	int startTime = 0;
@@ -102,13 +104,15 @@ int main()
 		window.draw(bulletSprite);
 
 		///////////////////////////////////////////// Janice /////////////////////////////////////////////
-		if (clock.getElapsedTime().asSeconds() > 10.0f || sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-			//if (wave.size() <= 4) {
-				Enemy newEnemy(&window, 100, 20, 0.3f, 0.5f, &texturePack);
+		if (clock.getElapsedTime().asSeconds() > 1.0f) {
+			if (e < 5) {
+				Enemy newEnemy(&window, 100, 20, 0.3f, 0.5f, &texturePack, 1);
 				newEnemy.setTarget(720, &targets[0]);
 				newEnemy.draw();
 				wave.push_back(newEnemy);
-			//}
+				waveEnemies[e] = newEnemy;
+				e++;
+			}
 			clock.restart();
 		}
 
@@ -139,8 +143,12 @@ int main()
 		///////////////////////////////////////////////////////////////////////
 
 		// Move all entities inside wave to towers
-		for (unsigned int i = 0; i < wave.size(); i++) {
+		/*for (unsigned int i = 0; i < wave.size(); i++) {
 			wave[i].moveX();
+			//wave[i].setTarget(targetX[currentTarget], &targets[currentTarget]);
+		}*/
+		for (unsigned int i = 0; i < 5; i++) {
+			waveEnemies[i].moveX();
 			//wave[i].setTarget(targetX[currentTarget], &targets[currentTarget]);
 		}
 
