@@ -2,6 +2,50 @@
 Enemy::Enemy() {
 
 }
+Enemy::Enemy(sf::RenderWindow* renWin, float hp, int atk, float spd, float as, sf::Sprite sprite, int type)
+{
+	std::cout << "Spawned" << std::endl;
+	// Types
+	// 1 - Small, 2 - Medium, 3 - Large
+	if (type == 1) { singleSpriteWidth = 40;  singleSpriteHeight = 49; }
+	else if (type == 2) { singleSpriteWidth = 60;  singleSpriteHeight = 69; }
+	else if (type == 3) { singleSpriteWidth = 80;  singleSpriteHeight = 89; }
+
+	// Changeable Attributes
+	this->health = hp;
+	this->atk = atk / 2; // explanation: the timer ticks causes 2x amount of dmg
+	this->speed = spd;
+	this->as = as;
+
+	// Default
+	this->alive = true;
+	this->initX = 10;
+	this->initY = 350;
+	this->posX = initX;
+	this->posY = initY;
+	this->hitbox_visibility = false;
+	this->animationSpeed = 0.17f;
+
+	// Texture paths
+	this->sprite = sprite;
+	//this->texturePath_special = "images/enemies/" + type + "_special.png";
+
+	// Graphic
+	assignTexture();
+	assignWindow(renWin);
+
+	// Sprite settings and dimensions
+	this->sprite.setPosition(posX, posY);
+	this->spriteWidth = this->sprite.getGlobalBounds().width;
+	this->spriteHeight = this->sprite.getGlobalBounds().height;
+	// Hitbox
+	this->hitboxWidth = this->spriteWidth * 0.7f;
+	this->hitboxHeight = this->spriteHeight;
+	this->stopDrawing = false;
+
+	// Healthbar
+	healthWidth = spriteWidth;
+}
 Enemy::Enemy(sf::RenderWindow* renWin, float hp, int atk, float spd, float as, std::vector<sf::Texture>* texturePack, int type)
 {
 	// Types
@@ -94,7 +138,6 @@ void Enemy::changeTexture(sf::Texture t) {
 }
 // Draw everything
 void Enemy::draw() {
-	
 	if (!this->stopDrawing) {
 		// Updating x and y coords
 		setX();
@@ -105,7 +148,7 @@ void Enemy::draw() {
 		}
 
 		// Draw animation
-		if (clock.getElapsedTime().asSeconds() > this->animationSpeed) {
+		/*if (clock.getElapsedTime().asSeconds() > this->animationSpeed) {
 			if (isAlive() && !this->attacking) {
 				if (rectSrcSprite.left == 160) rectSrcSprite.left = 0;
 				else rectSrcSprite.left += 40;
@@ -126,10 +169,10 @@ void Enemy::draw() {
 			}
 			this->sprite.setTextureRect(rectSrcSprite);
 			clock.restart();
-		}
+		}*/
 
 		// Draw sprite
-		this->sprite.setTexture(this->texture);
+		//this->sprite.setTexture(this->texture);
 		this->renWin->draw(this->sprite);
 
 		// Draw others

@@ -5,13 +5,17 @@
 #include <chrono>
 #include <iostream>
 #include <vector>
+#include "Animation.hpp"
+#include "AnimatedSprite.hpp"
+#include "Monster.h"
 
 const double PI = 3.141592653589793238463;
 
 int main()
 {
 	// Create window
-	sf::RenderWindow window(sf::VideoMode(720, 480), "Defend the Joe!");
+	sf::Vector2i screenDimensions(720, 480);
+	sf::RenderWindow window(sf::VideoMode(screenDimensions.x, screenDimensions.y), "Defend the Joe!");
 
 	// Loading files
 	sf::Texture background;
@@ -41,21 +45,68 @@ int main()
 	sf::Clock clock;
 	sf::Clock temp;
 	std::vector<sf::Clock> clockList;
-	// Load texture and push into pack
+
+	//////////////////////////////// Make idle sprite ////////////////////////////////
+	
 	sf::Texture skelly_texture;
-	std::vector<sf::Texture> texturePack;
-	if (!skelly_texture.loadFromFile("images/enemies/skelly.png"))
-		std::cout << "Error loading skelly texture" << std::endl;
-	else texturePack.push_back(skelly_texture);
-	if (!skelly_texture.loadFromFile("images/enemies/skelly_attack.png"))
-		std::cout << "Error loading skelly attack texture" << std::endl;
-	else texturePack.push_back(skelly_texture);
-	if (!skelly_texture.loadFromFile("images/enemies/skelly_death.png"))
-		std::cout << "Error loading skelly death texture" << std::endl;
-	else texturePack.push_back(skelly_texture);
-	if (!skelly_texture.loadFromFile("images/enemies/skelly_special.png"))
-		std::cout << "Error loading skelly special texture" << std::endl;
-	else texturePack.push_back(skelly_texture);
+	skelly_texture.loadFromFile("images/enemies/skelly.png");
+	std::vector<Animation> skellyAni;
+
+	Animation skelly_idle;
+	skelly_idle.setSpriteSheet(skelly_texture);
+	skelly_idle.addFrame(sf::IntRect(0, 0, 40, 49));
+	skelly_idle.addFrame(sf::IntRect(40, 0, 40, 49));
+	skelly_idle.addFrame(sf::IntRect(80, 0, 40, 49));
+	skelly_idle.addFrame(sf::IntRect(120, 0, 40, 49));
+	skelly_idle.addFrame(sf::IntRect(160, 0, 40, 49));
+	skellyAni.push_back(skelly_idle);
+
+	Animation skelly_attack;
+	skelly_attack.setSpriteSheet(skelly_texture);
+	skelly_attack.addFrame(sf::IntRect(0, 49, 40, 49));
+	skelly_attack.addFrame(sf::IntRect(40, 49, 40, 49));
+	skelly_attack.addFrame(sf::IntRect(80, 49, 40, 49));
+	skelly_attack.addFrame(sf::IntRect(120, 49, 40, 49));
+	skelly_attack.addFrame(sf::IntRect(160, 49, 40, 49));
+	skellyAni.push_back(skelly_attack);
+
+	Animation skelly_death;
+	skelly_death.setSpriteSheet(skelly_texture);
+	skelly_death.addFrame(sf::IntRect(0, 49, 40, 49));
+	skelly_death.addFrame(sf::IntRect(40, 49, 40, 49));
+	skelly_death.addFrame(sf::IntRect(80, 49, 40, 49));
+	skelly_death.addFrame(sf::IntRect(120, 49, 40, 49));
+	skelly_death.addFrame(sf::IntRect(160, 49, 40, 49));
+	skellyAni.push_back(skelly_death);
+
+	//Animation* currentAnimation = &skelly_idle;
+
+	// Set up AnimatedSprite
+	//AnimatedSprite animatedSprite(sf::seconds(0.2f), true, false);
+	//animatedSprite.setPosition(sf::Vector2f(screenDimensions / 2));
+	
+	sf::Clock frameClock;
+
+	// Create a new testing monster
+	int targetHP = 100;
+	Monster baby(&window, skellyAni, 10, 100);
+	baby.setTarget(450, &targetHP);
+
+	Monster baby2(&window, skellyAni, 10, 100);
+	baby2.setStartingPosition(150, 340);
+	baby2.setTarget(450, &targetHP);
+
+	Monster baby3(&window, skellyAni, 10, 100);
+	baby3.setStartingPosition(200, 345);
+	baby3.setTarget(450, &targetHP);
+
+	Monster baby4(&window, skellyAni, 10, 100);
+	baby4.setStartingPosition(300, 355);
+	baby4.setTarget(450, &targetHP);
+
+	Monster baby5(&window, skellyAni, 10, 100);
+	baby5.setStartingPosition(400, 352);
+	baby5.setTarget(450, &targetHP);
 
 	//////////////////////////////// Wave of enemies /////////////////////////////////
 	std::vector<std::vector<Enemy>> waveList;
@@ -104,7 +155,40 @@ int main()
 		window.draw(bulletSprite);
 
 		///////////////////////////////////////////// Janice /////////////////////////////////////////////
-		if (clock.getElapsedTime().asSeconds() > 1.0f) {
+
+
+		sf::Time frameTime = frameClock.restart();
+
+		//animatedSprite.play(*currentAnimation);
+		//animatedSprite.update(frameTime);
+
+		baby.setFrameTime(&frameTime);
+		baby.playAnimation();
+		baby.draw();
+		baby.attackMove();
+
+		baby2.setFrameTime(&frameTime);
+		baby2.playAnimation();
+		baby2.draw();
+		baby2.attackMove();
+
+		baby3.setFrameTime(&frameTime);
+		baby3.playAnimation();
+		baby3.draw();
+		baby3.attackMove();
+
+		baby4.setFrameTime(&frameTime);
+		baby4.playAnimation();
+		baby4.draw();
+		baby4.attackMove();
+
+		baby5.setFrameTime(&frameTime);
+		baby5.playAnimation();
+		baby5.draw();
+		baby5.attackMove();
+		//window.draw(animatedSprite);
+
+		/*if (clock.getElapsedTime().asSeconds() > 1.0f) {
 			if (e < 5) {
 				Enemy newEnemy(&window, 100, 20, 0.3f, 0.5f, &texturePack, 1);
 				newEnemy.setTarget(720, &targets[0]);
@@ -114,7 +198,7 @@ int main()
 				e++;
 			}
 			clock.restart();
-		}
+		}*/
 
 		// Targets and health
 		/*if (targets[0] <= 0) {

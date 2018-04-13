@@ -60,7 +60,8 @@ private:
 	int windowWidth;
 	
 public:
-	Enemy();
+	Enemy(); 
+	Enemy(sf::RenderWindow* renWin, float hp, int atk, float spd, float as, sf::Sprite sprite, int type);
 	Enemy(sf::RenderWindow* renWin, float hp, int atk, float spd, float as, std::vector<sf::Texture>* texturePack, int type);
 	
 	// Graphics
