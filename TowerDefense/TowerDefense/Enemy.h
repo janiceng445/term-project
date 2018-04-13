@@ -98,6 +98,7 @@ public:
 
 	// Others
 	float getX();
+	void getFrame();
 	~Enemy();
 };
 

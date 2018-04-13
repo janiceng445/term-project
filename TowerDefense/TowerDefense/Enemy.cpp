@@ -86,6 +86,7 @@ void Enemy::changeTexture(sf::Texture t) {
 }
 // Draw everything
 void Enemy::draw() {
+	
 	if (!this->stopDrawing) {
 		// Updating x and y coords
 		setX();
@@ -269,4 +270,9 @@ float Enemy::getAtkSpeed() {
 }
 float Enemy::getTargetHealth() {
 	return *this->targetHealth;
+}
+
+// Temps
+void Enemy::getFrame() {
+	std::cout << "speed: " << this->rectSrcSprite.left << std::endl;
 }

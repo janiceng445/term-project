@@ -102,18 +102,18 @@ int main()
 		window.draw(bulletSprite);
 
 		///////////////////////////////////////////// Janice /////////////////////////////////////////////
-		if (clock.getElapsedTime().asSeconds() > 4.0f || sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-			if (wave.size() <= 1) {
+		if (clock.getElapsedTime().asSeconds() > 10.0f || sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+			//if (wave.size() <= 4) {
 				Enemy newEnemy(&window, 100, 20, 0.3f, 0.5f, &texturePack);
-				newEnemy.setTarget(200, &targets[0]);
+				newEnemy.setTarget(720, &targets[0]);
 				newEnemy.draw();
 				wave.push_back(newEnemy);
-			}
+			//}
 			clock.restart();
 		}
 
 		// Targets and health
-		if (targets[0] <= 0) {
+		/*if (targets[0] <= 0) {
 			targets[0] = 0;
 			currentTarget = 1;
 		}
@@ -126,24 +126,22 @@ int main()
 			for (unsigned int i = 0; i < wave.size(); i++) {
 				wave[i].setTarget(720, 0);
 			}
-		}
+		}*/
 
 		//////////////////////// TEST TAKE DAMAGE CODE ////////////////////////
-		if (!wave.empty() && wave.back().getX() >= 100 && temp.getElapsedTime().asSeconds() > 1.5f) {
+		/*if (!wave.empty() && wave.back().getX() >= 100 && temp.getElapsedTime().asSeconds() > 1.5f) {
 			wave.back().takeDamage(25);
 			if (wave.back().getHealth() == 0) {
 				wave.pop_back();
 			}
 			temp.restart();
-		}
+		}*/
 		///////////////////////////////////////////////////////////////////////
-		 
-
 
 		// Move all entities inside wave to towers
 		for (unsigned int i = 0; i < wave.size(); i++) {
 			wave[i].moveX();
-			wave[i].setTarget(targetX[currentTarget], &targets[currentTarget]);
+			//wave[i].setTarget(targetX[currentTarget], &targets[currentTarget]);
 		}
 
 		//////////////////////////////////////////////////////////////////////////////////////////////////
