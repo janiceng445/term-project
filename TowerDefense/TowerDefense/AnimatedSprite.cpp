@@ -138,7 +138,7 @@ void AnimatedSprite::setFrame(std::size_t newFrame, bool resetTime)
 		float right = left + static_cast<float>(rect.width);
 		float top = static_cast<float>(rect.top);
 		float bottom = top + static_cast<float>(rect.height);
-
+		
 		m_vertices[0].texCoords = sf::Vector2f(left, top);
 		m_vertices[1].texCoords = sf::Vector2f(left, bottom);
 		m_vertices[2].texCoords = sf::Vector2f(right, bottom);
@@ -154,6 +154,7 @@ void AnimatedSprite::update(sf::Time deltaTime)
 	// if not paused and we have a valid animation
 	if (!m_isPaused && m_animation)
 	{
+
 		// add delta time
 		m_currentTime += deltaTime;
 
@@ -177,7 +178,7 @@ void AnimatedSprite::update(sf::Time deltaTime)
 				}
 
 			}
-
+			
 			// set the current frame, not reseting the time
 			setFrame(m_currentFrame, false);
 		}

@@ -8,8 +8,10 @@
 #include "Animation.hpp"
 #include "AnimatedSprite.hpp"
 #include "Monster.h"
+#include <cstdlib>
 
 const double PI = 3.141592653589793238463;
+float SKELLY_SPWN_TIMER = 5.0f;
 
 int main()
 {
@@ -43,8 +45,6 @@ int main()
 	int currentTarget = 0;
 	// Clocks
 	sf::Clock clock;
-	sf::Clock temp;
-	std::vector<sf::Clock> clockList;
 
 	//////////////////////////////// Make idle sprite ////////////////////////////////
 	
@@ -79,50 +79,15 @@ int main()
 	skelly_death.addFrame(sf::IntRect(160, 49, 40, 49));
 	skellyAni.push_back(skelly_death);
 
-	//Animation* currentAnimation = &skelly_idle;
-
-	// Set up AnimatedSprite
-	//AnimatedSprite animatedSprite(sf::seconds(0.2f), true, false);
-	//animatedSprite.setPosition(sf::Vector2f(screenDimensions / 2));
-	
-	sf::Clock frameClock;
-
 	// Create a new testing monster
-	int targetHP = 100;
-	Monster baby(&window, skellyAni, 10, 100);
-	baby.setTarget(450, &targetHP);
-
-	Monster baby2(&window, skellyAni, 10, 100);
-	baby2.setStartingPosition(150, 340);
-	baby2.setTarget(450, &targetHP);
-
-	Monster baby3(&window, skellyAni, 10, 100);
-	baby3.setStartingPosition(200, 345);
-	baby3.setTarget(450, &targetHP);
-
-	Monster baby4(&window, skellyAni, 10, 100);
-	baby4.setStartingPosition(300, 355);
-	baby4.setTarget(450, &targetHP);
-
-	Monster baby5(&window, skellyAni, 10, 100);
-	baby5.setStartingPosition(400, 352);
-	baby5.setTarget(450, &targetHP);
+	int targetHP = 100;	
 
 	//////////////////////////////// Wave of enemies /////////////////////////////////
-	std::vector<std::vector<Enemy>> waveList;
 	int waveRound = 0;
-	std::vector<Enemy> wave;
-	Enemy* waveEnemies = new Enemy[5];
-	unsigned int e = 0;
+	std::vector<Monster> wave;
 
-	////////////////////////////////  Temporary Timer ////////////////////////////////
-	int startTime = 0;
-	int currentTime = 0;
-	int delay = 10;
+	
 
-	// Custom timer
-	Timer timer_attackPulse(500);
-	float tempTowerHealth = 1000;
 	//////////////////////////////////////////////////////////////////////////////////
 
 	while (window.isOpen())
@@ -155,50 +120,16 @@ int main()
 		window.draw(bulletSprite);
 
 		///////////////////////////////////////////// Janice /////////////////////////////////////////////
-
-
-		sf::Time frameTime = frameClock.restart();
-
-		//animatedSprite.play(*currentAnimation);
-		//animatedSprite.update(frameTime);
-
-		baby.setFrameTime(&frameTime);
-		baby.playAnimation();
-		baby.draw();
-		baby.attackMove();
-
-		baby2.setFrameTime(&frameTime);
-		baby2.playAnimation();
-		baby2.draw();
-		baby2.attackMove();
-
-		baby3.setFrameTime(&frameTime);
-		baby3.playAnimation();
-		baby3.draw();
-		baby3.attackMove();
-
-		baby4.setFrameTime(&frameTime);
-		baby4.playAnimation();
-		baby4.draw();
-		baby4.attackMove();
-
-		baby5.setFrameTime(&frameTime);
-		baby5.playAnimation();
-		baby5.draw();
-		baby5.attackMove();
-		//window.draw(animatedSprite);
-
-		/*if (clock.getElapsedTime().asSeconds() > 1.0f) {
-			if (e < 5) {
-				Enemy newEnemy(&window, 100, 20, 0.3f, 0.5f, &texturePack, 1);
-				newEnemy.setTarget(720, &targets[0]);
-				newEnemy.draw();
-				wave.push_back(newEnemy);
-				waveEnemies[e] = newEnemy;
-				e++;
-			}
+		
+		// Skelly Spawner
+		int r = (rand() % 6) - 3;
+		unsigned int skellyMax = 5;
+		if (clock.getElapsedTime().asSeconds() > SKELLY_SPWN_TIMER + r && wave.size() <= skellyMax) {
+			Monster skelly(&window, skellyAni, 10, 100);
+			skelly.setTarget(450, &targetHP);
+			wave.push_back(skelly);
 			clock.restart();
-		}*/
+		}
 
 		// Targets and health
 		/*if (targets[0] <= 0) {
@@ -226,14 +157,10 @@ int main()
 		}*/
 		///////////////////////////////////////////////////////////////////////
 
-		// Move all entities inside wave to towers
-		/*for (unsigned int i = 0; i < wave.size(); i++) {
-			wave[i].moveX();
-			//wave[i].setTarget(targetX[currentTarget], &targets[currentTarget]);
-		}*/
-		for (unsigned int i = 0; i < 5; i++) {
-			waveEnemies[i].moveX();
-			//wave[i].setTarget(targetX[currentTarget], &targets[currentTarget]);
+		for (unsigned int i = 0; i < wave.size(); i++) {
+			wave[i].run();
+			wave[i].draw();
+			wave[i].attackMove();
 		}
 
 		//////////////////////////////////////////////////////////////////////////////////////////////////
