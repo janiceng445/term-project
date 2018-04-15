@@ -3,6 +3,9 @@
 Monster::Monster() {}
 Monster::Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP)
 {
+	if (type == 1) size = 98;
+	
+
 	int r = (rand() % 41 - 20) * 2; // For random spawning y coordinate
 
 	// Attributes
@@ -70,8 +73,9 @@ void Monster::run() {
 			if (aniSprite.getCurrentFrame() == 4) {
 				currentFrame = 0;
 			}
+			aniSprite.setFrameTime(sf::seconds(0.1f));
 			changeCurrentAnimation(2);
-			if (aniSprite.getCurrentFrame() == 4 && aniSprite.getAnimation()->getFrame(aniSprite.getCurrentFrame()).top == 98) {
+			if (aniSprite.getCurrentFrame() == 4 && aniSprite.getAnimation()->getFrame(aniSprite.getCurrentFrame()).top == spriteHeight * 2) {
 				stopRunning = true;
 				isPermaDead = true;
 			}
@@ -223,7 +227,6 @@ bool Monster::isDead() {
 }
 
 /////////////////////////////////////////// Other ///////////////////////////////////////////
-
 
 
 Monster::~Monster()

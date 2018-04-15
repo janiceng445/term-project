@@ -18,6 +18,8 @@ private:
 	bool isAttacking;
 	int stoppingPoint;
 	int decay_timer;
+	int type;
+	int size;
 
 	// Graphics/Animations
 	Animation* currentAnimation;
@@ -48,6 +50,7 @@ private:
 	int targetedHealth;
 	int currentFrame;
 	sf::Clock clock;
+	std::vector<Monster> wave;
 
 public:
 	Monster();

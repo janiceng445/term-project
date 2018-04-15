@@ -105,8 +105,6 @@ int main()
 	int waveRound = 0;
 	std::vector<Monster> wave;
 
-
-
 	///////////////////////////////// Projectiles ////////////////////////////////////
 
 	sf::Sprite bulletSprite(bulletTexture);
@@ -232,10 +230,6 @@ int main()
 		}*/
 		///////////////////////////////////////////////////////////////////////
 		for (unsigned int i = 0; i < wave.size(); i++) {
-			if (wave[i].isDead()) {
-				wave.erase(wave.begin() + i);
-				break;
-			}
 			wave[i].run();
 			wave[i].draw();
 			wave[i].attackMove();
