@@ -1,17 +1,20 @@
 #include <SFML/Graphics.hpp>
-#include "Enemy.h"
-#include "Timer.h"
 #include <thread>
 #include <chrono>
 #include <iostream>
 #include <vector>
+#include <math.h>
+#include <cstdlib>
 #include "Animation.hpp"
 #include "AnimatedSprite.hpp"
 #include "Monster.h"
-#include <cstdlib>
+#include "Enemy.h"
+#include "Timer.h"
+#include "Projectile.h"
 
 const double PI = 3.141592653589793238463;
 float SKELLY_SPWN_TIMER = 5.0f;
+const int fireTimer = 300;
 
 int main()
 {
@@ -22,34 +25,50 @@ int main()
 	// Loading files
 	sf::Texture background;
 	if (!background.loadFromFile("images/background.png")) {
+		std::cerr << "background failed" << std::endl;
 		return -1;
 	}
+
 	sf::Texture joeTexture;
 	if (!joeTexture.loadFromFile("images/revolverJoe.png")) {
+		std::cerr << "revolverJoe failed" << std::endl;
 		return -1;
 	}
+
 	sf::Texture armTexture;
 	if (!armTexture.loadFromFile("images/arm.png")) {
+		std::cerr << "arm failed" << std::endl;
 		return -1;
 	}
+
 	sf::Texture bulletTexture;
 	if (!bulletTexture.loadFromFile("images/bullet.png")) {
+		std::cerr << "bullet failed" << std::endl;
 		return -1;
 	}
-	
+
+	sf::Texture towerTexture;
+	if (!towerTexture.loadFromFile("images/towertest.png")) {
+		std::cerr << "tower failed" << std::endl;
+		//return -1;
+	}
+
 
 	////////////////////////////// Temporary Placement ///////////////////////////////
 	float targetHealth = 200;
-	float targets[3] = {50, 55, 60};
+	float targets[3] = { 50, 55, 60 };
 	int targetX[3] = { 150, 200, 250 };
 	int currentTarget = 0;
 	// Clocks
 	sf::Clock clock;
 
 	//////////////////////////////// Make idle sprite ////////////////////////////////
-	
+
 	sf::Texture skelly_texture;
-	skelly_texture.loadFromFile("images/enemies/skelly.png");
+	if (!skelly_texture.loadFromFile("images/enemies/skelly.png")) {
+		std::cerr << "skelly_spriteSheet failed" << std::endl;
+		return -1;
+	}
 	std::vector<Animation> skellyAni;
 
 	Animation skelly_idle;
@@ -72,33 +91,41 @@ int main()
 
 	Animation skelly_death;
 	skelly_death.setSpriteSheet(skelly_texture);
-	skelly_death.addFrame(sf::IntRect(0, 49, 40, 49));
-	skelly_death.addFrame(sf::IntRect(40, 49, 40, 49));
-	skelly_death.addFrame(sf::IntRect(80, 49, 40, 49));
-	skelly_death.addFrame(sf::IntRect(120, 49, 40, 49));
-	skelly_death.addFrame(sf::IntRect(160, 49, 40, 49));
+	skelly_death.addFrame(sf::IntRect(0, 98, 40, 49));
+	skelly_death.addFrame(sf::IntRect(40, 98, 40, 49));
+	skelly_death.addFrame(sf::IntRect(80, 98, 40, 49));
+	skelly_death.addFrame(sf::IntRect(120, 98, 40, 49));
+	skelly_death.addFrame(sf::IntRect(160, 98, 40, 49));
 	skellyAni.push_back(skelly_death);
 
 	// Create a new testing monster
-	int targetHP = 100;	
+	int targetHP = 100;
 
 	//////////////////////////////// Wave of enemies /////////////////////////////////
 	int waveRound = 0;
 	std::vector<Monster> wave;
 
-	
 
-	//////////////////////////////////////////////////////////////////////////////////
+
+	///////////////////////////////// Projectiles ////////////////////////////////////
+
+	sf::Sprite bulletSprite(bulletTexture);
+	std::vector<Projectile> currentProj;
+
+	sf::Vector2f center;
+	sf::Vector2f mousePos;
+	sf::Vector2f aimDir;
+	sf::Vector2f aimDirNorm;
+
+	Projectile p1(bulletSprite);
+	int timer = fireTimer;
+	bool shot = false;
+
+	///////////////////////////////////////////////////////////////////////////////////
 
 	while (window.isOpen())
 	{
 		sf::Event event;
-		while (window.pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-				window.close();
-		}
-		window.clear();
 
 		///////////////////////////////////////////// Gerard /////////////////////////////////////////////
 		sf::Sprite background(background);
@@ -114,13 +141,61 @@ int main()
 		//sets rotation of arm based on mouse location (gun points at mouse pointer)
 		bulletSprite.setTexture(bulletTexture);
 
+		///////////////////////////////////////////// Samuel /////////////////////////////////////////////
+
+		center = armSprite.getPosition();
+		mousePos = sf::Vector2f(sf::Mouse::getPosition(window));
+		aimDir = mousePos - center;
+		aimDirNorm = aimDir / sqrt(pow(aimDir.x, 2) + pow(aimDir.y, 2));
+
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+			if (timer == fireTimer) {
+				shot = true;
+				p1.bullet.setPosition(center);
+				
+				p1.bullet.setRotation((180.0 / PI) * atan2(248 - sf::Mouse::getPosition(window).y, 550 - sf::Mouse::getPosition(window).x) - 90);
+				p1.vel = (aimDirNorm * p1.getMaxVel());
+				currentProj.push_back(Projectile(p1));
+			}
+		}
+		if (shot == true) {
+			timer--;
+			if (timer == 0) {
+				shot = false;
+				timer = fireTimer;
+			}
+		}
+
 		window.draw(background);
 		window.draw(armSprite);
 		window.draw(joeSprite);
 		window.draw(bulletSprite);
 
+		//window.draw(towerSprite);
+		if (!currentProj.empty()) {
+			for (unsigned int i = 0; i < currentProj.size(); i++) {
+				currentProj[i].bullet.move(currentProj[i].vel);
+				//std::cout << currentProj[i].bullet.getPosition().x << ", " << currentProj[i].bullet.getPosition().y << std::endl;
+				window.draw(currentProj[i].bullet);
+
+				// Checks collision with enemies from the bullet scope
+				if (currentProj[i].checkCollision(&wave)) currentProj.erase(currentProj.begin() + i);
+
+				// Ends the loop if the bullet vector is empty and reading attempt is made to see next element in empty vector
+				if (currentProj.empty()) {
+					break;
+				}
+				// Deletes the bullet if it goes off screen
+				if (currentProj[i].bullet.getPosition().x < 0 || currentProj[i].bullet.getPosition().x > screenDimensions.x
+					|| currentProj[i].bullet.getPosition().y < 0 || currentProj[i].bullet.getPosition().y > screenDimensions.y)
+				{
+					currentProj.erase(currentProj.begin() + i);
+				}
+			}
+		}
+
 		///////////////////////////////////////////// Janice /////////////////////////////////////////////
-		
+
 		// Skelly Spawner
 		int r = (rand() % 6) - 3;
 		unsigned int skellyMax = 5;
@@ -133,40 +208,50 @@ int main()
 
 		// Targets and health
 		/*if (targets[0] <= 0) {
-			targets[0] = 0;
-			currentTarget = 1;
+		targets[0] = 0;
+		currentTarget = 1;
 		}
 		if (targets[1] <= 0) {
-			targets[1] = 0;
-			currentTarget = 2;
+		targets[1] = 0;
+		currentTarget = 2;
 		}
 		if (targets[2] <= 0) { // Game should be over after this
-			targets[2] = 0;
-			for (unsigned int i = 0; i < wave.size(); i++) {
-				wave[i].setTarget(720, 0);
-			}
+		targets[2] = 0;
+		for (unsigned int i = 0; i < wave.size(); i++) {
+		wave[i].setTarget(720, 0);
+		}
 		}*/
 
 		//////////////////////// TEST TAKE DAMAGE CODE ////////////////////////
 		/*if (!wave.empty() && wave.back().getX() >= 100 && temp.getElapsedTime().asSeconds() > 1.5f) {
-			wave.back().takeDamage(25);
-			if (wave.back().getHealth() == 0) {
-				wave.pop_back();
-			}
-			temp.restart();
+		wave.back().takeDamage(25);
+		if (wave.back().getHealth() == 0) {
+		wave.pop_back();
+		}
+		temp.restart();
 		}*/
 		///////////////////////////////////////////////////////////////////////
-
 		for (unsigned int i = 0; i < wave.size(); i++) {
+			if (wave[i].isDead()) {
+				wave.erase(wave.begin() + i);
+				break;
+			}
 			wave[i].run();
 			wave[i].draw();
 			wave[i].attackMove();
 		}
 
+
 		//////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 		window.display();
+
+		while (window.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+				window.close();
+		}
+		window.clear();
 	}
 
 	return 0;

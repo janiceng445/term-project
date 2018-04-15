@@ -14,8 +14,10 @@ private:
 	int AD;
 	int HP;
 	bool isAlive;
+	bool isPermaDead;
 	bool isAttacking;
 	int stoppingPoint;
+	int decay_timer;
 
 	// Graphics/Animations
 	Animation* currentAnimation;
@@ -24,6 +26,8 @@ private:
 	sf::Time frameTime;
 	int spriteWidth;
 	int spriteHeight;
+	bool stopRunning;
+	bool stopDrawing;
 
 	// Healthbar
 	sf::RectangleShape bar;
@@ -52,7 +56,6 @@ public:
 	// Animation
 	void playAnimation();
 	void update(sf::Time frameTime);
-	void setFrameTime(sf::Time* frameTime);
 	void setCurrentAnimation();
 	void changeCurrentAnimation(int n);
 	void draw();
@@ -73,15 +76,17 @@ public:
 	void changeY();
 	void setStartingPosition(float x, float y);
 	void attackMove();
+	sf::FloatRect getSpriteGlobalBounds();
 
 	// Behavior
 	void setTarget(int x, int* targetedHealth);
 	void attack();
 	void takeDamage(int dmg);
 	void die();
+	bool isAliveFunc();
+	bool isDead();
 	
 	// Other
 
 	~Monster();
 };
-

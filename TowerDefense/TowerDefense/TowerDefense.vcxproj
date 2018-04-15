@@ -130,6 +130,7 @@
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Monster.cpp" />
+    <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -137,6 +138,7 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="AnimatedSprite.hpp" />
     <ClInclude Include="Monster.h" />
+    <ClInclude Include="Projectile.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>
