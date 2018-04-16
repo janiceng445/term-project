@@ -11,9 +11,10 @@ Monster::Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, 
 	// Attributes
 	this->AD = AD / 2; // Explanation: attacks ticks twice
 	this->HP = HP;
+	this->max_HP = HP;
 	this->isAlive = true;
 	this->isAttacking = false;
-	this->decay_timer = 2000;
+	this->decay_timer = 10000;
 
 	// Location Default
 	this->x = -25;
@@ -24,7 +25,7 @@ Monster::Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, 
 	this->stopDrawing = false;
 	this->aniPack = aniPack;
 	setCurrentAnimation();
-	this->aniSprite.setFrameTime(sf::seconds(0.2f));
+	this->aniSprite.setFrameTime(sf::seconds(0.15f));
 	this->aniSprite.play();
 	this->aniSprite.setLooped(true);
 	this->aniSprite.setPosition(this->x, this->y);
@@ -110,7 +111,7 @@ void Monster::addHealthBar() {
 	this->bar = bar;
 }
 void Monster::updateHealthBar() {
-	float hp = (float) this->HP / 100 * this->spriteWidth;
+	float hp = (float) this->HP / this->max_HP * this->spriteWidth;
 	// Changing color of bar if < 50%
 	hp > 0.50 * this->spriteWidth ? bar.setFillColor(sf::Color::Green) :
 									bar.setFillColor(sf::Color::Red);
@@ -196,6 +197,10 @@ void Monster::attack() {
 			clock.restart();
 		}
 	}
+}
+
+void Monster::useSpecialAbility() {
+	// Do nothing as base monster
 }
 
 // Take damage

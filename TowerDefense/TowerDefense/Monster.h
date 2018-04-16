@@ -9,27 +9,29 @@
 
 class Monster
 {
-private:
+protected:
 	// Attributes
 	int AD;
 	int HP;
-	bool isAlive;
-	bool isPermaDead;
+	int max_HP;
+	bool isAlive; // State of enemy
+	bool isPermaDead; // Decaying process (animation purposes)
 	bool isAttacking;
-	int stoppingPoint;
-	int decay_timer;
-	int type;
-	int size;
+	bool special;
+	int stoppingPoint; // Tower locations
+	int decay_timer; // Time it takes for sprite to disappear
 
 	// Graphics/Animations
+	int type; // small | medium | large enemies
+	int size; // Goes hand-in-hand with type
 	Animation* currentAnimation;
 	AnimatedSprite aniSprite;
 	std::vector<Animation> aniPack;
 	sf::Time frameTime;
 	int spriteWidth;
 	int spriteHeight;
-	bool stopRunning;
-	bool stopDrawing;
+	bool stopRunning; // Stop running timers and behavioral animation check
+	bool stopDrawing; // Stop drawing sprite
 
 	// Healthbar
 	sf::RectangleShape bar;
@@ -50,7 +52,7 @@ private:
 	int targetedHealth;
 	int currentFrame;
 	sf::Clock clock;
-	std::vector<Monster> wave;
+	sf::Clock frameClock;
 
 public:
 	Monster();
@@ -62,9 +64,7 @@ public:
 	void setCurrentAnimation();
 	void changeCurrentAnimation(int n);
 	void draw();
-	void run();
-
-	sf::Clock frameClock;
+	void virtual run();
 
 	// Healthbar
 	void addHealthBar();
@@ -84,6 +84,7 @@ public:
 	// Behavior
 	void setTarget(int x, int* targetedHealth);
 	void attack();
+	void virtual useSpecialAbility();
 	void takeDamage(int dmg);
 	void die();
 	bool isAliveFunc();

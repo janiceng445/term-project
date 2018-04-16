@@ -11,9 +11,12 @@
 #include "Enemy.h"
 #include "Timer.h"
 #include "Projectile.h"
+#include "Lancer.h"
 
 const double PI = 3.141592653589793238463;
 float SKELLY_SPWN_TIMER = 5.0f;
+float RHINO_SPWN_TIMER = 7.0f;
+float LANCER_SPWN_TIMER = 9.0f;
 const int fireTimer = 300;
 
 int main()
@@ -60,9 +63,17 @@ int main()
 	int targetX[3] = { 150, 200, 250 };
 	int currentTarget = 0;
 	// Clocks
-	sf::Clock clock;
+	sf::Clock clock_Skelly;
+	sf::Clock clock_Rhino;
+	sf::Clock clock_Lancer;
 
 	//////////////////////////////// Make idle sprite ////////////////////////////////
+
+	int size_s_x = 40;
+	int size_s_y = 49;
+	int size_m_x = 60;
+	int size_m_y = 74;
+
 
 	sf::Texture skelly_texture;
 	if (!skelly_texture.loadFromFile("images/enemies/skelly.png")) {
@@ -71,32 +82,113 @@ int main()
 	}
 	std::vector<Animation> skellyAni;
 
+
 	Animation skelly_idle;
 	skelly_idle.setSpriteSheet(skelly_texture);
-	skelly_idle.addFrame(sf::IntRect(0, 0, 40, 49));
-	skelly_idle.addFrame(sf::IntRect(40, 0, 40, 49));
-	skelly_idle.addFrame(sf::IntRect(80, 0, 40, 49));
-	skelly_idle.addFrame(sf::IntRect(120, 0, 40, 49));
-	skelly_idle.addFrame(sf::IntRect(160, 0, 40, 49));
+	skelly_idle.addFrame(sf::IntRect(0, 0, size_s_x, size_s_y));
+	skelly_idle.addFrame(sf::IntRect(size_s_x, 0, size_s_x, size_s_y));
+	skelly_idle.addFrame(sf::IntRect(size_s_x * 2, 0, size_s_x, size_s_y));
+	skelly_idle.addFrame(sf::IntRect(size_s_x * 3, 0, size_s_x, size_s_y));
+	skelly_idle.addFrame(sf::IntRect(size_s_x * 4, 0, size_s_x, size_s_y));
 	skellyAni.push_back(skelly_idle);
 
 	Animation skelly_attack;
 	skelly_attack.setSpriteSheet(skelly_texture);
-	skelly_attack.addFrame(sf::IntRect(0, 49, 40, 49));
-	skelly_attack.addFrame(sf::IntRect(40, 49, 40, 49));
-	skelly_attack.addFrame(sf::IntRect(80, 49, 40, 49));
-	skelly_attack.addFrame(sf::IntRect(120, 49, 40, 49));
-	skelly_attack.addFrame(sf::IntRect(160, 49, 40, 49));
+	skelly_attack.addFrame(sf::IntRect(0, size_s_y, size_s_x, size_s_y));
+	skelly_attack.addFrame(sf::IntRect(size_s_x, size_s_y, size_s_x, size_s_y));
+	skelly_attack.addFrame(sf::IntRect(size_s_x * 2, size_s_y, size_s_x, size_s_y));
+	skelly_attack.addFrame(sf::IntRect(size_s_x * 3, size_s_y, size_s_x, size_s_y));
+	skelly_attack.addFrame(sf::IntRect(size_s_x * 4, size_s_y, size_s_x, size_s_y));
 	skellyAni.push_back(skelly_attack);
 
 	Animation skelly_death;
 	skelly_death.setSpriteSheet(skelly_texture);
-	skelly_death.addFrame(sf::IntRect(0, 98, 40, 49));
-	skelly_death.addFrame(sf::IntRect(40, 98, 40, 49));
-	skelly_death.addFrame(sf::IntRect(80, 98, 40, 49));
-	skelly_death.addFrame(sf::IntRect(120, 98, 40, 49));
-	skelly_death.addFrame(sf::IntRect(160, 98, 40, 49));
+	skelly_death.addFrame(sf::IntRect(0, size_s_y * 2, size_s_x, size_s_y));
+	skelly_death.addFrame(sf::IntRect(size_s_x, size_s_y * 2, size_s_x, size_s_y));
+	skelly_death.addFrame(sf::IntRect(size_s_x * 2, size_s_y * 2, size_s_x, size_s_y));
+	skelly_death.addFrame(sf::IntRect(size_s_x * 3, size_s_y * 2, size_s_x, size_s_y));
+	skelly_death.addFrame(sf::IntRect(size_s_x * 4, size_s_y * 2, size_s_x, size_s_y));
 	skellyAni.push_back(skelly_death);
+
+	sf::Texture rhino_texture;
+	if (!rhino_texture.loadFromFile("images/enemies/rhino.png")) {
+		std::cerr << "rhino_spriteSheet failed" << std::endl;
+		return -1;
+	}
+	std::vector<Animation> rhinoAni;
+
+	Animation rhino_idle;
+	rhino_idle.setSpriteSheet(rhino_texture);
+	rhino_idle.setSpriteSheet(rhino_texture);
+	rhino_idle.addFrame(sf::IntRect(0, 0, size_s_x, size_s_y));
+	rhino_idle.addFrame(sf::IntRect(size_s_x, 0, size_s_x, size_s_y));
+	rhino_idle.addFrame(sf::IntRect(size_s_x * 2, 0, size_s_x, size_s_y));
+	rhino_idle.addFrame(sf::IntRect(size_s_x * 3, 0, size_s_x, size_s_y));
+	rhino_idle.addFrame(sf::IntRect(size_s_x * 4, 0, size_s_x, size_s_y));
+	rhinoAni.push_back(rhino_idle);
+
+	Animation rhino_attack;
+	rhino_attack.setSpriteSheet(rhino_texture);
+	rhino_attack.addFrame(sf::IntRect(0, size_s_y, size_s_x, size_s_y));
+	rhino_attack.addFrame(sf::IntRect(size_s_x, size_s_y, size_s_x, size_s_y));
+	rhino_attack.addFrame(sf::IntRect(size_s_x * 2, size_s_y, size_s_x, size_s_y));
+	rhino_attack.addFrame(sf::IntRect(size_s_x * 3, size_s_y, size_s_x, size_s_y));
+	rhino_attack.addFrame(sf::IntRect(size_s_x * 4, size_s_y, size_s_x, size_s_y));
+	rhinoAni.push_back(rhino_attack);
+
+	Animation rhino_death;
+	rhino_death.setSpriteSheet(rhino_texture);
+	rhino_death.addFrame(sf::IntRect(0, size_s_y * 2, size_s_x, size_s_y));
+	rhino_death.addFrame(sf::IntRect(size_s_x, size_s_y * 2, size_s_x, size_s_y));
+	rhino_death.addFrame(sf::IntRect(size_s_x * 2, size_s_y * 2, size_s_x, size_s_y));
+	rhino_death.addFrame(sf::IntRect(size_s_x * 3, size_s_y * 2, size_s_x, size_s_y));
+	rhino_death.addFrame(sf::IntRect(size_s_x * 4, size_s_y * 2, size_s_x, size_s_y));
+	rhinoAni.push_back(rhino_death);
+
+	sf::Texture lancer_texture;
+	if (!lancer_texture.loadFromFile("images/enemies/lancer.png")) {
+		std::cerr << "lancer_spriteSheet failed" << std::endl;
+		return -1;
+	}
+	std::vector<Animation> lancerAni;
+
+	Animation lancer_idle;
+	lancer_idle.setSpriteSheet(lancer_texture);
+	lancer_idle.setSpriteSheet(lancer_texture);
+	lancer_idle.addFrame(sf::IntRect(0, 0, size_m_x, size_m_y));
+	lancer_idle.addFrame(sf::IntRect(size_m_x, 0, size_m_x, size_m_y));
+	lancer_idle.addFrame(sf::IntRect(size_m_x * 2, 0, size_m_x, size_m_y));
+	lancer_idle.addFrame(sf::IntRect(size_m_x * 3, 0, size_m_x, size_m_y));
+	lancer_idle.addFrame(sf::IntRect(size_m_x * 4, 0, size_m_x, size_m_y));
+	lancerAni.push_back(lancer_idle);
+
+	Animation lancer_attack;
+	lancer_attack.setSpriteSheet(lancer_texture);
+	lancer_attack.addFrame(sf::IntRect(0, size_m_y, size_m_x, size_m_y));
+	lancer_attack.addFrame(sf::IntRect(size_m_x, size_m_y, size_m_x, size_m_y));
+	lancer_attack.addFrame(sf::IntRect(size_m_x * 2, size_m_y, size_m_x * 2, size_m_y));
+	lancer_attack.addFrame(sf::IntRect(size_m_x * 2, size_m_y, size_m_x * 2, size_m_y));
+	lancer_attack.addFrame(sf::IntRect(size_m_x * 4, size_m_y, size_m_x, size_m_y));
+	lancerAni.push_back(lancer_attack);
+
+	Animation lancer_death;
+	lancer_death.setSpriteSheet(lancer_texture);
+	lancer_death.addFrame(sf::IntRect(0, size_m_y * 2, size_m_x, size_m_y));
+	lancer_death.addFrame(sf::IntRect(size_m_x, size_m_y * 2, size_m_x, size_m_y));
+	lancer_death.addFrame(sf::IntRect(size_m_x * 2, size_m_y * 2, size_m_x, size_m_y));
+	lancer_death.addFrame(sf::IntRect(size_m_x * 3, size_m_y * 2, size_m_x, size_m_y));
+	lancer_death.addFrame(sf::IntRect(size_m_x * 4, size_m_y * 2, size_m_x, size_m_y));
+	lancerAni.push_back(lancer_death);
+
+	Animation lancer_special;
+	lancer_special.setSpriteSheet(lancer_texture);
+	lancer_special.addFrame(sf::IntRect(0, size_m_y * 3, size_m_x, size_m_y));
+	lancer_special.addFrame(sf::IntRect(size_m_x, size_m_y * 3, size_m_x, size_m_y));
+	lancer_special.addFrame(sf::IntRect(size_m_x * 2, size_m_y * 3, size_m_x, size_m_y));
+	lancer_special.addFrame(sf::IntRect(size_m_x * 3, size_m_y * 3, size_m_x, size_m_y));
+	lancer_special.addFrame(sf::IntRect(size_m_x * 4, size_m_y * 3, size_m_x, size_m_y));
+	lancerAni.push_back(lancer_special);
+
 
 	// Create a new testing monster
 	int targetHP = 100;
@@ -150,7 +242,7 @@ int main()
 			if (timer == fireTimer) {
 				shot = true;
 				p1.bullet.setPosition(center);
-				
+
 				p1.bullet.setRotation((180.0 / PI) * atan2(248 - sf::Mouse::getPosition(window).y, 550 - sf::Mouse::getPosition(window).x) - 90);
 				p1.vel = (aimDirNorm * p1.getMaxVel());
 				currentProj.push_back(Projectile(p1));
@@ -196,12 +288,28 @@ int main()
 
 		// Skelly Spawner
 		int r = (rand() % 6) - 3;
-		unsigned int skellyMax = 5;
-		if (clock.getElapsedTime().asSeconds() > SKELLY_SPWN_TIMER + r && wave.size() <= skellyMax) {
+		unsigned int skellyMax = 3;
+		unsigned int rhinoMax = 5;
+		unsigned int lancerMax = 6;
+		if (clock_Skelly.getElapsedTime().asSeconds() > SKELLY_SPWN_TIMER + r && wave.size() <= skellyMax) {
 			Monster skelly(&window, skellyAni, 10, 100);
 			skelly.setTarget(450, &targetHP);
 			wave.push_back(skelly);
-			clock.restart();
+			clock_Skelly.restart();
+		}
+
+		if (clock_Rhino.getElapsedTime().asSeconds() > RHINO_SPWN_TIMER + r && wave.size() <= rhinoMax) {
+			Monster rhino(&window, rhinoAni, 12, 125);
+			rhino.setTarget(475, &targetHP);
+			wave.push_back(rhino);
+			clock_Rhino.restart();
+		}
+
+		if (clock_Lancer.getElapsedTime().asSeconds() > LANCER_SPWN_TIMER + r && wave.size() <= lancerMax) {
+			Lancer lancer(&window, lancerAni, 25, 250);
+			lancer.setTarget(475, &targetHP);
+			wave.push_back(lancer);
+			clock_Lancer.restart();
 		}
 
 		// Targets and health
