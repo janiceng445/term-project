@@ -62,10 +62,12 @@ int main()
 	sf::Vector2f mouseAimDirNorm;
 
 	Projectile p1(bulletSprite);
+	//new shooting
 	int timer = 333;
 	int reloaded = 0;
 	bool shot = false;
 	bool reloading = false;
+	//new shooting
 
 	//janice
 	////////////////////////////// Temporary Placement ///////////////////////////////
@@ -230,7 +232,7 @@ int main()
 		}
 		//janice
 
-		//mine
+		//new shooting
 		center = armSprite.getPosition();
 		mousePos = sf::Vector2f(sf::Mouse::getPosition(window));
 		mouseAimDir = mousePos - center;
@@ -258,7 +260,7 @@ int main()
 				timer = 333;
 			}
 		}
-		//mine
+		//new shooting
 
 		//drawing
 		window.draw(background);
@@ -301,6 +303,7 @@ int main()
 
 		while (window.pollEvent(event)) {
 			if (event.type == sf::Event::Closed) window.close();
+			//new shooting
 			if (event.type == sf::Event::MouseWheelMoved) {
 				if (reloaded != 6 && reloading == true) {
 					reloaded++;
@@ -308,6 +311,7 @@ int main()
 					continue;
 				}
 			}
+			//new shooting
 		}
 		window.clear(sf::Color::Black);
 	}

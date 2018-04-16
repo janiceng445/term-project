@@ -16,3 +16,24 @@ sf::Vector2f Projectile::getVel() {
 float Projectile::getMaxVel() {
 	return maxVel;
 }
+
+sf::Vector2f Projectile::getLocation() {
+	return this->bullet.getPosition();
+}
+
+sf::FloatRect Projectile::getSpriteGlobalBounds() {
+	return bullet.getGlobalBounds();
+}
+
+bool Projectile::checkCollision(std::vector<Monster>* m) {
+	for (unsigned int i = 0; i < m->size(); i++) {
+		if (m->at(i).isAliveFunc()) {
+			if (bullet.getGlobalBounds().intersects(m->at(i).getSpriteGlobalBounds())) {
+				m->at(i).takeDamage(25);
+				return true;
+			}
+			//if (m->at(i).isDead()) m->erase(m->begin() + i);
+		}
+	}
+	return false;
+}

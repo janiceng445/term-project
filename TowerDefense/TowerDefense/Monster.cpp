@@ -3,22 +3,29 @@
 Monster::Monster() {}
 Monster::Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP)
 {
+	if (type == 1) size = 98;
+
+
 	int r = (rand() % 41 - 20) * 2; // For random spawning y coordinate
 
 									// Attributes
 	this->AD = AD / 2; // Explanation: attacks ticks twice
 	this->HP = HP;
+	this->max_HP = HP;
 	this->isAlive = true;
 	this->isAttacking = false;
+	this->decay_timer = 10000;
 
 	// Location Default
 	this->x = -25;
 	this->y = 375 + (float)r;
 
 	// Animation
+	this->stopRunning = false;
+	this->stopDrawing = false;
 	this->aniPack = aniPack;
 	setCurrentAnimation();
-	this->aniSprite.setFrameTime(sf::seconds(0.2f));
+	this->aniSprite.setFrameTime(sf::seconds(0.15f));
 	this->aniSprite.play();
 	this->aniSprite.setLooped(true);
 	this->aniSprite.setPosition(this->x, this->y);
@@ -28,7 +35,7 @@ Monster::Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, 
 	// Healthbar
 	addHealthBar();
 	// Hitbox
-	hitboxVisibility = true;
+	hitboxVisibility = false;
 	this->hitbox_Width = this->spriteWidth * 0.7f;
 	this->hitbox_Height = (float)this->spriteHeight;
 
@@ -44,9 +51,6 @@ Monster::Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, 
 void Monster::setCurrentAnimation() {
 	this->currentAnimation = &this->aniPack.at(0);
 }
-void Monster::setFrameTime(sf::Time* frameTime) {
-	//this->frameTime = frameTime;
-}
 // Plays animation of currently selected status
 void Monster::playAnimation() {
 	this->aniSprite.play(*currentAnimation);
@@ -61,23 +65,42 @@ void Monster::changeCurrentAnimation(int n) {
 }
 // Runs the timers
 void Monster::run() {
-	sf::Time frameTime = this->frameClock.restart();
-	if (isAttacking) {
-		changeCurrentAnimation(1);
+	if (!stopRunning) {
+		sf::Time frameTime = this->frameClock.restart();
+		if (isAttacking && isAlive) {
+			changeCurrentAnimation(1);
+		}
+		else if (!isAlive) {
+			if (aniSprite.getCurrentFrame() == 4) {
+				currentFrame = 0;
+			}
+			aniSprite.setFrameTime(sf::seconds(0.1f));
+			changeCurrentAnimation(2);
+			if (aniSprite.getCurrentFrame() == 4 && aniSprite.getAnimation()->getFrame(aniSprite.getCurrentFrame()).top == spriteHeight * 2) {
+				stopRunning = true;
+				isPermaDead = true;
+			}
+		}
+		else {
+			changeCurrentAnimation(0);
+		}
+		playAnimation();
+		update(frameTime);
 	}
-	else if (!isAlive) {
-		changeCurrentAnimation(2);
+	if (isPermaDead) {
+		decay_timer--;
+		if (decay_timer == 0) {
+			decay_timer = 0;
+			stopDrawing = true;
+		}
 	}
-	else {
-		changeCurrentAnimation(0);
-	}
-	playAnimation();
-	update(frameTime);
 }
 // Draws the sprite on the window
 void Monster::draw() {
-	this->window->draw(aniSprite);
-	this->window->draw(hitbox);
+	if (!stopDrawing) {
+		this->window->draw(aniSprite);
+		this->window->draw(hitbox);
+	}
 }
 
 /////////////////////////////////////////// Health Bar ///////////////////////////////////////////
@@ -88,7 +111,7 @@ void Monster::addHealthBar() {
 	this->bar = bar;
 }
 void Monster::updateHealthBar() {
-	float hp = (float)this->HP / 100 * this->spriteWidth;
+	float hp = (float)this->HP / this->max_HP * this->spriteWidth;
 	// Changing color of bar if < 50%
 	hp > 0.50 * this->spriteWidth ? bar.setFillColor(sf::Color::Green) :
 		bar.setFillColor(sf::Color::Red);
@@ -153,6 +176,10 @@ void Monster::attackMove() {
 	if (hitboxVisibility) drawHitbox();
 }
 
+sf::FloatRect Monster::getSpriteGlobalBounds() {
+	return aniSprite.getGlobalBounds();
+}
+
 /////////////////////////////////////////// Behavior ///////////////////////////////////////////
 
 // Sets target via x-location and health
@@ -166,11 +193,14 @@ void Monster::attack() {
 	if (isAlive) {
 		isAttacking = true;
 		if (clock.getElapsedTime().asSeconds() > 0.17f) {
-			std::cout << "Attacking" << std::endl;
 			this->targetedHealth -= this->AD;
 			clock.restart();
 		}
 	}
+}
+
+void Monster::useSpecialAbility() {
+	// Do nothing as base monster
 }
 
 // Take damage
@@ -186,9 +216,22 @@ void Monster::takeDamage(int dmg) {
 void Monster::die() {
 	this->isAlive = false;
 }
+// Gets isAlive value
+bool Monster::isAliveFunc() {
+	if (this->isAlive) {
+		return true;
+	}
+	return false;
+}
+// Checks if dead
+bool Monster::isDead() {
+	if (this->isPermaDead) {
+		return true;
+	}
+	return false;
+}
 
 /////////////////////////////////////////// Other ///////////////////////////////////////////
-
 
 
 Monster::~Monster()

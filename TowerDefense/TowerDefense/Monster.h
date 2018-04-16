@@ -9,23 +9,31 @@
 
 class Monster
 {
-	private:
+	protected:
 	// Attributes
 	int AD;
 	int HP;
-	bool isAlive;
+	int max_HP;
+	bool isAlive; // State of enemy
+	bool isPermaDead; // Decaying process (animation purposes)
 	bool isAttacking;
-	int stoppingPoint;
+	bool special;
+	int stoppingPoint; // Tower locations
+	int decay_timer; // Time it takes for sprite to disappear
 
-	// Graphics/Animations
+					 // Graphics/Animations
+	int type; // small | medium | large enemies
+	int size; // Goes hand-in-hand with type
 	Animation* currentAnimation;
 	AnimatedSprite aniSprite;
 	std::vector<Animation> aniPack;
 	sf::Time frameTime;
 	int spriteWidth;
 	int spriteHeight;
+	bool stopRunning; // Stop running timers and behavioral animation check
+	bool stopDrawing; // Stop drawing sprite
 
-	// Healthbar
+					  // Healthbar
 	sf::RectangleShape bar;
 	// Hitbox
 	sf::RectangleShape hitbox;
@@ -44,6 +52,7 @@ class Monster
 	int targetedHealth;
 	int currentFrame;
 	sf::Clock clock;
+	sf::Clock frameClock;
 
 	public:
 	Monster();
@@ -52,13 +61,10 @@ class Monster
 	// Animation
 	void playAnimation();
 	void update(sf::Time frameTime);
-	void setFrameTime(sf::Time* frameTime);
 	void setCurrentAnimation();
 	void changeCurrentAnimation(int n);
 	void draw();
-	void run();
-
-	sf::Clock frameClock;
+	void virtual run();
 
 	// Healthbar
 	void addHealthBar();
@@ -73,12 +79,16 @@ class Monster
 	void changeY();
 	void setStartingPosition(float x, float y);
 	void attackMove();
+	sf::FloatRect getSpriteGlobalBounds();
 
 	// Behavior
 	void setTarget(int x, int* targetedHealth);
 	void attack();
+	void virtual useSpecialAbility();
 	void takeDamage(int dmg);
 	void die();
+	bool isAliveFunc();
+	bool isDead();
 
 	// Other
 
