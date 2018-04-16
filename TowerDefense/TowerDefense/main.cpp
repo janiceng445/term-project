@@ -12,6 +12,8 @@
 
 const double PI = 3.141592653589793238463;
 float SKELLY_SPWN_TIMER = 5.0f;
+float RHINO_SPWN_TIMER = 7.0f;
+float LANCER_SPWN_TIMER = 9.0f;
 
 int main()
 {
@@ -71,10 +73,17 @@ int main()
 	float targets[3] = { 50, 55, 60 };
 	int targetX[3] = { 150, 200, 250 };
 	int currentTarget = 0;
+	sf::Clock clock_Rhino;
+	sf::Clock clock_Lancer;
 	// Clocks
 	sf::Clock clock;
 
 	//////////////////////////////// Make idle sprite ////////////////////////////////
+
+	int size_s_x = 40;
+	int size_s_y = 49;
+	int size_m_x = 60;
+	int size_m_y = 74;
 
 	sf::Texture skelly_texture;
 	skelly_texture.loadFromFile("Images/enemies/skelly.png");
@@ -106,6 +115,85 @@ int main()
 	skelly_death.addFrame(sf::IntRect(120, 49, 40, 49));
 	skelly_death.addFrame(sf::IntRect(160, 49, 40, 49));
 	skellyAni.push_back(skelly_death);
+
+	sf::Texture rhino_texture;
+	if (!rhino_texture.loadFromFile("images/enemies/rhino.png")) {
+		std::cerr << "rhino_spriteSheet failed" << std::endl;
+		return -1;
+	}
+	std::vector<Animation> rhinoAni;
+
+	Animation rhino_idle;
+	rhino_idle.setSpriteSheet(rhino_texture);
+	rhino_idle.setSpriteSheet(rhino_texture);
+	rhino_idle.addFrame(sf::IntRect(0, 0, size_s_x, size_s_y));
+	rhino_idle.addFrame(sf::IntRect(size_s_x, 0, size_s_x, size_s_y));
+	rhino_idle.addFrame(sf::IntRect(size_s_x * 2, 0, size_s_x, size_s_y));
+	rhino_idle.addFrame(sf::IntRect(size_s_x * 3, 0, size_s_x, size_s_y));
+	rhino_idle.addFrame(sf::IntRect(size_s_x * 4, 0, size_s_x, size_s_y));
+	rhinoAni.push_back(rhino_idle);
+
+	Animation rhino_attack;
+	rhino_attack.setSpriteSheet(rhino_texture);
+	rhino_attack.addFrame(sf::IntRect(0, size_s_y, size_s_x, size_s_y));
+	rhino_attack.addFrame(sf::IntRect(size_s_x, size_s_y, size_s_x, size_s_y));
+	rhino_attack.addFrame(sf::IntRect(size_s_x * 2, size_s_y, size_s_x, size_s_y));
+	rhino_attack.addFrame(sf::IntRect(size_s_x * 3, size_s_y, size_s_x, size_s_y));
+	rhino_attack.addFrame(sf::IntRect(size_s_x * 4, size_s_y, size_s_x, size_s_y));
+	rhinoAni.push_back(rhino_attack);
+
+	Animation rhino_death;
+	rhino_death.setSpriteSheet(rhino_texture);
+	rhino_death.addFrame(sf::IntRect(0, size_s_y * 2, size_s_x, size_s_y));
+	rhino_death.addFrame(sf::IntRect(size_s_x, size_s_y * 2, size_s_x, size_s_y));
+	rhino_death.addFrame(sf::IntRect(size_s_x * 2, size_s_y * 2, size_s_x, size_s_y));
+	rhino_death.addFrame(sf::IntRect(size_s_x * 3, size_s_y * 2, size_s_x, size_s_y));
+	rhino_death.addFrame(sf::IntRect(size_s_x * 4, size_s_y * 2, size_s_x, size_s_y));
+	rhinoAni.push_back(rhino_death);
+
+	sf::Texture lancer_texture;
+	if (!lancer_texture.loadFromFile("images/enemies/lancer.png")) {
+		std::cerr << "lancer_spriteSheet failed" << std::endl;
+		return -1;
+	}
+	std::vector<Animation> lancerAni;
+
+	Animation lancer_idle;
+	lancer_idle.setSpriteSheet(lancer_texture);
+	lancer_idle.setSpriteSheet(lancer_texture);
+	lancer_idle.addFrame(sf::IntRect(0, 0, size_m_x, size_m_y));
+	lancer_idle.addFrame(sf::IntRect(size_m_x, 0, size_m_x, size_m_y));
+	lancer_idle.addFrame(sf::IntRect(size_m_x * 2, 0, size_m_x, size_m_y));
+	lancer_idle.addFrame(sf::IntRect(size_m_x * 3, 0, size_m_x, size_m_y));
+	lancer_idle.addFrame(sf::IntRect(size_m_x * 4, 0, size_m_x, size_m_y));
+	lancerAni.push_back(lancer_idle);
+
+	Animation lancer_attack;
+	lancer_attack.setSpriteSheet(lancer_texture);
+	lancer_attack.addFrame(sf::IntRect(0, size_m_y, size_m_x, size_m_y));
+	lancer_attack.addFrame(sf::IntRect(size_m_x, size_m_y, size_m_x, size_m_y));
+	lancer_attack.addFrame(sf::IntRect(size_m_x * 2, size_m_y, size_m_x * 2, size_m_y));
+	lancer_attack.addFrame(sf::IntRect(size_m_x * 2, size_m_y, size_m_x * 2, size_m_y));
+	lancer_attack.addFrame(sf::IntRect(size_m_x * 4, size_m_y, size_m_x, size_m_y));
+	lancerAni.push_back(lancer_attack);
+
+	Animation lancer_death;
+	lancer_death.setSpriteSheet(lancer_texture);
+	lancer_death.addFrame(sf::IntRect(0, size_m_y * 2, size_m_x, size_m_y));
+	lancer_death.addFrame(sf::IntRect(size_m_x, size_m_y * 2, size_m_x, size_m_y));
+	lancer_death.addFrame(sf::IntRect(size_m_x * 2, size_m_y * 2, size_m_x, size_m_y));
+	lancer_death.addFrame(sf::IntRect(size_m_x * 3, size_m_y * 2, size_m_x, size_m_y));
+	lancer_death.addFrame(sf::IntRect(size_m_x * 4, size_m_y * 2, size_m_x, size_m_y));
+	lancerAni.push_back(lancer_death);
+
+	Animation lancer_special;
+	lancer_special.setSpriteSheet(lancer_texture);
+	lancer_special.addFrame(sf::IntRect(0, size_m_y * 3, size_m_x, size_m_y));
+	lancer_special.addFrame(sf::IntRect(size_m_x, size_m_y * 3, size_m_x, size_m_y));
+	lancer_special.addFrame(sf::IntRect(size_m_x * 2, size_m_y * 3, size_m_x, size_m_y));
+	lancer_special.addFrame(sf::IntRect(size_m_x * 3, size_m_y * 3, size_m_x, size_m_y));
+	lancer_special.addFrame(sf::IntRect(size_m_x * 4, size_m_y * 3, size_m_x, size_m_y));
+	lancerAni.push_back(lancer_special);
 
 	// Create a new testing monster
 	int targetHP = 100;
@@ -172,6 +260,14 @@ int main()
 		}
 		//mine
 
+		//drawing
+		window.draw(background);
+		window.draw(armSprite);
+		window.draw(joeSprite);
+		for (int i = 0; i < ammo.size(); i++) {
+			ammo[i].setPosition(sf::Vector2f((i*11)+1, 0));
+			window.draw(ammo[i]);
+		}
 		//janice
 		for (unsigned int i = 0; i < wave.size(); i++) {
 			wave[i].run();
@@ -180,18 +276,19 @@ int main()
 		}
 		//janice
 
-		window.draw(background);
-		window.draw(armSprite);
-		window.draw(joeSprite);
-		for (int i = 0; i < ammo.size(); i++) {
-			ammo[i].setPosition(sf::Vector2f((i*11)+1, 0));
-			window.draw(ammo[i]);
-		}
-
+		//deleting dead bullets
 		for (int i = 0; (unsigned)i < currentProj.size(); i++) {
 			currentProj[i].bullet.move(currentProj[i].vel);
 			//std::cout << currentProj[i].bullet.getPosition().x << ", " << currentProj[i].bullet.getPosition().y << std::endl;
 			window.draw(currentProj[i].bullet);
+
+			//collision
+			if (currentProj[i].checkCollision(&wave)) currentProj.erase(currentProj.begin() + i);
+
+			// Ends the loop if the bullet vector is empty and reading attempt is made to see next element in empty vector
+			if (currentProj.empty()) {
+				break;
+			}
 			
 			if (currentProj[i].bullet.getPosition().x < 0 || currentProj[i].bullet.getPosition().x > 720
 				|| currentProj[i].bullet.getPosition().y < 0 || currentProj[i].bullet.getPosition().y > 480)
