@@ -77,7 +77,7 @@ void Monster::run() {
 			}
 			aniSprite.setFrameTime(sf::seconds(0.1f));
 			changeCurrentAnimation(2);
-			if (aniSprite.getCurrentFrame() == 4 && aniSprite.getAnimation()->getSize() != 0
+			if (aniSprite.getCurrentFrame() == 4 /*&& aniSprite.getAnimation()->getSize() != 0*/
 				&& aniSprite.getAnimation()->getFrame(aniSprite.getCurrentFrame()).top == spriteHeight * 2) 
 			{
 				stopRunning = true;
@@ -219,7 +219,7 @@ void Monster::takeDamage(int dmg) {
 void Monster::die() {
 	this->isAlive = false;
 	score->add(100);
-	std::cout << score->getTotal() << std::endl;
+	//std::cout << score->getTotal() << std::endl;
 }
 // Gets isAlive value
 bool Monster::isAliveFunc() {

@@ -29,19 +29,19 @@ int main()
 		std::cerr << "background failed" << std::endl;
 		return -1;
 	}
-	
+
 	sf::Texture joeTexture;
 	if (!joeTexture.loadFromFile("Images/revolverJoe.png")) {
 		std::cerr << "revolverJoe failed" << std::endl;
 		return -1;
 	}
-	
+
 	sf::Texture armTexture;
 	if (!armTexture.loadFromFile("Images/arm.png")) {
 		std::cerr << "arm failed" << std::endl;
 		return -1;
 	}
-	
+
 	sf::Texture bulletTexture;
 	if (!bulletTexture.loadFromFile("Images/bullet.png")) {
 		std::cerr << "bullet failed" << std::endl;
@@ -54,7 +54,7 @@ int main()
 		return -1;
 	}
 
-	//bullet initialiation
+	//bullet initialization
 	sf::Sprite bulletSprite(bulletTexture);
 	std::vector<Projectile> currentProj;
 	std::vector<sf::Sprite> ammo;
@@ -68,7 +68,7 @@ int main()
 	sf::Vector2f mouseAimDir;
 	sf::Vector2f mouseAimDirNorm;
 
-	Projectile p1(bulletSprite);
+	Projectile p1(3.0);
 	//new shooting
 	int projTimer = 250;
 	int reloaded = 0;
@@ -100,29 +100,29 @@ int main()
 
 	Animation skelly_idle;
 	skelly_idle.setSpriteSheet(skelly_texture);
-	skelly_idle.addFrame(sf::IntRect(0, 0, 40, 49));
-	skelly_idle.addFrame(sf::IntRect(40, 0, 40, 49));
-	skelly_idle.addFrame(sf::IntRect(80, 0, 40, 49));
-	skelly_idle.addFrame(sf::IntRect(120, 0, 40, 49));
-	skelly_idle.addFrame(sf::IntRect(160, 0, 40, 49));
+	skelly_idle.addFrame(sf::IntRect(0, 0, size_s_x, size_s_y));
+	skelly_idle.addFrame(sf::IntRect(size_s_x, 0, size_s_x, size_s_y));
+	skelly_idle.addFrame(sf::IntRect(size_s_x * 2, 0, size_s_x, size_s_y));
+	skelly_idle.addFrame(sf::IntRect(size_s_x * 3, 0, size_s_x, size_s_y));
+	skelly_idle.addFrame(sf::IntRect(size_s_x * 4, 0, size_s_x, size_s_y));
 	skellyAni.push_back(skelly_idle);
 
 	Animation skelly_attack;
 	skelly_attack.setSpriteSheet(skelly_texture);
-	skelly_attack.addFrame(sf::IntRect(0, 49, 40, 49));
-	skelly_attack.addFrame(sf::IntRect(40, 49, 40, 49));
-	skelly_attack.addFrame(sf::IntRect(80, 49, 40, 49));
-	skelly_attack.addFrame(sf::IntRect(120, 49, 40, 49));
-	skelly_attack.addFrame(sf::IntRect(160, 49, 40, 49));
+	skelly_attack.addFrame(sf::IntRect(0, size_s_y, size_s_x, size_s_y));
+	skelly_attack.addFrame(sf::IntRect(size_s_x, size_s_y, size_s_x, size_s_y));
+	skelly_attack.addFrame(sf::IntRect(size_s_x * 2, size_s_y, size_s_x, size_s_y));
+	skelly_attack.addFrame(sf::IntRect(size_s_x * 3, size_s_y, size_s_x, size_s_y));
+	skelly_attack.addFrame(sf::IntRect(size_s_x * 4, size_s_y, size_s_x, size_s_y));
 	skellyAni.push_back(skelly_attack);
 
 	Animation skelly_death;
 	skelly_death.setSpriteSheet(skelly_texture);
-	skelly_death.addFrame(sf::IntRect(0, 49, 40, 49));
-	skelly_death.addFrame(sf::IntRect(40, 49, 40, 49));
-	skelly_death.addFrame(sf::IntRect(80, 49, 40, 49));
-	skelly_death.addFrame(sf::IntRect(120, 49, 40, 49));
-	skelly_death.addFrame(sf::IntRect(160, 49, 40, 49));
+	skelly_death.addFrame(sf::IntRect(0, size_s_y * 2, size_s_x, size_s_y));
+	skelly_death.addFrame(sf::IntRect(size_s_x, size_s_y * 2, size_s_x, size_s_y));
+	skelly_death.addFrame(sf::IntRect(size_s_x * 2, size_s_y * 2, size_s_x, size_s_y));
+	skelly_death.addFrame(sf::IntRect(size_s_x * 3, size_s_y * 2, size_s_x, size_s_y));
+	skelly_death.addFrame(sf::IntRect(size_s_x * 4, size_s_y * 2, size_s_x, size_s_y));
 	skellyAni.push_back(skelly_death);
 
 	sf::Texture rhino_texture;
@@ -227,8 +227,9 @@ int main()
 	scoreText.setString(std::to_string(gameScore.getTotal()));
 	scoreText.setCharacterSize(18);
 	scoreText.setFillColor(sf::Color::White);
-	scoreText.setPosition(650, 5);
+	scoreText.setPosition(650, 10);
 
+	//*****MAIN GAME LOOP******//
 	while (window.isOpen()) {
 		sf::Event event;
 		sf::Sprite background(background);
@@ -252,7 +253,7 @@ int main()
 		armSprite.setRotation((180.0 / PI) * atan2(248 - sf::Mouse::getPosition(window).y, 550 - sf::Mouse::getPosition(window).x));
 		//sets rotation of arm based on mouse location (gun points at mouse pointer)
 		bulletSprite.setTexture(bulletTexture);
-		
+
 		//janice
 		// Skelly Spawner
 		int r = (rand() % 6) - 3;
@@ -301,7 +302,7 @@ int main()
 		window.draw(joeSprite);
 		window.draw(scoreText);
 		for (int i = 0; i < ammo.size(); i++) {
-			ammo[i].setPosition(sf::Vector2f((i*11)+1, 0));
+			ammo[i].setPosition(sf::Vector2f((i * 11) + 1, 0));
 			window.draw(ammo[i]);
 		}
 		//janice
@@ -318,21 +319,21 @@ int main()
 			//std::cout << currentProj[i].bullet.getPosition().x << ", " << currentProj[i].bullet.getPosition().y << std::endl;
 			window.draw(currentProj[i].bullet);
 
-			//collision
-			if (currentProj[i].checkCollision(&wave)) currentProj.erase(currentProj.begin() + i);
-
 			// Ends the loop if the bullet vector is empty and reading attempt is made to see next element in empty vector
 			if (currentProj.empty()) {
 				break;
 			}
-			
-			if (currentProj[i].bullet.getPosition().x < 0 || currentProj[i].bullet.getPosition().x > 720
+
+			//collision
+			if (currentProj[i].checkCollision(&wave)) currentProj.erase(currentProj.begin() + i);
+
+			else if (currentProj[i].bullet.getPosition().x < 0 || currentProj[i].bullet.getPosition().x > 720
 				|| currentProj[i].bullet.getPosition().y < 0 || currentProj[i].bullet.getPosition().y > 480)
 			{
 				currentProj.erase(currentProj.begin() + i);
 			}
 		}
-		
+
 		window.display();
 
 		while (window.pollEvent(event)) {
