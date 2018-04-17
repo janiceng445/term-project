@@ -1,4 +1,4 @@
-//#pragma once
+#pragma once
 #ifndef PROJECTILE_H
 #define PROJECTILE_H
 #include "Monster.h"

@@ -1,13 +1,13 @@
+#include <iostream>
 #include "Monster.h"
+#include "Score.h"
 
 Monster::Monster() {}
-Monster::Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP)
+Monster::Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP, Score* score)
 {
 	if (type == 1) size = 98;
 
-
 	int r = (rand() % 41 - 20) * 2; // For random spawning y coordinate
-
 									// Attributes
 	this->AD = AD / 2; // Explanation: attacks ticks twice
 	this->HP = HP;
@@ -43,6 +43,7 @@ Monster::Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, 
 	// Others
 	this->window = win;
 	this->targetedHealth = 0;
+	this->score = score;
 }
 
 /////////////////////////////////////////// Animation ///////////////////////////////////////////
@@ -76,7 +77,9 @@ void Monster::run() {
 			}
 			aniSprite.setFrameTime(sf::seconds(0.1f));
 			changeCurrentAnimation(2);
-			if (aniSprite.getCurrentFrame() == 4 && aniSprite.getAnimation()->getFrame(aniSprite.getCurrentFrame()).top == spriteHeight * 2) {
+			if (aniSprite.getCurrentFrame() == 4 && aniSprite.getAnimation()->getSize() != 0
+				&& aniSprite.getAnimation()->getFrame(aniSprite.getCurrentFrame()).top == spriteHeight * 2) 
+			{
 				stopRunning = true;
 				isPermaDead = true;
 			}
@@ -215,6 +218,8 @@ void Monster::takeDamage(int dmg) {
 // Dies
 void Monster::die() {
 	this->isAlive = false;
+	score->add(100);
+	std::cout << score->getTotal() << std::endl;
 }
 // Gets isAlive value
 bool Monster::isAliveFunc() {

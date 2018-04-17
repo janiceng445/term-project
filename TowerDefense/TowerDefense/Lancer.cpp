@@ -4,7 +4,7 @@ Lancer::Lancer()
 {
 }
 
-Lancer::Lancer(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP) : Monster(win, aniPack, AD, HP) {
+Lancer::Lancer(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP) : Monster(win, aniPack, AD, HP, score) {
 	special = true;
 	usingSpecial = false;
 }

@@ -2,13 +2,17 @@
 #include <iostream>
 #include <vector>
 #include <math.h>
+#include <cstdlib>
+#include <thread>
+#include <chrono>
+#include <string>
 #include "Tower.h"
 #include "Projectile.h"
 #include "Timer.h"
 #include "Animation.hpp"
 #include "AnimatedSprite.hpp"
 #include "Monster.h"
-
+#include "Score.h"
 
 const double PI = 3.141592653589793238463;
 float SKELLY_SPWN_TIMER = 5.0f;
@@ -19,7 +23,9 @@ int main()
 {
 	sf::RenderWindow window(sf::VideoMode(720, 480), "Revolver Joe");
 	sf::Texture background;
+	//loading textures
 	if (!background.loadFromFile("Images/background.png")) {
+		system("pause");
 		std::cerr << "background failed" << std::endl;
 		return -1;
 	}
@@ -48,6 +54,7 @@ int main()
 		return -1;
 	}
 
+	//bullet initialiation
 	sf::Sprite bulletSprite(bulletTexture);
 	std::vector<Projectile> currentProj;
 	std::vector<sf::Sprite> ammo;
@@ -63,7 +70,7 @@ int main()
 
 	Projectile p1(bulletSprite);
 	//new shooting
-	int timer = 333;
+	int projTimer = 250;
 	int reloaded = 0;
 	bool shot = false;
 	bool reloading = false;
@@ -205,11 +212,37 @@ int main()
 	std::vector<Monster> wave;
 	//janice
 
+	//scoring
+	Score gameScore;
+	int scoreTimer = 1000;
+	sf::Text scoreText;
+	sf::Font pixeled;
+
+	if (!pixeled.loadFromFile("fonts/Pixeled.ttf")) {
+		std::cerr << "font failed" << std::endl;
+		return -1;
+	}
+
+	scoreText.setFont(pixeled);
+	scoreText.setString(std::to_string(gameScore.getTotal()));
+	scoreText.setCharacterSize(18);
+	scoreText.setFillColor(sf::Color::White);
+	scoreText.setPosition(650, 5);
+
 	while (window.isOpen()) {
 		sf::Event event;
 		sf::Sprite background(background);
 		sf::Sprite joeSprite;
 		sf::Sprite armSprite;
+
+		//scoring
+		scoreTimer--;
+		if (scoreTimer == 0) {
+			gameScore.add(10);
+			scoreTimer = 1000;
+		}
+		scoreText.setString(std::to_string(gameScore.getTotal()));
+		//std::cout << gameScore.getTotal() << std::endl;
 
 		joeSprite.setTexture(joeTexture);
 		joeSprite.setPosition(590, 200);
@@ -223,9 +256,9 @@ int main()
 		//janice
 		// Skelly Spawner
 		int r = (rand() % 6) - 3;
-		unsigned int skellyMax = 5;
+		unsigned int skellyMax = 7;
 		if (clock.getElapsedTime().asSeconds() > SKELLY_SPWN_TIMER + r && wave.size() <= skellyMax) {
-			Monster skelly(&window, skellyAni, 10, 100);
+			Monster skelly(&window, skellyAni, 10, 100, &gameScore);
 			skelly.setTarget(450, &targetHP);
 			wave.push_back(skelly);
 			clock.restart();
@@ -238,11 +271,11 @@ int main()
 		mouseAimDir = mousePos - center;
 		mouseAimDirNorm = mouseAimDir / sqrt(pow(mouseAimDir.x, 2) + pow(mouseAimDir.y, 2));
 
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && timer == 333 && reloading == false && !ammo.empty()) {
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && projTimer == 250 && reloading == false && !ammo.empty()) {
 			shot = true;
 			ammo.pop_back();
 			if (ammo.empty()) reloading = true;
-			p1.bullet.setPosition(center + sf::Vector2f(19,4));
+			p1.bullet.setPosition(center + sf::Vector2f(19, 4));
 			p1.bullet.setRotation((180.0 / PI) * atan2(248 - sf::Mouse::getPosition(window).y, 550 - sf::Mouse::getPosition(window).x) - 90);
 			p1.vel = (mouseAimDirNorm * p1.getMaxVel());
 			currentProj.push_back(Projectile(p1));
@@ -254,10 +287,10 @@ int main()
 			}
 		}
 		if (shot == true) {
-			timer--;
-			if (timer == 0) {
+			projTimer--;
+			if (projTimer == 0) {
 				shot = false;
-				timer = 333;
+				projTimer = 250;
 			}
 		}
 		//new shooting
@@ -266,6 +299,7 @@ int main()
 		window.draw(background);
 		window.draw(armSprite);
 		window.draw(joeSprite);
+		window.draw(scoreText);
 		for (int i = 0; i < ammo.size(); i++) {
 			ammo[i].setPosition(sf::Vector2f((i*11)+1, 0));
 			window.draw(ammo[i]);
