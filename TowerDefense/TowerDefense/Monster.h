@@ -8,6 +8,9 @@
 #include "Score.h"
 #include <cstdlib>
 
+const float DEFAULT_MVMT_SPEED = 0.05f;
+const float DEFAULT_ANI_SPEED = 0.1f;
+
 class Monster
 {
 protected:
@@ -16,6 +19,7 @@ protected:
 	int HP;
 	int max_HP;
 	float movementSpeed;
+	float animationSpeed;
 	bool isAlive; // State of enemy
 	bool isPermaDead; // Decaying process (animation purposes)
 	bool isAttacking;
@@ -82,13 +86,13 @@ public:
 	void changeY();
 	void setStartingPosition(float x, float y);
 	void attackMove();
-	sf::FloatRect getSpriteGlobalBounds();
+	virtual sf::FloatRect getSpriteGlobalBounds();
 
 	// Behavior
 	void setTarget(int x, int* targetedHealth);
 	void attack();
 	void virtual useSpecialAbility();
-	void takeDamage(int dmg);
+	void virtual takeDamage(int dmg);
 	void die();
 	bool isAliveFunc();
 	bool isDead();
