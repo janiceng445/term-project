@@ -34,22 +34,24 @@ int main()
 		std::cerr << "skelly_spriteSheet failed" << std::endl;
 		return -1;
 	}
-	std::vector<Animation> skellyAni;
-	setSpriteAnimations(&skellyAni, &skelly_texture, 's', "Skelly");
-
 	sf::Texture rhino_texture;
 	if (!rhino_texture.loadFromFile("images/enemies/rhino.png")) {
 		std::cerr << "rhino_spriteSheet failed" << std::endl;
 		return -1;
 	}
-	std::vector<Animation> rhinoAni;
-	setSpriteAnimations(&rhinoAni, &rhino_texture, 's', "Rhino");
 
 	sf::Texture lancer_texture;
 	if (!lancer_texture.loadFromFile("images/enemies/lancer.png")) {
 		std::cerr << "lancer_spriteSheet failed" << std::endl;
 		return -1;
 	}
+
+	////////////////////////////// Add animations //////////////////////////////
+
+	std::vector<Animation> skellyAni;
+	setSpriteAnimations(&skellyAni, &skelly_texture, 's', "Skelly");
+	std::vector<Animation> rhinoAni;
+	setSpriteAnimations(&rhinoAni, &rhino_texture, 's', "Rhino");
 	std::vector<Animation> lancerAni;
 	setSpriteAnimations(&lancerAni, &lancer_texture, 'm', "Lancer");
 
