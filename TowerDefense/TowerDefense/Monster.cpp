@@ -12,6 +12,7 @@ Monster::Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, 
 	this->AD = AD / 2; // Explanation: attacks ticks twice
 	this->HP = HP;
 	this->max_HP = HP;
+	this->movementSpeed = 0.05f;
 	this->isAlive = true;
 	this->isAttacking = false;
 	this->decay_timer = 10000;
@@ -166,7 +167,7 @@ void Monster::attackMove() {
 	// Move
 	if (this->isAlive) {
 		if (this->x < this->stoppingPoint) {
-			this->aniSprite.move(0.1f, 0);
+			this->aniSprite.move(movementSpeed, 0);
 		}
 		if (this->x > this->stoppingPoint - 10 && this->aniSprite.getCurrentFrame() == 3) {
 			attack();

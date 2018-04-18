@@ -14,6 +14,7 @@ protected:
 	int AD;
 	int HP;
 	int max_HP;
+	float movementSpeed;
 	bool isAlive; // State of enemy
 	bool isPermaDead; // Decaying process (animation purposes)
 	bool isAttacking;
