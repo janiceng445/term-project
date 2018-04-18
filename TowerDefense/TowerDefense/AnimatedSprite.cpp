@@ -37,7 +37,6 @@ void AnimatedSprite::setAnimation(const Animation& animation)
 	m_texture = m_animation->getSpriteSheet();
 	m_currentFrame = 0;
 	setFrame(m_currentFrame);
-	std::cout << "in set animation " << std::endl;
 }
 
 void AnimatedSprite::setFrameTime(sf::Time time)
@@ -153,7 +152,6 @@ void AnimatedSprite::setFrame(std::size_t newFrame, bool resetTime)
 
 void AnimatedSprite::update(sf::Time deltaTime)
 {
-	std::cout << "m_animation? " << &m_animation << std::endl;
 	// if not paused and we have a valid animation
 	if (!m_isPaused && m_animation)
 	{
@@ -169,21 +167,14 @@ void AnimatedSprite::update(sf::Time deltaTime)
 
 			// get next Frame index
 
-			std::cout << "error" << std::endl;
-
-			std::cout << "1: " << m_animation->getFrame(0).left << std::endl;
-			std::cout << "get size " << m_animation->getSize() << std::endl;
-			std::cout << "get frame " << m_currentFrame << std::endl;
 			if (m_currentFrame + 1 < m_animation->getSize()) {
 				m_currentFrame++;
 
-				std::cout << "error1" << std::endl;
 			}
 			else
 			{
 				// animation has ended
 				m_currentFrame = 0; // reset to start
-				std::cout << "error2" << std::endl;
 				if (!m_isLooped)
 				{
 					m_isPaused = true;

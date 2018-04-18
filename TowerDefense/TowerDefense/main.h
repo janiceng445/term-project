@@ -17,7 +17,7 @@
 
 // Global constants
 const double PI = 3.141592653589793238463;
-const float SKELLY_SPWN_TIMER = 5.0f;
+const float SKELLY_SPWN_TIMER = 4.0f;
 const float RHINO_SPWN_TIMER = 7.0f;
 const float LANCER_SPWN_TIMER = 1.0f;
 const int fireTimer = 300;

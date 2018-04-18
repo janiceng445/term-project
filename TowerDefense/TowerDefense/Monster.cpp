@@ -55,9 +55,7 @@ void Monster::setCurrentAnimation() {
 }
 // Plays animation of currently selected status
 void Monster::playAnimation() {
-	std::cout << "1" << std::endl;
 	this->aniSprite.play(*currentAnimation);
-	std::cout << "2" << std::endl;
 }
 // Updates frame time
 void Monster::update(sf::Time frameTime) {
@@ -65,16 +63,10 @@ void Monster::update(sf::Time frameTime) {
 }
 // Changes current animation status
 void Monster::changeCurrentAnimation(int n) {
-	std::cout << "tst3" << std::endl;
-	std::cout << "is empty: " << aniPack.empty() << std::endl;
-
-	std::cout << "tst" << std::endl;
 	this->currentAnimation = &this->aniPack.at(n);
-	std::cout << "tst4" << std::endl;
 }
 // Runs the timers
 void Monster::run() {
-	std::cout << "Run: is empty: " << aniPack.empty() << std::endl;
 	if (!stopRunning) {
 		sf::Time frameTime = this->frameClock.restart();
 		if (isAttacking && isAlive) {
@@ -92,11 +84,8 @@ void Monster::run() {
 			}
 		}
 		else {
-			std::cout << "tst1" << std::endl;
 			changeCurrentAnimation(0);
-			std::cout << "tst2" << std::endl;
 		}
-		std::cout << "CA size: " << currentAnimation->getSize() << std::endl;
 		playAnimation();
 		update(frameTime);
 	}
