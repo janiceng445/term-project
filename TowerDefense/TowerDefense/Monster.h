@@ -10,7 +10,7 @@
 
 class Monster
 {
-protected:
+	protected:
 	// Attributes
 	int AD;
 	int HP;
@@ -57,7 +57,7 @@ protected:
 	sf::Clock frameClock;
 	Score* score;
 
-public:
+	public:
 	Monster();
 	Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP, Score* score);
 

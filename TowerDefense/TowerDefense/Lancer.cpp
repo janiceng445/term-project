@@ -4,7 +4,7 @@ Lancer::Lancer()
 {
 }
 
-Lancer::Lancer(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP, Score* score) : Monster(win, aniPack, AD, HP, score) {
+Lancer::Lancer(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP) : Monster(win, aniPack, AD, HP) {
 	special = true;
 	usingSpecial = false;
 	detectionRadius = this->spriteWidth * 2;
