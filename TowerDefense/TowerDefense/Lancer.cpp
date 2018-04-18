@@ -15,7 +15,7 @@ Lancer::Lancer(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, in
 
 // Override Monster run
 void Lancer::run() {
-	//std::cout << "Testing" << std::endl;
+	/*//std::cout << "Testing" << std::endl;
 	if (!stopRunning) {
 		sf::Time frameTime = this->frameClock.restart();
 		if (isAttacking && isAlive) {
@@ -52,7 +52,7 @@ void Lancer::run() {
 		//detectionRadius();
 
 
-	}
+	}*/
 	if (isPermaDead) {
 		decay_timer--;
 		if (decay_timer == 0) {

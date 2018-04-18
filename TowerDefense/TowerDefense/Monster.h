@@ -92,6 +92,8 @@ public:
 	bool isDead();
 	
 	// Other
+	void Test();
+	void getDMG();
 
 	~Monster();
 };
