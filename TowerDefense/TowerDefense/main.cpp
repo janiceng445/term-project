@@ -223,7 +223,7 @@ int main()
 		name.push_back("Rhino");
 		name.push_back("Lancer");
 
-		// Skelly Spawner
+		// Spawners
 		unsigned int skellyMax = 5;
 		unsigned int skelly_DMG = 10;
 		unsigned int skelly_HP = 100;
@@ -232,15 +232,15 @@ int main()
 		unsigned int rhino_DMG = 12;
 		unsigned int rhino_HP = 125;
 
-		unsigned int lancerMax = 6;
+		unsigned int lancerMax = 0;
 		unsigned int lancer_DMG = 25;
 		unsigned int lancer_HP = 250;
 
 		unsigned int boundary = 450;
 		// Parameters: maximum spawns, clock, spawn timer, wave vector, window, animation vector, dmg, hp, boundary, target's hp
-		//runSpawners(skellyMax, &clock_Skelly, SKELLY_SPWN_TIMER, &wave, &window, skellyAni, skelly_DMG, skelly_HP, boundary, &targetHP, name[0], &gameScore);
+		runSpawners(skellyMax, &clock_Skelly, SKELLY_SPWN_TIMER, &wave, &window, skellyAni, skelly_DMG, skelly_HP, boundary, &targetHP, name[0], &gameScore);
 		//runSpawners(rhinoMax, &clock_Rhino, RHINO_SPWN_TIMER, &wave, &window, rhinoAni, rhino_DMG, rhino_HP, boundary, &targetHP, name[1], &gameScore);
-		runSpawners(lancerMax, &clock_Lancer, LANCER_SPWN_TIMER, &wave, &window, lancerAni, lancer_DMG, lancer_HP, boundary, &targetHP, name[2], &gameScore);
+		//runSpawners(lancerMax, &clock_Lancer, LANCER_SPWN_TIMER, &wave, &window, lancerAni, lancer_DMG, lancer_HP, boundary, &targetHP, name[2], &gameScore);
 
 		// Targets and health
 		/*if (targets[0] <= 0) {
@@ -352,11 +352,11 @@ void setSpriteAnimations(std::vector<Animation>* ani, sf::Texture* texture, char
 	if (size == 'm' || size == 'l') {
 		Animation special;
 		special.setSpriteSheet(*texture);
-		special.addFrame(sf::IntRect(0, size_y * 2, size_x, size_y));
-		special.addFrame(sf::IntRect(size_x, size_y * 2, size_x, size_y));
-		special.addFrame(sf::IntRect(size_x * 2, size_y * 2, size_x, size_y));
-		special.addFrame(sf::IntRect(size_x * 3, size_y * 2, size_x, size_y));
-		special.addFrame(sf::IntRect(size_x * 4, size_y * 2, size_x, size_y));
+		special.addFrame(sf::IntRect(0, size_y * 3, size_x, size_y));
+		special.addFrame(sf::IntRect(size_x, size_y * 3, size_x, size_y));
+		special.addFrame(sf::IntRect(size_x * 2, size_y * 3, size_x, size_y));
+		special.addFrame(sf::IntRect(size_x * 3, size_y * 3, size_x, size_y));
+		special.addFrame(sf::IntRect(size_x * 4, size_y * 3, size_x, size_y));
 		ani->push_back(special);
 	}
 }

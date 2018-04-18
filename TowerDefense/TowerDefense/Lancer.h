@@ -16,6 +16,7 @@ public:
 	void useSpecialAbility();
 	bool detectRadius();
 	void drawDetectionBubble();
+	//virtual sf::FloatRect getSpriteGlobalBounds();
 
 	bool checkIfSpecial();
 	~Lancer();
