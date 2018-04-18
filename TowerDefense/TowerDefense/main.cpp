@@ -234,7 +234,7 @@ int main()
 		// Parameters: maximum spawns, clock, spawn timer, wave vector, window, animation vector, dmg, hp, boundary, target's hp
 		runSpawners(skellyMax, &clock_Skelly, SKELLY_SPWN_TIMER, &wave, &window, &skellyAni, skelly_DMG, skelly_HP, boundary, &targetHP);
 		runSpawners(rhinoMax, &clock_Rhino, RHINO_SPWN_TIMER, &wave, &window, &rhinoAni, rhino_DMG, rhino_HP, boundary, &targetHP);
-		runSpawners(lancerMax, &clock_Lancer, LANCER_SPWN_TIMER, &wave, &window, &lancerAni, 25, 250, boundary, &targetHP);
+		runSpawners(lancerMax, &clock_Lancer, LANCER_SPWN_TIMER, &wave, &window, &lancerAni, lancer_DMG, lancer_HP, boundary, &targetHP);
 
 		// Targets and health
 		/*if (targets[0] <= 0) {
