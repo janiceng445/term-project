@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////
 
 #include "AnimatedSprite.hpp"
+#include <iostream>
 
 AnimatedSprite::AnimatedSprite(sf::Time frameTime, bool paused, bool looped) :
 	m_animation(NULL), m_frameTime(frameTime), m_currentFrame(0), m_isPaused(paused), m_isLooped(looped), m_texture(NULL)
@@ -50,8 +51,9 @@ void AnimatedSprite::play()
 
 void AnimatedSprite::play(const Animation& animation)
 {
-	if (getAnimation() != &animation)
+	if (getAnimation() != &animation) {
 		setAnimation(animation);
+	}
 	play();
 }
 
@@ -127,18 +129,17 @@ void AnimatedSprite::setFrame(std::size_t newFrame, bool resetTime)
 	if (m_animation)
 	{
 		//calculate new vertex positions and texture coordiantes
+		
 		sf::IntRect rect = m_animation->getFrame(newFrame);
 
 		m_vertices[0].position = sf::Vector2f(0.f, 0.f);
 		m_vertices[1].position = sf::Vector2f(0.f, static_cast<float>(rect.height));
 		m_vertices[2].position = sf::Vector2f(static_cast<float>(rect.width), static_cast<float>(rect.height));
 		m_vertices[3].position = sf::Vector2f(static_cast<float>(rect.width), 0.f);
-
 		float left = static_cast<float>(rect.left) + 0.0001f;
 		float right = left + static_cast<float>(rect.width);
 		float top = static_cast<float>(rect.top);
 		float bottom = top + static_cast<float>(rect.height);
-		
 		m_vertices[0].texCoords = sf::Vector2f(left, top);
 		m_vertices[1].texCoords = sf::Vector2f(left, bottom);
 		m_vertices[2].texCoords = sf::Vector2f(right, bottom);
@@ -165,13 +166,15 @@ void AnimatedSprite::update(sf::Time deltaTime)
 			m_currentTime = sf::microseconds(m_currentTime.asMicroseconds() % m_frameTime.asMicroseconds());
 
 			// get next Frame index
-			if (m_currentFrame + 1 < m_animation->getSize())
+
+			if (m_currentFrame + 1 < m_animation->getSize()) {
 				m_currentFrame++;
+
+			}
 			else
 			{
 				// animation has ended
 				m_currentFrame = 0; // reset to start
-
 				if (!m_isLooped)
 				{
 					m_isPaused = true;
