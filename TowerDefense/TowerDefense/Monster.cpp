@@ -66,6 +66,7 @@ void Monster::changeCurrentAnimation(int n) {
 }
 // Runs the timers
 void Monster::run() {
+	
 	if (!stopRunning) {
 		sf::Time frameTime = this->frameClock.restart();
 		if (isAttacking && isAlive) {

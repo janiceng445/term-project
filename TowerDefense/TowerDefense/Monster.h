@@ -65,7 +65,7 @@ public:
 	void setCurrentAnimation();
 	void changeCurrentAnimation(int n);
 	void draw();
-	void virtual run();
+	virtual void run();
 
 	// Healthbar
 	void addHealthBar();
@@ -85,7 +85,7 @@ public:
 	// Behavior
 	void setTarget(int x, int* targetedHealth);
 	void attack();
-	void virtual useSpecialAbility();
+	virtual void  useSpecialAbility();
 	void takeDamage(int dmg);
 	void die();
 	bool isAliveFunc();
