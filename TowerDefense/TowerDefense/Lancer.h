@@ -3,21 +3,16 @@
 
 class Lancer : public Monster
 {
-private:
+	private:
 	bool usingSpecial;
-	int detectionRadius;
-	sf::CircleShape detectbubble;
-
-public:
+	public:
 	Lancer();
 	Lancer(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP, Score* score);
 
-	virtual void run();
+	void run() override;
 	void useSpecialAbility();
-	bool detectRadius();
-	void drawDetectionBubble();
+
 
 	bool checkIfSpecial();
 	~Lancer();
 };
-
