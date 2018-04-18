@@ -27,7 +27,7 @@ void Lancer::run() {
 				isPermaDead = true;
 			}
 		}
-		else if (special) {
+		else if (usingSpecial) {
 			if (aniSprite.getCurrentFrame() == 4) {
 				currentFrame = 0;
 			}

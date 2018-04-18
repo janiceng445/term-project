@@ -78,7 +78,7 @@ int main()
 
 	//////////////////////////////// Wave of enemies /////////////////////////////////
 	int waveRound = 0;
-	std::vector<Monster> wave;
+	std::vector<Monster*> wave;
 
 	//////////////////////////////// Scoreboard ////////////////////////////////
 	Score gameScore;
@@ -217,7 +217,12 @@ int main()
 
 		///////////////////////////////////////////// Janice /////////////////////////////////////////////
 
-		// Skelly Spawner
+		std::vector<std::string> name;
+		name.push_back("Skelly");
+		name.push_back("Rhino");
+		name.push_back("Lancer");
+
+		// Spawner
 		unsigned int skellyMax = 3;
 		unsigned int skelly_DMG = 10;
 		unsigned int skelly_HP = 100;
@@ -232,9 +237,9 @@ int main()
 
 		unsigned int boundary = 450;
 		// Parameters: maximum spawns, clock, spawn timer, wave vector, window, animation vector, dmg, hp, boundary, target's hp
-		runSpawners(skellyMax, &clock_Skelly, SKELLY_SPWN_TIMER, &wave, &window, &skellyAni, skelly_DMG, skelly_HP, boundary, &targetHP);
-		runSpawners(rhinoMax, &clock_Rhino, RHINO_SPWN_TIMER, &wave, &window, &rhinoAni, rhino_DMG, rhino_HP, boundary, &targetHP);
-		runSpawners(lancerMax, &clock_Lancer, LANCER_SPWN_TIMER, &wave, &window, &lancerAni, lancer_DMG, lancer_HP, boundary, &targetHP);
+		runSpawners(skellyMax, &clock_Skelly, SKELLY_SPWN_TIMER, &wave, &window, &skellyAni, skelly_DMG, skelly_HP, boundary, &targetHP, name.at(0));
+		runSpawners(rhinoMax, &clock_Rhino, RHINO_SPWN_TIMER, &wave, &window, &rhinoAni, rhino_DMG, rhino_HP, boundary, &targetHP, name.at(1));
+		runSpawners(lancerMax, &clock_Lancer, LANCER_SPWN_TIMER, &wave, &window, &lancerAni, lancer_DMG, lancer_HP, boundary, &targetHP, name.at(2));
 
 		// Targets and health
 		/*if (targets[0] <= 0) {
@@ -262,9 +267,9 @@ int main()
 		}*/
 		///////////////////////////////////////////////////////////////////////
 		for (unsigned int i = 0; i < wave.size(); i++) {
-			wave[i].run();
-			wave[i].draw();
-			wave[i].attackMove();
+			wave[i]->run();
+			wave[i]->draw();
+			wave[i]->attackMove();
 		}
 
 
@@ -345,22 +350,29 @@ void setSpriteAnimations(std::vector<Animation>* ani, sf::Texture* texture, char
 	if (size == 'm' || size == 'l') {
 		Animation special;
 		special.setSpriteSheet(*texture);
-		special.addFrame(sf::IntRect(0, size_y * 2, size_x, size_y));
-		special.addFrame(sf::IntRect(size_x, size_y * 2, size_x, size_y));
-		special.addFrame(sf::IntRect(size_x * 2, size_y * 2, size_x, size_y));
-		special.addFrame(sf::IntRect(size_x * 3, size_y * 2, size_x, size_y));
-		special.addFrame(sf::IntRect(size_x * 4, size_y * 2, size_x, size_y));
+		special.addFrame(sf::IntRect(0, size_y * 3, size_x, size_y));
+		special.addFrame(sf::IntRect(size_x, size_y * 3, size_x, size_y));
+		special.addFrame(sf::IntRect(size_x * 2, size_y * 3, size_x, size_y));
+		special.addFrame(sf::IntRect(size_x * 3, size_y * 3, size_x, size_y));
+		special.addFrame(sf::IntRect(size_x * 4, size_y * 3, size_x, size_y));
 		ani->push_back(special);
 	}
 }
 
-void runSpawners(int maxSpawn, sf::Clock* clock, int spwn_timer, std::vector<Monster>* wave, sf::RenderWindow* win, std::vector<Animation>* ani, int dmg, int hp, int boundary, int* targetHP) {
+void runSpawners(int maxSpawn, sf::Clock* clock, int spwn_timer, std::vector<Monster*>* wave, sf::RenderWindow* win, std::vector<Animation>* ani, int dmg, int hp, int boundary, int* targetHP, std::string name) {
 	int r = (rand() % 6) - 3;
 
 	if (clock->getElapsedTime().asSeconds() > spwn_timer + r && wave->size() <= maxSpawn) {
-		Monster spawn(win, *ani, dmg, hp);
-		spawn.setTarget(boundary, *&targetHP);
-		wave->push_back(spawn);
+		if (name == "Lancer") {
+			Lancer* spawn = new Lancer(win, *ani, dmg, hp);
+			spawn->setTarget(boundary, *&targetHP);
+			wave->push_back(spawn);
+		}
+		else {
+			Monster* spawn = new Monster(win, *ani, dmg, hp);
+			spawn->setTarget(boundary, *&targetHP);
+			wave->push_back(spawn);
+		}
 		clock->restart();
 	}
 }
