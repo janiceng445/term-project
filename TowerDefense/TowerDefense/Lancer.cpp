@@ -1,21 +1,17 @@
 #include "Lancer.h"
+#include "Score.h"
 
 Lancer::Lancer()
 {
 }
 
-Lancer::Lancer(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP) : Monster(win, aniPack, AD, HP) {
+Lancer::Lancer(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP, Score* score) : Monster(win, aniPack, AD, HP, score) {
 	special = true;
 	usingSpecial = false;
-	detectionRadius = this->spriteWidth * 3;
-	detectbubble.setRadius(detectionRadius);
-	detectbubble.setOutlineColor(sf::Color::Blue);
-	detectbubble.setOutlineThickness(1);
 }
 
 // Override Monster run
 void Lancer::run() {
-	//std::cout << "Testing" << std::endl;
 	if (!stopRunning) {
 		sf::Time frameTime = this->frameClock.restart();
 		if (isAttacking && isAlive) {
@@ -43,13 +39,12 @@ void Lancer::run() {
 		}
 		else {
 			changeCurrentAnimation(0);
-			drawDetectionBubble();
 		}
 		playAnimation();
 		update(frameTime);
 
 		// Check if condition met for special ability
-		//detectionRadius();
+
 
 
 	}
@@ -62,12 +57,6 @@ void Lancer::run() {
 	}
 }
 
-// Draws the detection bubble
-void Lancer::drawDetectionBubble() {
-	window->draw(detectbubble);
-}
-
-
 // Special Ability customization
 void Lancer::useSpecialAbility() {
 
@@ -77,12 +66,6 @@ void Lancer::useSpecialAbility() {
 bool Lancer::checkIfSpecial() {
 	return special;
 }
-
-// Detect radius
-bool Lancer::detectRadius() {
-	return false;
-}
-
 
 
 Lancer::~Lancer()
