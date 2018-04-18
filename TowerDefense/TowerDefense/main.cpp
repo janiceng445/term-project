@@ -57,10 +57,10 @@ int main()
 
 	////////////////////////////// Create window //////////////////////////////
 	sf::Vector2f dimensions;
-	dimensions.x = sf::VideoMode::getDesktopMode().width;
-	dimensions.y = sf::VideoMode::getDesktopMode().height;
-
-	sf::RenderWindow window(sf::VideoMode(dimensions.x, dimensions.y), "Defend the Joe!", sf::Style::Fullscreen);
+	dimensions.x = background.getSize().x;
+	dimensions.y = background.getSize().y;
+	sf::RenderWindow window(sf::VideoMode(1080, 720), "Defend the Joe!");
+	//sf::RenderWindow window(sf::VideoMode(dimensions.x, dimensions.y), "Defend the Joe!", sf::Style::Fullscreen);
 		
 	////////////////////////////// Temporary Placement ///////////////////////////////
 	float targetHealth = 200;
