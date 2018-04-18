@@ -237,9 +237,9 @@ int main()
 
 		unsigned int boundary = 450;
 		// Parameters: maximum spawns, clock, spawn timer, wave vector, window, animation vector, dmg, hp, boundary, target's hp
-		runSpawners(skellyMax, &clock_Skelly, SKELLY_SPWN_TIMER, &wave, &window, &skellyAni, skelly_DMG, skelly_HP, boundary, &targetHP, name.at(0));
-		runSpawners(rhinoMax, &clock_Rhino, RHINO_SPWN_TIMER, &wave, &window, &rhinoAni, rhino_DMG, rhino_HP, boundary, &targetHP, name.at(1));
-		runSpawners(lancerMax, &clock_Lancer, LANCER_SPWN_TIMER, &wave, &window, &lancerAni, lancer_DMG, lancer_HP, boundary, &targetHP, name.at(2));
+		runSpawners(skellyMax, &clock_Skelly, SKELLY_SPWN_TIMER, &wave, &window, &skellyAni, skelly_DMG, skelly_HP, boundary, &targetHP, name.at(0), &gameScore);
+		runSpawners(rhinoMax, &clock_Rhino, RHINO_SPWN_TIMER, &wave, &window, &rhinoAni, rhino_DMG, rhino_HP, boundary, &targetHP, name.at(1), &gameScore);
+		runSpawners(lancerMax, &clock_Lancer, LANCER_SPWN_TIMER, &wave, &window, &lancerAni, lancer_DMG, lancer_HP, boundary, &targetHP, name.at(2), &gameScore);
 
 		// Targets and health
 		/*if (targets[0] <= 0) {
@@ -359,17 +359,17 @@ void setSpriteAnimations(std::vector<Animation>* ani, sf::Texture* texture, char
 	}
 }
 
-void runSpawners(int maxSpawn, sf::Clock* clock, int spwn_timer, std::vector<Monster*>* wave, sf::RenderWindow* win, std::vector<Animation>* ani, int dmg, int hp, int boundary, int* targetHP, std::string name) {
+void runSpawners(int maxSpawn, sf::Clock* clock, int spwn_timer, std::vector<Monster*>* wave, sf::RenderWindow* win, std::vector<Animation>* ani, int dmg, int hp, int boundary, int* targetHP, std::string name, Score* score) {
 	int r = (rand() % 6) - 3;
 
 	if (clock->getElapsedTime().asSeconds() > spwn_timer + r && wave->size() <= maxSpawn) {
 		if (name == "Lancer") {
-			Lancer* spawn = new Lancer(win, *ani, dmg, hp);
+			Lancer* spawn = new Lancer(win, *ani, dmg, hp, score);
 			spawn->setTarget(boundary, *&targetHP);
 			wave->push_back(spawn);
 		}
 		else {
-			Monster* spawn = new Monster(win, *ani, dmg, hp);
+			Monster* spawn = new Monster(win, *ani, dmg, hp, score);
 			spawn->setTarget(boundary, *&targetHP);
 			wave->push_back(spawn);
 		}

@@ -1,7 +1,7 @@
 #include "Monster.h"
 
 Monster::Monster() {}
-Monster::Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP)
+Monster::Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP, Score* score)
 {
 	if (type == 1) size = 98;
 	
@@ -44,6 +44,7 @@ Monster::Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, 
 	// Others
 	this->window = win;
 	this->targetedHealth = 0;
+	this->score = score;
 }
 
 /////////////////////////////////////////// Animation ///////////////////////////////////////////
@@ -216,6 +217,7 @@ void Monster::takeDamage(int dmg) {
 // Dies
 void Monster::die() {
 	this->isAlive = false;
+	score->add(100);
 }
 // Gets isAlive value
 bool Monster::isAliveFunc() {

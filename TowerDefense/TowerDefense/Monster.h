@@ -5,6 +5,7 @@
 #include <vector>
 #include "Animation.hpp"
 #include "AnimatedSprite.hpp"
+#include "Score.h"
 #include <cstdlib>
 
 class Monster
@@ -54,10 +55,11 @@ protected:
 	int currentFrame;
 	sf::Clock clock;
 	sf::Clock frameClock;
+	Score* score;
 
 public:
 	Monster();
-	Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP);
+	Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP, Score* score);
 	
 	// Animation
 	void playAnimation();
