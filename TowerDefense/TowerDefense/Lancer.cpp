@@ -7,10 +7,8 @@ Lancer::Lancer()
 Lancer::Lancer(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP) : Monster(win, aniPack, AD, HP) {
 	special = true;
 	usingSpecial = false;
-	detectionRadius = this->spriteWidth * 2;
+	detectionRadius = this->spriteWidth * 3;
 	detectbubble.setRadius(detectionRadius);
-	detectbubble.setOrigin(detectbubble.getGlobalBounds().width / 2, detectbubble.getGlobalBounds().height / 2);
-	detectbubble.setFillColor(sf::Color(124, 183, 255, 100));
 	detectbubble.setOutlineColor(sf::Color::Blue);
 	detectbubble.setOutlineThickness(1);
 }
@@ -33,7 +31,7 @@ void Lancer::run() {
 				isPermaDead = true;
 			}
 		}
-		else if (isAlive && usingSpecial) {
+		else if (usingSpecial) {
 			if (aniSprite.getCurrentFrame() == 4) {
 				currentFrame = 0;
 			}
@@ -65,10 +63,6 @@ void Lancer::run() {
 
 // Draws the detection bubble
 void Lancer::drawDetectionBubble() {
-	sf::Vector2f position;
-	position.x = x + (spriteWidth / 2);
-	position.y = y + (spriteHeight / 2);
-	detectbubble.setPosition(position);
 	window->draw(detectbubble);
 }
 
@@ -88,12 +82,7 @@ bool Lancer::detectRadius() {
 	return false;
 }
 
-/*sf::FloatRect Lancer::getSpriteGlobalBounds() {
-	if (usingSpecial) {
-		//return detectbubble.getGlobalBounds();
-	}
-	return aniSprite.getGlobalBounds();
-}*/
+
 
 Lancer::~Lancer()
 {
