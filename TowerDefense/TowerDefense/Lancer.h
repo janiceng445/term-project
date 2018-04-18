@@ -3,11 +3,11 @@
 
 class Lancer : public Monster
 {
-	private:
+private:
 	bool usingSpecial;
-	public:
+public:
 	Lancer();
-	Lancer(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP, Score* score);
+	Lancer(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP);
 
 	void run() override;
 	void useSpecialAbility();
@@ -16,3 +16,4 @@ class Lancer : public Monster
 	bool checkIfSpecial();
 	~Lancer();
 };
+
