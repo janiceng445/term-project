@@ -18,7 +18,7 @@ Monster::Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, 
 
 	// Location Default
 	this->x = -25;
-	this->y = 375 + (float) r;
+	this->y = 0.84 * win->getSize().y + (float) r + 5;
 
 	// Animation
 	this->stopRunning = false;
@@ -166,7 +166,7 @@ void Monster::attackMove() {
 	// Move
 	if (this->isAlive) {
 		if (this->x < this->stoppingPoint) {
-			this->aniSprite.move(0.05f, 0);
+			this->aniSprite.move(0.1f, 0);
 		}
 		if (this->x > this->stoppingPoint - 10 && this->aniSprite.getCurrentFrame() == 3) {
 			attack();

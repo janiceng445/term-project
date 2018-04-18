@@ -10,9 +10,9 @@ private:
 	float maxVel = 1.f;
 
 public:
-	Projectile(sf::Sprite sprite);
+	Projectile(float radius);
 	sf::Vector2f vel;
-	sf::Sprite bullet;
+	sf::CircleShape bullet;
 	void setVel(sf::Vector2f input);
 	sf::Vector2f getVel();
 	float getMaxVel();

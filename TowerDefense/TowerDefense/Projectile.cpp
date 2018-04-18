@@ -1,8 +1,9 @@
 #include <SFML\Graphics.hpp>
 #include "Projectile.h"
 
-Projectile::Projectile(sf::Sprite sprite) {
-	bullet = sprite;
+Projectile::Projectile(float radius) {
+	bullet.setRadius(radius);
+	bullet.setFillColor(sf::Color::Black);
 }
 
 void Projectile::setVel(sf::Vector2f input) {
