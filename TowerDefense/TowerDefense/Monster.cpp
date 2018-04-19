@@ -233,6 +233,20 @@ bool Monster::isDead() {
 
 /////////////////////////////////////////// Other ///////////////////////////////////////////
 
+AnimatedSprite Monster::getSprite() 
+{
+	return this->aniSprite;
+}
+
+bool Monster::amIAttacking() 
+{
+	return this->isAttacking;
+}
+
+int Monster::getDmg() 
+{
+	return this->AD;
+}
 
 Monster::~Monster()
 {

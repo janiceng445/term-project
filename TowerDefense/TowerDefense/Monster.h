@@ -91,6 +91,8 @@ public:
 	bool isDead();
 	
 	// Other
-
+	AnimatedSprite getSprite();
+	bool amIAttacking();
+	int getDmg();
 	~Monster();
 };

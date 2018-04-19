@@ -12,6 +12,7 @@
 #include "Timer.h"
 #include "Projectile.h"
 #include "Lancer.h"
+#include "Tower.h"
 
 const double PI = 3.141592653589793238463;
 float SKELLY_SPWN_TIMER = 5.0f;
@@ -72,7 +73,8 @@ int main()
 	int size_s_x = 40;
 	int size_s_y = 49;
 	int size_m_x = 60;
-	int size_m_y = 74;
+	int size_m_y =
+		74;
 
 
 	sf::Texture skelly_texture;
@@ -211,12 +213,65 @@ int main()
 	int timer = fireTimer;
 	bool shot = false;
 
-	///////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////// Towers //////////////////////////////////////////
+	
+	//Clocks
+	sf::Clock barbedTimer;
+	sf::Clock shootyTimer;
+	sf::Clock enemyAtkTimer;
+	
+	sf::Texture basicTowerTx;
+	sf::Texture shootyTowerTx;
+	sf::Texture barbedWireTx;
+	
+	if (!basicTowerTx.loadFromFile("images/Towers/NewBasicTower.png"))
+	{
+		std::cout << "Basic tower could not be loaded. Check filepath" << std::endl;
+	}
+	if (!shootyTowerTx.loadFromFile("images/Towers/ShootyTower.png"))
+	{
+		std::cout << "Shooty tower could not be loaded. Check filepath" << std::endl;
+	}
+	if (!barbedWireTx.loadFromFile("images/Towers/NewBarbedWire.png"))
+	{
+		std::cout << "Barbed Wire could not be loaded. Check filepath" << std::endl;
+	}
+	
+	sf::Sprite basicTowerSpr;
+	sf::Sprite shootyTowerSpr;
+	sf::Sprite barbedWireSpr;
+	
+	basicTowerSpr.setTexture(basicTowerTx);
+	shootyTowerSpr.setTexture(shootyTowerTx);
+	barbedWireSpr.setTexture(barbedWireTx);
 
+	//initializing tower objects
+	Tower basicTower(&window, 75, 0, basicTowerSpr, 215.0, 275.0);				//a simple barricade
+	Tower shootyTower(&window, 100, 20, shootyTowerSpr, 400.0, 200.0);			//shoots the enemies
+	Tower barbedWire(&window, 100, 20, barbedWireSpr, 150, 300);				//deals damage to enemies who are walking through it
+
+
+
+	////// Handling Tower Projectiles//////////
+
+	
+	std::vector<Projectile> towerProjectiles;
+	
+	sf::Vector2f towerOrigin;
+	sf::Vector2f enemyPosition;
+	sf::Vector2f towerAimDirection;
+	sf::Vector2f towerAimDirNorm;
+
+	Projectile p2(bulletSprite);
+
+	
+
+	int testcounter = 0;
+	///////////////////////////////////////////////////////////////////////////////////
 	while (window.isOpen())
 	{
 		sf::Event event;
-
+		testcounter++;
 		///////////////////////////////////////////// Gerard /////////////////////////////////////////////
 		sf::Sprite background(background);
 		sf::Sprite joeSprite;
@@ -345,6 +400,125 @@ int main()
 
 
 		//////////////////////////////////////////////////////////////////////////////////////////////////
+
+		///////////////////////////////////////////// Ricky //////////////////////////////////////////////
+
+		//if the tower is alive, it draws it and then sets the enemies to target it
+		if (basicTower.amIAlive() == true)
+		{
+			for (int i = 0; i < wave.size(); i++)
+			{
+				wave.at(i).setTarget(basicTower.getXPosition(), &targetHP);
+			}
+			basicTower.draw();
+		}
+		else
+		{
+			//if the tower is dead, it resets the enemies' target to what it was before
+			for (int i = 0; i < wave.size(); i++)
+			{
+				wave.at(i).setTarget(475, &targetHP);
+			}
+		}
+
+		for (int i = 0; i < wave.size(); i++)
+		{
+			//checks to see if the enemy is attacking. The clock keeps the attack from having every game tick
+			if (wave.at(i).amIAttacking() == true && enemyAtkTimer.getElapsedTime().asSeconds() > 0.5f)
+			{
+				basicTower.takeDamage(wave.at(i).getDmg());
+				enemyAtkTimer.restart();
+			}
+			if (basicTower.getHealth() == 0)
+			{
+				basicTower.die();
+			}
+
+			if (wave.at(i).isAliveFunc() == true)
+			{
+				//checks to see if any enemies should take damage from the barbed wire
+				if (wave.at(i).getSpriteGlobalBounds().intersects(barbedWire.getSpriteGlobalBounds()))
+				{
+					if (barbedTimer.getElapsedTime().asSeconds() > 0.5f)
+					{
+						wave.at(i).takeDamage(10);
+						barbedTimer.restart();
+					}
+				}
+			}
+			
+		}
+
+		
+		shootyTower.draw();
+		barbedWire.draw();
+
+		int enemyCounter = 0;
+
+		if (!wave.empty())
+		{
+			while (enemyCounter < wave.size() && wave.at(enemyCounter).isAliveFunc() == false)
+			{
+				enemyCounter++;
+			}
+			if (enemyCounter < wave.size())
+			{
+				towerOrigin = shootyTower.getSprite().getPosition();
+				enemyPosition = sf::Vector2f(wave.at(enemyCounter).getSprite().getPosition());
+				towerAimDirection = enemyPosition - towerOrigin;
+				towerAimDirNorm = towerAimDirection / sqrt(pow(towerAimDirection.x, 2) + pow(towerAimDirection.y, 2));
+			}
+			if (shootyTimer.getElapsedTime().asSeconds() > 1.0f)
+			{
+				if (timer == fireTimer)
+				{
+					shot = true;
+					p2.bullet.setPosition(towerOrigin);
+
+					p2.bullet.setRotation((180.0 / PI) * atan2(248 - sf::Mouse::getPosition(window).y, 550 - sf::Mouse::getPosition(window).x) - 90);
+					p2.vel = (towerAimDirNorm * p2.getMaxVel());
+					towerProjectiles.push_back(Projectile(p2));
+				}
+				shootyTimer.restart();
+			}
+			if (shot == true)
+			{
+				timer--;
+				if (timer == 0)
+				{
+					shot = false;
+					timer = fireTimer;
+				}
+			}
+			if (!towerProjectiles.empty())
+			{
+				for (unsigned int i = 0; i < towerProjectiles.size(); i++)
+				{
+					towerProjectiles[i].bullet.move(towerProjectiles[i].vel);
+					//std::cout << currentProj[i].bullet.getPosition().x << ", " << currentProj[i].bullet.getPosition().y << std::endl;
+					window.draw(towerProjectiles[i].bullet);
+
+					// Checks collision with enemies from the bullet scope
+					if (towerProjectiles[i].checkCollision(&wave))
+					{
+						towerProjectiles.erase(towerProjectiles.begin() + i);
+					}
+
+					// Ends the loop if the bullet vector is empty and reading attempt is made to see next element in empty vector
+					if (towerProjectiles.empty())
+					{
+						break;
+					}
+					// Deletes the bullet if it goes off screen
+					if (towerProjectiles[i].bullet.getPosition().x < 0 || towerProjectiles[i].bullet.getPosition().x > screenDimensions.x
+						|| towerProjectiles[i].bullet.getPosition().y < 0 || towerProjectiles[i].bullet.getPosition().y > screenDimensions.y)
+					{
+						towerProjectiles.erase(towerProjectiles.begin() + i);
+					}
+				}
+			}
+		}
+		///////////////////////////////////////////////////////////////////////////////////////////////////
 
 		window.display();
 
