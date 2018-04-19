@@ -20,6 +20,8 @@ const double PI = 3.141592653589793238463;
 const float SKELLY_SPWN_TIMER = 5.0f;
 const float RHINO_SPWN_TIMER = 8.0f;
 const float LANCER_SPWN_TIMER = 10.0f;
+//Caleb Demon Tests
+const float DEMON_SPWN_TIMER = 10.0f;
 const int fireTimer = 300;
 
 // Spawner
@@ -34,6 +36,11 @@ unsigned int rhino_HP = 75;
 int lancerMax = 4;
 unsigned int lancer_DMG = 25;
 unsigned int lancer_HP = 250;
+
+//Caleb Demon Tests
+int demonMax = 4;
+unsigned int demon_DMG = 25;
+unsigned int demon_HP = 175;
 
 unsigned int boundary = 450;
 

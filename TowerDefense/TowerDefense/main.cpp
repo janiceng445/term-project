@@ -46,6 +46,13 @@ int main()
 		return -1;
 	}
 
+	//////////////////////////////Caleb Demon Tests/////////////////////////////
+	sf::Texture demon_texture;
+	if (!demon_texture.loadFromFile("images/enemies/demon.png")) {
+		std::cerr << "demon_spriteSheet failed" << std::endl;
+		return -1;
+	}
+
 	////////////////////////////// Add animations //////////////////////////////
 
 	std::vector<Animation> skellyAni;
@@ -54,6 +61,11 @@ int main()
 	setSpriteAnimations(&rhinoAni, &rhino_texture, 's', "Rhino");
 	std::vector<Animation> lancerAni;
 	setSpriteAnimations(&lancerAni, &lancer_texture, 'm', "Lancer");
+	
+	//////////////////////////////Caleb Demon Tests/////////////////////////////
+	std::vector<Animation> demonAni;
+	setSpriteAnimations(&demonAni, &demon_texture, 'd', "Demon");
+
 
 	////////////////////////////// Create window //////////////////////////////
 	sf::Vector2f dimensions;
@@ -71,6 +83,8 @@ int main()
 	sf::Clock clock_Skelly;
 	sf::Clock clock_Rhino;
 	sf::Clock clock_Lancer;
+	//Demon Clock Test
+	sf::Clock clock_Demon;
 	sf::Clock clock;
 
 	//************************ TOWER HITPOINTS ************************//
@@ -221,11 +235,15 @@ int main()
 		name.push_back("Skelly");
 		name.push_back("Rhino");
 		name.push_back("Lancer");
+		//Demon Tests
+		name.push_back("Demon");
 
 		// Parameters: maximum spawns, clock, spawn timer, wave vector, window, animation vector, dmg, hp, boundary, target's hp
 		runSpawners(&skellyMax, &clock_Skelly, SKELLY_SPWN_TIMER, &wave, &window, &skellyAni, skelly_DMG, skelly_HP, boundary, &targetHP, name.at(0), &gameScore);
 		runSpawners(&rhinoMax, &clock_Rhino, RHINO_SPWN_TIMER, &wave, &window, &rhinoAni, rhino_DMG, rhino_HP, boundary, &targetHP, name.at(1), &gameScore);
 		runSpawners(&lancerMax, &clock_Lancer, LANCER_SPWN_TIMER, &wave, &window, &lancerAni, lancer_DMG, lancer_HP, boundary, &targetHP, name.at(2), &gameScore);
+		//Demon Tests
+		runSpawners(&demonMax, &clock_Demon, DEMON_SPWN_TIMER, &wave, &window, &demonAni, demon_DMG, demon_HP, boundary, &targetHP, name.at(3), &gameScore);
 
 		// Targets and health
 		/*if (targets[0] <= 0) {
@@ -298,6 +316,9 @@ void setSpriteAnimations(std::vector<Animation>* ani, sf::Texture* texture, char
 		break;
 	case 'l':
 		break;
+	case 'd':
+		size_x = 68;
+		size_y = 60;
 	}
 
 	Animation idle;
@@ -353,6 +374,15 @@ void runSpawners(int* maxSpawn, sf::Clock* clock, int spwn_timer, std::vector<Mo
 	if (clock->getElapsedTime().asSeconds() > spwn_timer + r && *maxSpawn != 0) {
 		if (name == "Lancer") {
 			Lancer* spawn = new Lancer(win, *ani, dmg, hp, score);
+			spawn->setTarget(boundary, *&targetHP);
+			wave->push_back(spawn);
+		}
+		//Demon Testing
+		else if (name == "Demon")
+		{
+			int ran = rand() % 200 + 1;
+			Monster* spawn = new Monster(win, *ani, dmg, hp, score);
+			spawn->setStartingPosition(-25, (300 + ran));
 			spawn->setTarget(boundary, *&targetHP);
 			wave->push_back(spawn);
 		}
