@@ -20,9 +20,37 @@
 const double PI = 3.141592653589793238463;
 const float SKELLY_SPWN_TIMER = 5.0f;
 const float RHINO_SPWN_TIMER = 8.0f;
-const float LANCER_SPWN_TIMER = 3.0f;
+const float LANCER_SPWN_TIMER = 10.0f;
 const float DEMON_SPWN_TIMER = 7.0f;
 const int fireTimer = 300;
+
+// Spawner
+std::vector<Monster*> wave;
+int skellyMax = 8;
+unsigned int skelly_DMG = 10;
+unsigned int skelly_HP = 100;
+
+int rhinoMax = 0;
+unsigned int rhino_DMG = 15;
+unsigned int rhino_HP = 75;
+
+int lancerMax = 3;
+unsigned int lancer_DMG = 25;
+unsigned int lancer_HP = 250;
+
+int demonMax = 0;
+unsigned int demon_DMG = 25;
+unsigned int demon_HP = 175;
+
+unsigned int boundary = 450;
+
+// Tower Power
+unsigned int barbedWire_HP = 50;
+unsigned int basicTower_HP = 100;
+unsigned int shootyTower_HP = 75;
+unsigned int barbedWire_DMG = 0;
+unsigned int basicTower_DMG = 25;
+unsigned int shootyTower_DMG = 0;
 
 // Declarations
 bool paused = false;
@@ -111,26 +139,6 @@ sf::Vector2f enemyPosition;
 sf::Vector2f towerAimDirection;
 sf::Vector2f towerAimDirNorm;
 int reloaded;
-
-// Spawner
-std::vector<Monster*> wave;
-int skellyMax = 0;
-unsigned int skelly_DMG = 10;
-unsigned int skelly_HP = 100;
-
-int rhinoMax = 0;
-unsigned int rhino_DMG = 15;
-unsigned int rhino_HP = 75;
-
-int lancerMax = 0;
-unsigned int lancer_DMG = 25;
-unsigned int lancer_HP = 250;
-
-int demonMax = 4;
-unsigned int demon_DMG = 25;
-unsigned int demon_HP = 175;
-
-unsigned int boundary = 450;
 
 // Declaring functions
 void setSpriteAnimations(std::vector<Animation>* skellyAni, sf::Texture* skelly_texture, char size, std::string name);

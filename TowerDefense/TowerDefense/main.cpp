@@ -89,9 +89,9 @@ int main()
 	shootyTowerSpr.setTexture(shootyTowerTx);
 	barbedWireSpr.setTexture(barbedWireTx);
 
-	Tower barbedWire(&window, 100, 5, barbedWireSpr, dimensions.x * 0.5, dimensions.y * 0.7);				//deals damage to enemies who are walking through it
-	Tower basicTower(&window, 75, 0, basicTowerSpr, dimensions.x * 0.6, dimensions.y * 0.7);				//a simple barricade
-	Tower shootyTower(&window, 100, 20, shootyTowerSpr, dimensions.x * 0.7, dimensions.y * 0.7);			//shoots the enemies
+	Tower barbedWire(&window, barbedWire_HP, barbedWire_DMG, barbedWireSpr, dimensions.x * 0.5, dimensions.y * 0.7);				//deals damage to enemies who are walking through it
+	Tower basicTower(&window, basicTower_HP, basicTower_DMG, basicTowerSpr, dimensions.x * 0.6, dimensions.y * 0.85);				//a simple barricade
+	Tower shootyTower(&window, shootyTower_HP, shootyTower_DMG, shootyTowerSpr, dimensions.x * 0.7, dimensions.y * 0.7);			//shoots the enemies
 	
 	////////////////////////////// Add animations //////////////////////////////
 
@@ -280,7 +280,7 @@ int main()
 					{
 						if (barbedTimer.getElapsedTime().asSeconds() > 0.5f)
 						{
-							wave.at(i)->takeDamage(10);
+							wave.at(i)->takeDamage(barbedWire_DMG);
 							barbedTimer.restart();
 						}
 					}
@@ -378,7 +378,7 @@ int main()
 		///////////////////////////////////////////// Janice /////////////////////////////////////////////
 
 		//if the tower is alive, it draws it and then sets the enemies to target it
-		if (basicTower.amIAlive() == true) {
+		if (basicTower.amIAlive()) {
 			for (int i = 0; i < wave.size(); i++) {
 				wave.at(i)->setTarget(basicTower.getXPosition() - basicTower.getSpriteGlobalBounds().width / 2, &targetHP);
 			}
@@ -387,7 +387,7 @@ int main()
 		else {
 			//if the tower is dead, it resets the enemies' target to what it was before
 			for (int i = 0; i < wave.size(); i++) {
-				wave.at(i)->setTarget(475, &targetHP);
+				wave.at(i)->setTarget(shootyTower.getXPosition() - shootyTower.getSpriteGlobalBounds().width / 2, &targetHP);
 			}
 		}
 
