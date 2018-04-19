@@ -3,7 +3,7 @@
 
 Projectile::Projectile(float radius) {
 	bullet.setRadius(radius);
-	bullet.setFillColor(sf::Color::Black);
+	bullet.setFillColor(sf::Color(250, 255, 165, 255));
 }
 
 void Projectile::setVel(sf::Vector2f input) {
