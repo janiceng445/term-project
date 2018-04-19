@@ -180,7 +180,10 @@ void Monster::attackMove() {
 }
 // Gets spawn's current location
 sf::Vector2f Monster::getCurrentLocation() {
-	return this->aniSprite.getPosition();
+	sf::Vector2f location;
+	location.x = aniSprite.getPosition().x + (spriteWidth / 2);
+	location.y = aniSprite.getPosition().y + (spriteHeight / 2);
+	return location;
 }
 
 // Gets hitboxes for projectiles to give results

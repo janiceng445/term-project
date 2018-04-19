@@ -80,6 +80,7 @@ int main()
 	int reloaded = 0;
 	int timer = fireTimer;
 	bool shot = false;
+	bool towerShot = false;
 	bool reloading = false;
 
 	//////////////////////////////// Tower Initialization ////////////////////////////////
@@ -171,7 +172,6 @@ int main()
 				ammo.pop_back();
 				if (ammo.empty()) reloading = true;
 				p1.bullet.setPosition(center + sf::Vector2f(19, 4));
-				p1.bullet.setRotation((180.0 / PI) * atan2(248 - sf::Mouse::getPosition(window).y, 550 - sf::Mouse::getPosition(window).x) - 90);
 				p1.vel = (mouseAimDirNorm * p1.getMaxVel());
 				currentProj.push_back(Projectile(p1));
 			}
@@ -289,12 +289,15 @@ int main()
 
 			int enemyCounter = 0;
 
+			// Shoot only when wave is not empty
 			if (!wave.empty())
 			{
+				// Keeps a counter of how many enemies are alive
 				while (enemyCounter < wave.size() && wave.at(enemyCounter)->isAliveFunc() == false)
 				{
 					enemyCounter++;
 				}
+				// Initializes aiming mechanics
 				if (enemyCounter < wave.size())
 				{
 					towerOrigin = shootyTower.getSprite().getPosition();
@@ -302,27 +305,26 @@ int main()
 					towerAimDirection = enemyPosition - towerOrigin;
 					towerAimDirNorm = towerAimDirection / sqrt(pow(towerAimDirection.x, 2) + pow(towerAimDirection.y, 2));
 				}
+				// Timer for shooting
 				if (shootyTimer.getElapsedTime().asSeconds() > 1.0f)
 				{
 					if (timer == fireTimer)
 					{
-						std::cout << "Shooting" << std::endl;
-						shot = true;
+						towerShot = true;
 						p2.bullet.setPosition(towerOrigin);
-
-						p2.bullet.setRotation((180.0 / PI) * atan2(248 - sf::Mouse::getPosition(window).y, 550 - sf::Mouse::getPosition(window).x) - 90);
 						p2.vel = (towerAimDirNorm * p2.getMaxVel());
 						towerProjectiles.push_back(Projectile(p2));
 					}
 					shootyTimer.restart();
 				}
-				if (shot == true)
+				// Resetting the timer and allowing tower to shoot again
+				if (towerShot == true)
 				{
 					timer--;
-					std::cout << "timer: " << timer << std::endl;
-					if (timer == 0)
+					if (timer <= 0)
 					{
-						shot = false;
+						timer = 0;
+						towerShot = false;
 						timer = fireTimer;
 					}
 				}
