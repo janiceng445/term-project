@@ -223,15 +223,15 @@ int main()
 		name.push_back("Lancer");
 
 		// Spawner
-		unsigned int skellyMax = 3;
+		unsigned int skellyMax = 0;
 		unsigned int skelly_DMG = 10;
 		unsigned int skelly_HP = 100;
 
-		unsigned int rhinoMax = 5;
+		unsigned int rhinoMax = 0;
 		unsigned int rhino_DMG = 12;
 		unsigned int rhino_HP = 125;
 
-		unsigned int lancerMax = 6;
+		unsigned int lancerMax = 1;
 		unsigned int lancer_DMG = 25;
 		unsigned int lancer_HP = 250;
 

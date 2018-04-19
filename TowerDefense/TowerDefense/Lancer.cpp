@@ -6,22 +6,42 @@ Lancer::Lancer()
 
 Lancer::Lancer(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP, Score* score) : Monster(win, aniPack, AD, HP, score) {
 	special = true;
-	usingSpecial = true;
+	canSpecial = true;
+	usingSpecial = false;
 
 
 	// Attribute
-	barrierHP = 150;
+	barrierHPMax = 1500;
+	barrierHP = barrierHPMax;
+	radarActivated = true;
 
 	// Barrier animation
-	float radius = spriteWidth * 2;
+	radiusMax = barrierHPMax;
+	radius = barrierHP;
+	radiusRadar = spriteWidth * 5;
 	barrier.setRadius(radius);
-	barrier.setOutlineColor(sf::Color::Blue);
-	barrier.setOutlineThickness(1);
-	barrier.setOrigin(barrier.getGlobalBounds().width / 2, barrier.getGlobalBounds().height / 2);
+	barrierDurationMax = 500;
+	barrierDuration = barrierDurationMax;
+	barrierRecharge = 0;
 }
 
 // Override Monster run
 void Lancer::run() {
+	// Disables usingSpecial for all conditions
+	if (!canSpecial) {
+		usingSpecial = false;
+	}
+	// Recharge barrier
+	if (!canSpecial && barrierHP != barrierHPMax) {
+		barrierRecharge++;
+	}
+	// Barrier fully recharged and restored
+	if (barrierRecharge >= 3000) {
+		canSpecial = true;
+		barrierHP = barrierHPMax;
+		radius = barrierHPMax;
+		barrierRecharge = 0;
+	}
 	if (!stopRunning) {
 		sf::Time frameTime = this->frameClock.restart();
 		if (isAttacking && isAlive) {
@@ -38,30 +58,28 @@ void Lancer::run() {
 				isPermaDead = true;
 			}
 		}
-		else if (isAlive && usingSpecial) {
-
-			useSpecialAbility();
+		else if (isAlive && usingSpecial && barrierHP != 0) {
+			changeCurrentAnimation(3);
+			barrierDuration--;
+			drawBarrier();
 			movementSpeed = 0.02f;
 			animationSpeed = 0.01f;
-
-			if (aniSprite.getCurrentFrame() == 4) {
-				currentFrame = 0;
-			}
-			changeCurrentAnimation(3);
-			if (aniSprite.getCurrentFrame() == 4 && aniSprite.getAnimation()->getFrame(aniSprite.getCurrentFrame()).top == spriteHeight * 3) {
-				
+			if (barrierDuration <= 0) {
+				barrierDuration = barrierDurationMax;
+				usingSpecial = false;
 			}
 		}
 		else {
 			movementSpeed = DEFAULT_MVMT_SPEED;
 			animationSpeed = DEFAULT_ANI_SPEED;
 			changeCurrentAnimation(0);
+			drawRadar();
+
+			// Recharge barrier while not in use and when shield is still alive
+			if(barrierHP != barrierHPMax && canSpecial) barrierHP++;
 		}
 		playAnimation();
 		update(frameTime);
-
-		// Check if condition met for special ability
-
 
 
 	}
@@ -76,7 +94,9 @@ void Lancer::run() {
 
 // Special Ability customization
 void Lancer::useSpecialAbility() {
-	drawBarrier();
+	if (canSpecial) {
+		usingSpecial = true;
+	}
 }
 
 // Checks if it has special ability
@@ -92,22 +112,46 @@ void Lancer::drawBarrier() {
 	position.x = x + spriteWidth / 2;
 	position.y = y + spriteHeight / 2;
 	barrier.setPosition(position);
-
-	// Default color
-	barrier.setFillColor(sf::Color(105, 190, 255, 100));
-
+	// Color
+	barrier.setFillColor(sf::Color(105, 190, 255, 75));
+	// Changing size
+	radius = barrierHP / 10;
+	barrier.setRadius(radius);
+	barrier.setOrigin(barrier.getGlobalBounds().width / 2, barrier.getGlobalBounds().height / 2);
 
 	window->draw(barrier);
 }
+/////////////////////////////////// Radar ///////////////////////////////////
+
+void Lancer::drawRadar() {
+	sf::Vector2f position;
+	position.x = x + spriteWidth / 2;
+	position.y = y + spriteHeight / 2;
+	radar.setPosition(position);
+	// Color
+	radar.setFillColor(sf::Color(255, 0, 0, 0));
+	// Changing size
+	radar.setRadius(radiusRadar);
+	radar.setOrigin(radar.getGlobalBounds().width / 2, radar.getGlobalBounds().height / 2);
+
+	window->draw(radar);
+}
+
+
+/////////////////////////////////// Location ///////////////////////////////////
 sf::FloatRect Lancer::getSpriteGlobalBounds() {
-	if (usingSpecial) 
+	if (usingSpecial)
 		return barrier.getGlobalBounds();
 	else 
 		return aniSprite.getGlobalBounds();
 }
+sf::FloatRect Lancer::getDetectionRadius() {
+	return radar.getGlobalBounds();
+}
+/////////////////////////////////// Behavior ///////////////////////////////////
 void Lancer::takeDamage(int dmg) {
-	if (usingSpecial) {
-		this->barrierHP -= dmg;
+	if (usingSpecial && canSpecial) {
+		this->barrierHP -= 0.25 * barrierHPMax;
 	}
 	else {
 		this->HP -= dmg;
@@ -116,7 +160,7 @@ void Lancer::takeDamage(int dmg) {
 	// Remove barrier if destroyed
 	if (barrierHP <= 0) {
 		this->barrierHP = 0;
-		usingSpecial = false;
+		canSpecial = false;
 	}
 
 	if (this->HP <= 0) {

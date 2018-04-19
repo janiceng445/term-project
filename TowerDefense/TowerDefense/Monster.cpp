@@ -182,6 +182,9 @@ void Monster::attackMove() {
 sf::FloatRect Monster::getSpriteGlobalBounds() {
 	return aniSprite.getGlobalBounds();
 }
+sf::FloatRect Monster::getDetectionRadius() {
+	return aniSprite.getGlobalBounds();
+}
 
 /////////////////////////////////////////// Behavior ///////////////////////////////////////////
 

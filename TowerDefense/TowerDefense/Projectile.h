@@ -7,7 +7,7 @@
 
 class Projectile {
 private:
-	float maxVel = 1.f;
+	float maxVel = 3.0f;
 
 public:
 	Projectile(float radius);
