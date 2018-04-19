@@ -43,9 +43,13 @@ int main()
 	setSpriteAnimations(&lancerAni, &lancer_texture, 'm', "Lancer");
 
 	////////////////////////////// Create window //////////////////////////////
-	dimensions.x = backgroundTexture.getSize().x;
-	dimensions.y = backgroundTexture.getSize().y;
-	sf::RenderWindow window(sf::VideoMode(1080, 720), "Defend the Joe!");
+	//dimensions.x = backgroundTexture.getSize().x; // DELETE IF WE DECIDE NOT TO DO FULLSCREEN
+	//dimensions.y = backgroundTexture.getSize().y; // DELETE IF WE DECIDE NOT TO DO FULLSCREEN
+	dimensions.x = 1080;
+	dimensions.y = 720;
+	menuBar.setSize(sf::Vector2f(dimensions.x, 70)); 
+	menuBar.setFillColor(sf::Color(0, 0, 0, 255));
+	sf::RenderWindow window(sf::VideoMode(dimensions.x, dimensions.y), "Defend the Joe!");
 	//sf::RenderWindow window(sf::VideoMode(dimensions.x, dimensions.y), "Defend the Joe!", sf::Style::Fullscreen);
 
 	////////////////////////////// Temporary Placement ///////////////////////////////
@@ -63,7 +67,7 @@ int main()
 	int scoreTimer = 1000;
 
 	if (!pixeled.loadFromFile("fonts/Pixeled.ttf")) {
-		std::cerr << "font failed" << std::endl;
+		std::cerr << "Font failed to load." << std::endl;
 		return -1;
 	}
 
@@ -71,7 +75,7 @@ int main()
 	scoreText.setString(std::to_string(gameScore.getTotal()));
 	scoreText.setCharacterSize(18);
 	scoreText.setFillColor(sf::Color::White);
-	scoreText.setPosition(650, 10);
+	scoreText.setPosition(10, 10);
 
 	///////////////////////////////// Projectiles ////////////////////////////////////
 
@@ -220,17 +224,18 @@ int main()
 		///////////////////////////////////////////// Samuel /////////////////////////////////////////////
 
 		// Score
-		scoreText.setString(std::to_string(gameScore.getTotal()));
-
+		scoreText.setString("$ " + std::to_string(gameScore.getTotal()));
+		
 		// Drawing the main sprites on screen
 		window.draw(background);
+		window.draw(menuBar);
 		window.draw(armSprite);
 		window.draw(joeSprite);
 		window.draw(scoreText);
 
 		// Drawing the bullets
 		for (unsigned int i = 0; i < ammo.size(); i++) {
-			ammo[i].setPosition(sf::Vector2f((float)(i * 11) + 1, 0.0f));
+			ammo[i].setPosition(sf::Vector2f((float)(i * 11) + 1 + 10, 15 + scoreText.getGlobalBounds().height));
 			window.draw(ammo[i]);
 		}
 

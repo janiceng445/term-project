@@ -32,6 +32,7 @@ sf::RenderWindow window;
 Score gameScore;
 sf::Text scoreText;
 sf::Font pixeled;
+sf::RectangleShape menuBar;
 
 // Textures
 sf::Texture backgroundTexture;
