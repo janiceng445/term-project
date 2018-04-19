@@ -18,7 +18,6 @@ Lancer::Lancer(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, in
 	// Barrier animation
 	radiusMax = barrierHPMax;
 	radius = barrierHP;
-	radiusRadar = spriteWidth * 5;
 	barrier.setRadius(radius);
 	barrierDurationMax = 500;
 	barrierDuration = barrierDurationMax;
@@ -28,7 +27,7 @@ Lancer::Lancer(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, in
 // Override Monster run
 void Lancer::run() {
 	// Disables usingSpecial for all conditions
-	if (!canSpecial) {
+	if (!canSpecial || barrierHP == 0) {
 		usingSpecial = false;
 	}
 	// Recharge barrier
@@ -45,9 +44,12 @@ void Lancer::run() {
 	if (!stopRunning) {
 		sf::Time frameTime = this->frameClock.restart();
 		if (isAttacking && isAlive) {
+			canSpecial = false;
+			usingSpecial = false;
 			changeCurrentAnimation(1);
 		}
 		else if (!isAlive) {
+			animationSpeed = DEFAULT_ANI_SPEED;
 			if (aniSprite.getCurrentFrame() == 4) {
 				currentFrame = 0;
 			}
@@ -73,10 +75,7 @@ void Lancer::run() {
 			movementSpeed = DEFAULT_MVMT_SPEED;
 			animationSpeed = DEFAULT_ANI_SPEED;
 			changeCurrentAnimation(0);
-			drawRadar();
-
-			// Recharge barrier while not in use and when shield is still alive
-			if(barrierHP != barrierHPMax && canSpecial) barrierHP++;
+			detect();
 		}
 		playAnimation();
 		update(frameTime);
@@ -123,18 +122,8 @@ void Lancer::drawBarrier() {
 }
 /////////////////////////////////// Radar ///////////////////////////////////
 
-void Lancer::drawRadar() {
-	sf::Vector2f position;
-	position.x = x + spriteWidth / 2;
-	position.y = y + spriteHeight / 2;
-	radar.setPosition(position);
-	// Color
-	radar.setFillColor(sf::Color(255, 0, 0, 0));
-	// Changing size
-	radar.setRadius(radiusRadar);
-	radar.setOrigin(radar.getGlobalBounds().width / 2, radar.getGlobalBounds().height / 2);
-
-	window->draw(radar);
+void Lancer::detect() {
+	radar = aniSprite.getPosition().x + 150;
 }
 
 
@@ -145,8 +134,8 @@ sf::FloatRect Lancer::getSpriteGlobalBounds() {
 	else 
 		return aniSprite.getGlobalBounds();
 }
-sf::FloatRect Lancer::getDetectionRadius() {
-	return radar.getGlobalBounds();
+float Lancer::getDetectionDistance() {
+	return radar;
 }
 /////////////////////////////////// Behavior ///////////////////////////////////
 void Lancer::takeDamage(int dmg) {
@@ -158,7 +147,7 @@ void Lancer::takeDamage(int dmg) {
 	}
 
 	// Remove barrier if destroyed
-	if (barrierHP <= 0) {
+	if (barrierHP <= 0 || barrier.getRadius() < spriteWidth) {
 		this->barrierHP = 0;
 		canSpecial = false;
 	}

@@ -87,7 +87,7 @@ public:
 	void setStartingPosition(float x, float y);
 	void attackMove();
 	sf::FloatRect virtual getSpriteGlobalBounds();
-	sf::FloatRect virtual getDetectionRadius();
+	float virtual getDetectionDistance();
 
 	// Behavior
 	void setTarget(int x, int* targetedHealth);

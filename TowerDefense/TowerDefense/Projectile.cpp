@@ -29,7 +29,7 @@ sf::FloatRect Projectile::getSpriteGlobalBounds() {
 bool Projectile::checkCollision(std::vector<Monster*>* m) {
 	for (unsigned int i = 0; i < m->size(); i++) {
 		if (m->at(i)->isAliveFunc()) {
-			if (bullet.getGlobalBounds().intersects(m->at(i)->getDetectionRadius())) {
+			if (bullet.getPosition().x < m->at(i)->getDetectionDistance()) {
 				m->at(i)->useSpecialAbility();
 			}
 			if (bullet.getGlobalBounds().intersects(m->at(i)->getSpriteGlobalBounds())) {

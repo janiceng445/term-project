@@ -16,7 +16,7 @@ Monster::Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, 
 	this->animationSpeed = DEFAULT_ANI_SPEED;
 	this->isAlive = true;
 	this->isAttacking = false;
-	this->decay_timer = 10000;
+	this->decay_timer = 1000;
 
 	// Location Default
 	this->x = -25;
@@ -182,8 +182,8 @@ void Monster::attackMove() {
 sf::FloatRect Monster::getSpriteGlobalBounds() {
 	return aniSprite.getGlobalBounds();
 }
-sf::FloatRect Monster::getDetectionRadius() {
-	return aniSprite.getGlobalBounds();
+float Monster::getDetectionDistance() {
+	return aniSprite.getPosition().x;
 }
 
 /////////////////////////////////////////// Behavior ///////////////////////////////////////////

@@ -12,8 +12,7 @@ private:
 	float radius;
 	float radiusMax;
 
-	sf::CircleShape radar;
-	float radiusRadar;
+	float radar;
 	bool radarActivated;
 
 	int barrierDuration;
@@ -30,11 +29,11 @@ public:
 	// Barrier
 	void drawBarrier();
 	sf::FloatRect virtual getSpriteGlobalBounds() override;
-	sf::FloatRect virtual getDetectionRadius() override;
+	float virtual getDetectionDistance() override;
 	void virtual takeDamage(int dmg);
 
 	// Radar
-	void drawRadar();
+	void detect();
 
 
 	bool checkIfSpecial();
