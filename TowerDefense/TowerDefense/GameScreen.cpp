@@ -156,22 +156,23 @@ int GameScreen::Run(sf::RenderWindow &window) {
 			//sets rotation of arm based on mouse location (gun points at mouse pointer)
 			armSprite.setRotation((180.0 / PI) * atan2(0.52 * dimensions.y - sf::Mouse::getPosition(window).y, 0.76 * dimensions.x - sf::Mouse::getPosition(window).x));
 
-			///////////////////////////////////////////// Samuel /////////////////////////////////////////////
-
 			// Score
 			scoreTimer--;
-			if (scoreTimer == 0) {
+			if (scoreTimer == 0)
+			{
 				gameScore.add(10);
 				scoreTimer = 1000;
 			}
 
+			//==================================================// SHOOTING //==================================================//
 			// Shooting mechanic
 			center = armSprite.getPosition();
 			mousePos = sf::Vector2f(sf::Mouse::getPosition(window));
 			mouseAimDir = mousePos - center;
 			mouseAimDirNorm = mouseAimDir / sqrt(pow(mouseAimDir.x, 2) + pow(mouseAimDir.y, 2));
 
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && projTimer == maxProjTimer && reloading == false && !ammo.empty()) {
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && projTimer == maxProjTimer && reloading == false && !ammo.empty())
+			{
 				shot = true;
 				ammo.pop_back();
 				if (ammo.empty()) reloading = true;
@@ -179,30 +180,37 @@ int GameScreen::Run(sf::RenderWindow &window) {
 				p1.vel = (mouseAimDirNorm * p1.getMaxVel());
 				currentProj.push_back(Projectile(p1));
 			}
-			else if (reloading) {
-				if (reloaded == 6) {
+			else if (reloading)
+			{
+				if (reloaded == 6)
+				{
 					reloaded = 0;
 					reloading = false;
 				}
 			}
-			if (shot == true) {
+			if (shot == true)
+			{
 				projTimer--;
-				if (projTimer == 0) {
+				if (projTimer == 0)
+				{
 					shot = false;
 					projTimer = maxProjTimer;
 				}
 			}
 
 			// Deleting bullets off screen or collisions
-			if (!currentProj.empty()) {
-				for (unsigned int i = 0; i < currentProj.size(); i++) {
+			if (!currentProj.empty())
+			{
+				for (unsigned int i = 0; i < currentProj.size(); i++)
+				{
 					currentProj[i].bullet.move(currentProj[i].vel);
 
 					// Checks collision with enemies from the bullet scope
 					if (currentProj[i].checkCollision(&wave)) currentProj.erase(currentProj.begin() + i);
 
 					// Ends the loop if the bullet vector is empty and reading attempt is made to see next element in empty vector
-					if (currentProj.empty()) {
+					if (currentProj.empty())
+					{
 						break;
 					}
 					// Deletes the bullet if it goes off screen
@@ -214,7 +222,7 @@ int GameScreen::Run(sf::RenderWindow &window) {
 				}
 			}
 
-			///////////////////////////////////////////// Janice /////////////////////////////////////////////
+			//==================================================// ENEMY SPAWNING //==================================================//
 
 			std::vector<std::string> name;
 			name.push_back("Skelly");
@@ -254,16 +262,17 @@ int GameScreen::Run(sf::RenderWindow &window) {
 			temp.restart();
 			}*/
 			///////////////////////////////////////////////////////////////////////
-			for (unsigned int i = 0; i < wave.size(); i++) {
+			for (unsigned int i = 0; i < wave.size(); i++)
+			{
 				wave[i]->run();
 				wave[i]->attackMove();
-				if (wave[i]->isDead()) {
+				if (wave[i]->isDead())
+				{
 					wave.erase(wave.begin() + i);
 				}
 			}
 
-			///////////////////////////////////////////// Ricky /////////////////////////////////////////////
-
+			//==================================================// TOWERS //==================================================//
 			for (int i = 0; i < wave.size(); i++)
 			{
 				//checks to see if the enemy is attacking. The clock keeps the attack from having every game tick
@@ -272,12 +281,12 @@ int GameScreen::Run(sf::RenderWindow &window) {
 					basicTower.takeDamage(wave.at(i)->getDamage());
 					enemyAtkTimer.restart();
 				}
-				if (basicTower.getHealth() == 0)
+				if (basicTower.getHealth() <= 0)
 				{
 					basicTower.die();
 				}
 
-				if (wave.at(i)->isAliveFunc() == true)
+				if (wave.at(i)->isAliveFunc())
 				{
 					//checks to see if any enemies should take damage from the barbed wire
 					if (wave.at(i)->getSpriteGlobalBounds().intersects(barbedWire.getSpriteGlobalBounds()))
@@ -304,7 +313,8 @@ int GameScreen::Run(sf::RenderWindow &window) {
 				// Initializes aiming mechanics
 				if (enemyCounter < wave.size())
 				{
-					towerOrigin = shootyTower.getSprite().getPosition();
+					towerOrigin.x = shootyTower.getSprite().getPosition().x + 30;
+					towerOrigin.y = shootyTower.getSprite().getPosition().y + 35;
 					enemyPosition = sf::Vector2f(wave.at(enemyCounter)->getCurrentLocation());
 					towerAimDirection = enemyPosition - towerOrigin;
 					towerAimDirNorm = towerAimDirection / sqrt(pow(towerAimDirection.x, 2) + pow(towerAimDirection.y, 2));
@@ -359,12 +369,11 @@ int GameScreen::Run(sf::RenderWindow &window) {
 					}
 				}
 			}
-
 			//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
 		}
 
+
 		//--//--//--//--//--//--//--//--//--//--//--/ DRAW /--//--//--//--//--//--//--//--//--//--//--//--//
-		///////////////////////////////////////////// Samuel /////////////////////////////////////////////
 
 		// Score
 		scoreText.setString("$ " + std::to_string(gameScore.getTotal()));
@@ -373,34 +382,37 @@ int GameScreen::Run(sf::RenderWindow &window) {
 		window.draw(armSprite);
 		window.draw(joeSprite);
 
-		if (!currentProj.empty()) {
-			for (unsigned int i = 0; i < currentProj.size(); i++) {
+		if (!currentProj.empty())
+		{
+			for (unsigned int i = 0; i < currentProj.size(); i++)
+			{
 				window.draw(currentProj[i].bullet);
 			}
 		}
 
-		///////////////////////////////////////////// Janice /////////////////////////////////////////////
-
 		//if the tower is alive, it draws it and then sets the enemies to target it
-		if (basicTower.amIAlive()) {
-			for (int i = 0; i < wave.size(); i++) {
+		if (basicTower.amIAlive())
+		{
+			for (int i = 0; i < wave.size(); i++)
+			{
 				wave.at(i)->setTarget(basicTower.getXPosition() - basicTower.getSpriteGlobalBounds().width / 2, &targetHP);
 			}
 			basicTower.draw();
 		}
-		else {
+		else
+		{
 			//if the tower is dead, it resets the enemies' target to what it was before
-			for (int i = 0; i < wave.size(); i++) {
+			for (int i = 0; i < wave.size(); i++)
+			{
 				wave.at(i)->setTarget(shootyTower.getXPosition() - shootyTower.getSpriteGlobalBounds().width / 2, &targetHP);
 			}
 		}
 
 		// Draws enemies
-		for (unsigned int i = 0; i < wave.size(); i++) {
+		for (unsigned int i = 0; i < wave.size(); i++)
+		{
 			wave[i]->draw();
 		}
-
-		///////////////////////////////////////////// Ricky /////////////////////////////////////////////
 
 		shootyTower.draw();
 		//barbedWire.draw();
@@ -409,7 +421,8 @@ int GameScreen::Run(sf::RenderWindow &window) {
 		window.draw(menuBar);
 		window.draw(scoreText);
 		// Drawing the bullets
-		for (unsigned int i = 0; i < ammo.size(); i++) {
+		for (unsigned int i = 0; i < ammo.size(); i++)
+		{
 			ammo[i].setPosition(sf::Vector2f((float)(i * 11) + 1 + 10, 15 + scoreText.getGlobalBounds().height));
 			window.draw(ammo[i]);
 		}
@@ -537,7 +550,10 @@ void GameScreen::runSpawners(int* maxSpawn, sf::Clock* clock, int spwn_timer, st
 		clock->restart();
 	}
 }
+void GameScreen::createPauseScreen()
+{
 
+}
 void GameScreen::showPauseScreen() {
 
 }

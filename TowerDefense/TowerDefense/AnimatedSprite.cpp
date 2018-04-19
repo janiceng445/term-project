@@ -117,7 +117,8 @@ sf::Time AnimatedSprite::getFrameTime() const
 }
 
 // Custom code implemented by Janice Ng
-int AnimatedSprite::getCurrentFrame() {
+int AnimatedSprite::getCurrentFrame()
+{
 	return m_currentFrame;
 }
 //

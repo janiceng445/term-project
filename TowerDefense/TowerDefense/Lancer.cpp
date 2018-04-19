@@ -73,6 +73,7 @@ void Lancer::run() {
 			}
 		}
 		else {
+			isAttacking = false;
 			movementSpeed = DEFAULT_MVMT_SPEED;
 			animationSpeed = DEFAULT_ANI_SPEED;
 			changeCurrentAnimation(0);

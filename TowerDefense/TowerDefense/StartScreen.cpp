@@ -3,7 +3,8 @@
 
 StartScreen::StartScreen() {}
 
-int StartScreen::Run(sf::RenderWindow &window) {
+int StartScreen::Run(sf::RenderWindow &window)
+{
 	bool running = true;
 	int selected = 0;
 	sf::Event event;
@@ -12,14 +13,16 @@ int StartScreen::Run(sf::RenderWindow &window) {
 	dimensions.y = window.getSize().y;
 
 	//loading background
-	if (!menuBack.loadFromFile("Images/menuback.png")) {
+	if (!menuBack.loadFromFile("Images/menuback.png"))
+	{
 		std::cerr << "menuback failed to load" << std::endl;
 		return -1;
 	}
 	menuSprite.setTexture(menuBack);
-	
+
 	//loading menu font
-	if (!pixeled.loadFromFile("fonts/Pixeled.ttf")) {
+	if (!pixeled.loadFromFile("fonts/Pixeled.ttf"))
+	{
 		std::cerr << "pixeled failed to load" << std::endl;
 		return -1;
 	}
@@ -50,53 +53,65 @@ int StartScreen::Run(sf::RenderWindow &window) {
 	menuCursor.setFillColor(sf::Color::White);
 	menuCursor.setPosition(startGameText.getPosition().x - 30, startGameText.getPosition().y);
 
-	while (running) {
-		while (window.pollEvent(event)) {
-			if (event.type == sf::Event::Closed) {
+	while (running)
+	{
+		while (window.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+			{
 				window.close();
 			}
-			else if (event.type == sf::Event::KeyPressed) {
-				switch (event.key.code) {
-					case sf::Keyboard::Up:
-						if (selected == 0) {
-							selected = 2;
-							menuCursor.setPosition(startGameText.getPosition().x - 30, exitGameText.getPosition().y);
-						}
-						else if (selected == 1) {
-							selected = 0;
-							menuCursor.setPosition(startGameText.getPosition().x - 30, startGameText.getPosition().y);
-						}
-						else if (selected = 2) {
-							selected = 1;
-							menuCursor.setPosition(startGameText.getPosition().x - 30, fillerText.getPosition().y);
-						}
-						break;
+			else if (event.type == sf::Event::KeyPressed)
+			{
+				switch (event.key.code)
+				{
+				case sf::Keyboard::Up:
+					if (selected == 0)
+					{
+						selected = 2;
+						menuCursor.setPosition(startGameText.getPosition().x - 30, exitGameText.getPosition().y);
+					}
+					else if (selected == 1)
+					{
+						selected = 0;
+						menuCursor.setPosition(startGameText.getPosition().x - 30, startGameText.getPosition().y);
+					}
+					else if (selected = 2)
+					{
+						selected = 1;
+						menuCursor.setPosition(startGameText.getPosition().x - 30, fillerText.getPosition().y);
+					}
+					break;
 
-					case sf::Keyboard::Down:
-						if (selected == 0) {
-							selected = 1;
-							menuCursor.setPosition(startGameText.getPosition().x - 30, fillerText.getPosition().y);
-						}
-						else if (selected == 1) {
-							selected = 2;
-							menuCursor.setPosition(startGameText.getPosition().x - 30, exitGameText.getPosition().y);
-						}
-						else if (selected = 2) {
-							selected = 0;
-							menuCursor.setPosition(startGameText.getPosition().x - 30, startGameText.getPosition().y);
-						}
-						break;
+				case sf::Keyboard::Down:
+					if (selected == 0)
+					{
+						selected = 1;
+						menuCursor.setPosition(startGameText.getPosition().x - 30, fillerText.getPosition().y);
+					}
+					else if (selected == 1)
+					{
+						selected = 2;
+						menuCursor.setPosition(startGameText.getPosition().x - 30, exitGameText.getPosition().y);
+					}
+					else if (selected = 2)
+					{
+						selected = 0;
+						menuCursor.setPosition(startGameText.getPosition().x - 30, startGameText.getPosition().y);
+					}
+					break;
 
-					case sf::Keyboard::Return:
-						if (selected == 0) {
-							window.clear();
-							return 0;
-						}
-						else if (selected == 2) return -1;
-						break;
+				case sf::Keyboard::Return:
+					if (selected == 0)
+					{
+						window.clear();
+						return 0;
+					}
+					else if (selected == 2) return -1;
+					break;
 
-					default:
-						break;
+				default:
+					break;
 				}
 			}
 		}

@@ -148,6 +148,7 @@ class GameScreen : public cScreen {
 	void setSpriteAnimations(std::vector<Animation>* skellyAni, sf::Texture* skelly_texture, char size, std::string name);
 	void runSpawners(int* maxSpawn, sf::Clock* clock, int spwn_timer, std::vector<Monster*>* wave, sf::RenderWindow* window,
 		std::vector<Animation>* ani, int dmg, int hp, int boundary, int* targetHP, std::string name, Score* score);
+	void createPauseScreen();
 	void showPauseScreen();
 	void hidePauseScreen();
 };

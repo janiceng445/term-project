@@ -127,22 +127,27 @@
   <ItemGroup>
     <ClCompile Include="AnimatedSprite.cpp" />
     <ClCompile Include="Animation.cpp" />
+    <ClCompile Include="GameScreen.cpp" />
     <ClCompile Include="Lancer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="Score.cpp" />
+    <ClCompile Include="StartScreen.cpp" />
     <ClCompile Include="Tower.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.hpp" />
     <ClInclude Include="AnimatedSprite.hpp" />
+    <ClInclude Include="cScreen.hpp" />
+    <ClInclude Include="GameScreen.hpp" />
     <ClInclude Include="Lancer.h" />
-    <ClInclude Include="main.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Score.h" />
+    <ClInclude Include="Screens.hpp" />
+    <ClInclude Include="StartScreen.hpp" />
     <ClInclude Include="Tower.h" />
   </ItemGroup>
   <ItemGroup>

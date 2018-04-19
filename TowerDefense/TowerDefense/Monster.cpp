@@ -85,6 +85,7 @@ void Monster::run() {
 			}
 		}
 		else {
+			isAttacking = false;
 			changeCurrentAnimation(0);
 		}
 		playAnimation();
