@@ -7,10 +7,6 @@ int GameScreen::Run(sf::RenderWindow &window) {
 	sf::Event event;
 	bool running = true;
 
-	//projectile initialization
-	Projectile p1(3.0);
-	Projectile p2(3.0);
-
 	// Loading files
 	if (!backgroundTexture.loadFromFile("images/background.png")) {
 		std::cerr << "background failed" << std::endl;
@@ -73,8 +69,13 @@ int GameScreen::Run(sf::RenderWindow &window) {
 	dimensions.y = 720;
 	menuBar.setSize(sf::Vector2f(dimensions.x, 70));
 	menuBar.setFillColor(sf::Color(0, 0, 0, 255));
+	createPauseScreen();
 
 	///////////////////////////////// Projectiles ////////////////////////////////////
+
+	//projectile initialization
+	Projectile p1(3.0);
+	Projectile p2(3.0);
 
 	sf::Sprite bulletSprite(bulletTexture);
 
@@ -427,6 +428,8 @@ int GameScreen::Run(sf::RenderWindow &window) {
 			window.draw(ammo[i]);
 		}
 
+		// Draws the pause screen
+		if (paused)	{ drawPauseScreen(&window); }
 		//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
 
 		window.display();
@@ -434,7 +437,10 @@ int GameScreen::Run(sf::RenderWindow &window) {
 		while (window.pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed)
+			{
 				window.close();
+				return -1;
+			}
 			else if (event.type == sf::Event::MouseWheelMoved) {
 				if (reloaded != 6 && reloading == true) {
 					reloaded++;
@@ -456,7 +462,6 @@ int GameScreen::Run(sf::RenderWindow &window) {
 
 	return -1;
 }
-
 
 void GameScreen::setSpriteAnimations(std::vector<Animation>* ani, sf::Texture* texture, char size, std::string name) {
 	int size_x;
@@ -524,7 +529,6 @@ void GameScreen::setSpriteAnimations(std::vector<Animation>* ani, sf::Texture* t
 		ani->push_back(special);
 	}
 }
-
 void GameScreen::runSpawners(int* maxSpawn, sf::Clock* clock, int spwn_timer, std::vector<Monster*>* wave, sf::RenderWindow* win, std::vector<Animation>* ani, int dmg, int hp, int boundary, int* targetHP, std::string name, Score* score) {
 	int r = (rand() % 6) - 3;
 	if (clock->getElapsedTime().asSeconds() > spwn_timer + r && *maxSpawn != 0) {
@@ -537,7 +541,7 @@ void GameScreen::runSpawners(int* maxSpawn, sf::Clock* clock, int spwn_timer, st
 		{
 			int ran = rand() % 200 + 1;
 			Monster* spawn = new Monster(win, *ani, dmg, hp, score);
-			spawn->setStartingPosition(-25, (300 + ran));
+			spawn->setStartingPosition((float)-25, (float) (300 + ran));
 			spawn->setTarget(boundary, *&targetHP);
 			wave->push_back(spawn);
 		}
@@ -552,11 +556,22 @@ void GameScreen::runSpawners(int* maxSpawn, sf::Clock* clock, int spwn_timer, st
 }
 void GameScreen::createPauseScreen()
 {
+	int width = 174; // taken from running program
+	int height = 36; // taken from running program
+	// Gray overlay
+	pauseScreen.setSize(dimensions);
+	pauseScreen.setFillColor(sf::Color(0, 0, 0, 150));
+	pauseScreen.setPosition(sf::Vector2f(0, 0));
 
+	// Pause text
+	pauseText.setFont(pixeled);
+	pauseText.setFillColor(sf::Color::White);
+	pauseText.setString("PAUSED");
+	pauseText.setPosition(dimensions.x / 2 - width / 2, dimensions.y / 2 + height / 2);
+	
 }
-void GameScreen::showPauseScreen() {
-
-}
-void GameScreen::hidePauseScreen() {
-
+void GameScreen::drawPauseScreen(sf::RenderWindow* win)
+{
+	win->draw(pauseScreen);
+	win->draw(pauseText);
 }

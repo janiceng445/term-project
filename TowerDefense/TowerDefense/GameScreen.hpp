@@ -67,6 +67,7 @@ class GameScreen : public cScreen {
 	sf::Font pixeled;
 	sf::RectangleShape menuBar;
 	sf::RectangleShape pauseScreen;
+	sf::Text pauseText;
 	bool pauseScreenVisibility;
 
 
@@ -149,6 +150,5 @@ class GameScreen : public cScreen {
 	void runSpawners(int* maxSpawn, sf::Clock* clock, int spwn_timer, std::vector<Monster*>* wave, sf::RenderWindow* window,
 		std::vector<Animation>* ani, int dmg, int hp, int boundary, int* targetHP, std::string name, Score* score);
 	void createPauseScreen();
-	void showPauseScreen();
-	void hidePauseScreen();
+	void drawPauseScreen(sf::RenderWindow* win);
 };

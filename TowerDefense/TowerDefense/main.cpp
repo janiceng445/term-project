@@ -21,4 +21,5 @@ int main()
 		if (screen != -1) screen++;
 		if ((unsigned)screen > screens.size()) return 0;
 	}
+	return 0;
 }

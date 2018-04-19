@@ -27,7 +27,7 @@ class Monster
 	int stoppingPoint; // Tower locations
 	int decay_timer; // Time it takes for sprite to disappear
 
-					 // Graphics/Animations
+	// Graphics/Animations
 	int type; // small | medium | large enemies
 	int size; // Goes hand-in-hand with type
 	Animation* currentAnimation;
@@ -39,7 +39,7 @@ class Monster
 	bool stopRunning; // Stop running timers and behavioral animation check
 	bool stopDrawing; // Stop drawing sprite
 
-					  // Healthbar
+	// Healthbar
 	sf::RectangleShape bar;
 	// Hitbox
 	sf::RectangleShape hitbox;
