@@ -155,7 +155,7 @@ void Monster::changeY() {
 	int r = (rand() % 41 - 20) * 3; // For random spawning y coordinate
 	this->y += r;
 }
-
+// Set spawn's starting position
 void Monster::setStartingPosition(float x, float y) {
 	this->x = x;
 	this->y = y;
@@ -177,6 +177,10 @@ void Monster::attackMove() {
 	}
 	updateHealthBar();
 	if (hitboxVisibility) drawHitbox();
+}
+// Gets spawn's current location
+sf::Vector2f Monster::getCurrentLocation() {
+	return this->aniSprite.getPosition();
 }
 
 // Gets hitboxes for projectiles to give results
@@ -218,7 +222,14 @@ void Monster::takeDamage(int dmg) {
 		die();
 	}
 }
-
+// Gets damage
+int Monster::getDamage() {
+	return this->AD;
+}
+// Checks if Monster is attacking
+bool Monster::isCurrAttacking() {
+	return this->isAttacking;
+}
 // Dies
 void Monster::die() {
 	this->isAlive = false;

@@ -40,22 +40,64 @@ int main()
 		return -1;
 	}
 
-	////////////////////////////// Add animations //////////////////////////////
+	//////////////////////////////// Load tower textures ////////////////////////////////
 
-	setSpriteAnimations(&skellyAni, &skelly_texture, 's', "Skelly");
-	setSpriteAnimations(&rhinoAni, &rhino_texture, 's', "Rhino");
-	setSpriteAnimations(&lancerAni, &lancer_texture, 'm', "Lancer");
-	setSpriteAnimations(&demonAni, &demon_texture, 'd', "Demon");
+	if (!basicTowerTx.loadFromFile("images/Towers/NewBasicTower.png"))
+	{
+		std::cout << "Basic tower could not be loaded. Check filepath" << std::endl;
+		return -1;
+	}
+	if (!shootyTowerTx.loadFromFile("images/Towers/ShootyTower.png"))
+	{
+		std::cout << "Shooty tower could not be loaded. Check filepath" << std::endl;
+		return -1;
+	}
+	if (!barbedWireTx.loadFromFile("images/Towers/NewBarbedWire.png"))
+	{
+		std::cout << "Barbed Wire could not be loaded. Check filepath" << std::endl;
+		return -1;
+	}
 
 	////////////////////////////// Create window //////////////////////////////
 	//dimensions.x = backgroundTexture.getSize().x; // DELETE IF WE DECIDE NOT TO DO FULLSCREEN
 	//dimensions.y = backgroundTexture.getSize().y; // DELETE IF WE DECIDE NOT TO DO FULLSCREEN
 	dimensions.x = 1080;
 	dimensions.y = 720;
-	menuBar.setSize(sf::Vector2f(dimensions.x, 70)); 
+	menuBar.setSize(sf::Vector2f(dimensions.x, 70));
 	menuBar.setFillColor(sf::Color(0, 0, 0, 255));
 	sf::RenderWindow window(sf::VideoMode(dimensions.x, dimensions.y), "Defend the Joe!");
 	//sf::RenderWindow window(sf::VideoMode(dimensions.x, dimensions.y), "Defend the Joe!", sf::Style::Fullscreen);
+
+	///////////////////////////////// Projectiles ////////////////////////////////////
+
+	sf::Sprite bulletSprite(bulletTexture);
+
+	for (int i = 0; i < 6; i++) {
+		ammo.push_back(bulletSprite);
+	}
+
+	int projTimer = maxProjTimer;
+	int reloaded = 0;
+	int timer = fireTimer;
+	bool shot = false;
+	bool reloading = false;
+
+	//////////////////////////////// Tower Initialization ////////////////////////////////
+
+	basicTowerSpr.setTexture(basicTowerTx);
+	shootyTowerSpr.setTexture(shootyTowerTx);
+	barbedWireSpr.setTexture(barbedWireTx);
+
+	Tower barbedWire(&window, 100, 5, barbedWireSpr, dimensions.x * 0.5, dimensions.y * 0.7);				//deals damage to enemies who are walking through it
+	Tower basicTower(&window, 75, 0, basicTowerSpr, dimensions.x * 0.6, dimensions.y * 0.7);				//a simple barricade
+	Tower shootyTower(&window, 100, 20, shootyTowerSpr, dimensions.x * 0.7, dimensions.y * 0.7);			//shoots the enemies
+	
+	////////////////////////////// Add animations //////////////////////////////
+
+	setSpriteAnimations(&skellyAni, &skelly_texture, 's', "Skelly");
+	setSpriteAnimations(&rhinoAni, &rhino_texture, 's', "Rhino");
+	setSpriteAnimations(&lancerAni, &lancer_texture, 'm', "Lancer");
+	setSpriteAnimations(&demonAni, &demon_texture, 'd', "Demon");
 
 	////////////////////////////// Temporary Placement ///////////////////////////////
 	float targetHealth = 200;
@@ -82,19 +124,6 @@ int main()
 	scoreText.setFillColor(sf::Color::White);
 	scoreText.setPosition(10, 10);
 
-	///////////////////////////////// Projectiles ////////////////////////////////////
-
-	sf::Sprite bulletSprite(bulletTexture);
-
-	for (int i = 0; i < 6; i++) {
-		ammo.push_back(bulletSprite);
-	}
-
-	int projTimer = maxProjTimer;
-	int reloaded = 0;
-	bool shot = false;
-	bool reloading = false;
-
 	///////////////////////////////// Gerard //////////////////////////////////////////
 
 	sf::Sprite background(backgroundTexture);
@@ -113,6 +142,9 @@ int main()
 	while (window.isOpen())
 	{
 		sf::Event event;
+
+		//////////////////// BACKGROUND : Draw background image beneath all other images ////////////////////
+		window.draw(background);
 
 		if (!paused)
 		{
@@ -225,6 +257,103 @@ int main()
 					wave.erase(wave.begin() + i);
 				}
 			}
+
+			///////////////////////////////////////////// Ricky /////////////////////////////////////////////
+
+			for (int i = 0; i < wave.size(); i++)
+			{
+				//checks to see if the enemy is attacking. The clock keeps the attack from having every game tick
+				if (wave.at(i)->isCurrAttacking() == true && enemyAtkTimer.getElapsedTime().asSeconds() > 0.5f)
+				{
+					basicTower.takeDamage(wave.at(i)->getDamage());
+					enemyAtkTimer.restart();
+				}
+				if (basicTower.getHealth() == 0)
+				{
+					basicTower.die();
+				}
+
+				if (wave.at(i)->isAliveFunc() == true)
+				{
+					//checks to see if any enemies should take damage from the barbed wire
+					if (wave.at(i)->getSpriteGlobalBounds().intersects(barbedWire.getSpriteGlobalBounds()))
+					{
+						if (barbedTimer.getElapsedTime().asSeconds() > 0.5f)
+						{
+							wave.at(i)->takeDamage(10);
+							barbedTimer.restart();
+						}
+					}
+				}
+			}
+
+			int enemyCounter = 0;
+
+			if (!wave.empty())
+			{
+				while (enemyCounter < wave.size() && wave.at(enemyCounter)->isAliveFunc() == false)
+				{
+					enemyCounter++;
+				}
+				if (enemyCounter < wave.size())
+				{
+					towerOrigin = shootyTower.getSprite().getPosition();
+					enemyPosition = sf::Vector2f(wave.at(enemyCounter)->getCurrentLocation());
+					towerAimDirection = enemyPosition - towerOrigin;
+					towerAimDirNorm = towerAimDirection / sqrt(pow(towerAimDirection.x, 2) + pow(towerAimDirection.y, 2));
+				}
+				if (shootyTimer.getElapsedTime().asSeconds() > 1.0f)
+				{
+					if (timer == fireTimer)
+					{
+						std::cout << "Shooting" << std::endl;
+						shot = true;
+						p2.bullet.setPosition(towerOrigin);
+
+						p2.bullet.setRotation((180.0 / PI) * atan2(248 - sf::Mouse::getPosition(window).y, 550 - sf::Mouse::getPosition(window).x) - 90);
+						p2.vel = (towerAimDirNorm * p2.getMaxVel());
+						towerProjectiles.push_back(Projectile(p2));
+					}
+					shootyTimer.restart();
+				}
+				if (shot == true)
+				{
+					timer--;
+					std::cout << "timer: " << timer << std::endl;
+					if (timer == 0)
+					{
+						shot = false;
+						timer = fireTimer;
+					}
+				}
+				if (!towerProjectiles.empty())
+				{
+					for (unsigned int i = 0; i < towerProjectiles.size(); i++)
+					{
+						towerProjectiles[i].bullet.move(towerProjectiles[i].vel);
+						window.draw(towerProjectiles[i].bullet);
+
+						// Checks collision with enemies from the bullet scope
+						if (towerProjectiles[i].checkCollision(&wave))
+						{
+							towerProjectiles.erase(towerProjectiles.begin() + i);
+						}
+
+						// Ends the loop if the bullet vector is empty and reading attempt is made to see next element in empty vector
+						if (towerProjectiles.empty())
+						{
+							break;
+						}
+						// Deletes the bullet if it goes off screen
+						if (towerProjectiles[i].bullet.getPosition().x < 0 || towerProjectiles[i].bullet.getPosition().x > dimensions.x
+							|| towerProjectiles[i].bullet.getPosition().y < 0 || towerProjectiles[i].bullet.getPosition().y > dimensions.y)
+						{
+							towerProjectiles.erase(towerProjectiles.begin() + i);
+						}
+					}
+				}
+			}
+
 			//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
 		}
 
@@ -234,18 +363,9 @@ int main()
 		// Score
 		scoreText.setString("$ " + std::to_string(gameScore.getTotal()));
 		
-		// Drawing the main sprites on screen
-		window.draw(background);
-		window.draw(menuBar);
+		//////////////////// MIDGROUND : Drawing the main sprites on screen ////////////////////
 		window.draw(armSprite);
 		window.draw(joeSprite);
-		window.draw(scoreText);
-
-		// Drawing the bullets
-		for (unsigned int i = 0; i < ammo.size(); i++) {
-			ammo[i].setPosition(sf::Vector2f((float)(i * 11) + 1 + 10, 15 + scoreText.getGlobalBounds().height));
-			window.draw(ammo[i]);
-		}
 
 		if (!currentProj.empty()) {
 			for (unsigned int i = 0; i < currentProj.size(); i++) {
@@ -255,9 +375,39 @@ int main()
 
 		///////////////////////////////////////////// Janice /////////////////////////////////////////////
 
+		//if the tower is alive, it draws it and then sets the enemies to target it
+		if (basicTower.amIAlive() == true) {
+			for (int i = 0; i < wave.size(); i++) {
+				wave.at(i)->setTarget(basicTower.getXPosition() - basicTower.getSpriteGlobalBounds().width / 2, &targetHP);
+			}
+			basicTower.draw();
+		}
+		else {
+			//if the tower is dead, it resets the enemies' target to what it was before
+			for (int i = 0; i < wave.size(); i++) {
+				wave.at(i)->setTarget(475, &targetHP);
+			}
+		}
+
+		// Draws enemies
 		for (unsigned int i = 0; i < wave.size(); i++) {
 			wave[i]->draw();
 		}
+
+		///////////////////////////////////////////// Ricky /////////////////////////////////////////////
+		
+		shootyTower.draw();
+		//barbedWire.draw();
+
+		//////////////////// FOREGROUND : Draw menu bar on top of all other images ////////////////////
+		window.draw(menuBar);
+		window.draw(scoreText);
+		// Drawing the bullets
+		for (unsigned int i = 0; i < ammo.size(); i++) {
+			ammo[i].setPosition(sf::Vector2f((float)(i * 11) + 1 + 10, 15 + scoreText.getGlobalBounds().height));
+			window.draw(ammo[i]);
+		}
+
 		//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
 
 		window.display();

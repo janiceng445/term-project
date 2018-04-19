@@ -86,6 +86,7 @@ public:
 	void changeY();
 	void setStartingPosition(float x, float y);
 	void attackMove();
+	sf::Vector2f getCurrentLocation();
 	sf::FloatRect virtual getSpriteGlobalBounds();
 	float virtual getDetectionDistance();
 
@@ -94,6 +95,8 @@ public:
 	void attack();
 	void virtual useSpecialAbility();
 	void virtual takeDamage(int dmg);
+	int getDamage();
+	bool isCurrAttacking();
 	void die();
 	bool isAliveFunc();
 	bool isDead();

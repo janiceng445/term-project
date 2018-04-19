@@ -117,6 +117,11 @@ void Lancer::drawBarrier() {
 	radius = barrierHP / 10;
 	barrier.setRadius(radius);
 	barrier.setOrigin(barrier.getGlobalBounds().width / 2, barrier.getGlobalBounds().height / 2);
+	
+	sf::RectangleShape test;
+	test.setSize(sf::Vector2f(200, 200));
+	test.setFillColor(sf::Color::Red);
+	test.setPosition(100, 100);
 
 	window->draw(barrier);
 }

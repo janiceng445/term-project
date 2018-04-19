@@ -134,6 +134,7 @@
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="Score.cpp" />
     <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="Tower.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.hpp" />
@@ -146,6 +147,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="Score.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="Tower.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="TowerDefense.rc" />

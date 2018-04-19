@@ -14,12 +14,13 @@
 #include "Projectile.h"
 #include "Lancer.h"
 #include "Score.h"
+#include "Tower.h"
 
 // Global constants
 const double PI = 3.141592653589793238463;
 const float SKELLY_SPWN_TIMER = 5.0f;
 const float RHINO_SPWN_TIMER = 8.0f;
-const float LANCER_SPWN_TIMER = 10.0f;
+const float LANCER_SPWN_TIMER = 3.0f;
 const float DEMON_SPWN_TIMER = 10.0f;
 const int fireTimer = 300;
 
@@ -47,6 +48,9 @@ sf::Texture skelly_texture;
 sf::Texture rhino_texture;
 sf::Texture lancer_texture;
 sf::Texture demon_texture;
+sf::Texture basicTowerTx;
+sf::Texture shootyTowerTx;
+sf::Texture barbedWireTx;
 
 sf::Vector2f dimensions;
 
@@ -81,8 +85,16 @@ sf::Clock clock_Rhino;
 sf::Clock clock_Lancer;
 sf::Clock clock_Demon;
 sf::Clock game_clock;
+sf::Clock barbedTimer;
+sf::Clock shootyTimer;
+sf::Clock enemyAtkTimer;
 
-// Projectiles
+// Tower Sprites
+sf::Sprite basicTowerSpr;
+sf::Sprite shootyTowerSpr;
+sf::Sprite barbedWireSpr;
+
+// Joe Projectiles
 std::vector<sf::Sprite> ammo;
 std::vector<Projectile> currentProj;
 sf::Vector2f center;
@@ -90,23 +102,30 @@ sf::Vector2f mousePos;
 sf::Vector2f mouseAimDir;
 sf::Vector2f mouseAimDirNorm;
 Projectile p1(3.0);
+// Tower Projectiles
+Projectile p2(3.0);
+std::vector<Projectile> towerProjectiles;
+sf::Vector2f towerOrigin;
+sf::Vector2f enemyPosition;
+sf::Vector2f towerAimDirection;
+sf::Vector2f towerAimDirNorm;
 int reloaded;
 
 // Spawner
 std::vector<Monster*> wave;
-int skellyMax = 10;
+int skellyMax = 0;
 unsigned int skelly_DMG = 10;
 unsigned int skelly_HP = 100;
 
-int rhinoMax = 5;
+int rhinoMax = 0;
 unsigned int rhino_DMG = 15;
 unsigned int rhino_HP = 75;
 
-int lancerMax = 4;
+int lancerMax = 1;
 unsigned int lancer_DMG = 25;
 unsigned int lancer_HP = 250;
 
-int demonMax = 4;
+int demonMax = 0;
 unsigned int demon_DMG = 25;
 unsigned int demon_HP = 175;
 
