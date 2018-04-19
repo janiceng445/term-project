@@ -4,11 +4,11 @@ Monster::Monster() {}
 Monster::Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP, Score* score)
 {
 	if (type == 1) size = 98;
-	
+
 
 	int r = (rand() % 41 - 20) * 2; // For random spawning y coordinate
 
-	// Attributes
+									// Attributes
 	this->AD = AD / 2; // Explanation: attacks ticks twice
 	this->HP = HP;
 	this->max_HP = HP;
@@ -20,7 +20,7 @@ Monster::Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, 
 
 	// Location Default
 	this->x = -25;
-	this->y = 0.84 * win->getSize().y + (float) r + 5;
+	this->y = 0.84 * win->getSize().y + (float)r + 5;
 
 	// Animation
 	this->stopRunning = false;
@@ -39,7 +39,7 @@ Monster::Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, 
 	// Hitbox
 	hitboxVisibility = false;
 	this->hitbox_Width = this->spriteWidth * 0.7f;
-	this->hitbox_Height = (float) this->spriteHeight;
+	this->hitbox_Height = (float)this->spriteHeight;
 
 
 	// Others
@@ -103,6 +103,7 @@ void Monster::draw() {
 	if (!stopDrawing) {
 		this->window->draw(aniSprite);
 		this->window->draw(hitbox);
+		this->window->draw(this->bar);
 	}
 }
 
@@ -110,20 +111,19 @@ void Monster::draw() {
 
 void Monster::addHealthBar() {
 	sf::RectangleShape bar;
-	bar.setSize(sf::Vector2f((float) this->spriteWidth, 5));
+	bar.setSize(sf::Vector2f((float)this->spriteWidth, 5));
 	this->bar = bar;
 }
 void Monster::updateHealthBar() {
-	float hp = (float) this->HP / this->max_HP * this->spriteWidth;
+	float hp = (float)this->HP / this->max_HP * this->spriteWidth;
 	// Changing color of bar if < 50%
 	hp > 0.50 * this->spriteWidth ? bar.setFillColor(sf::Color::Green) :
-									bar.setFillColor(sf::Color::Red);
+		bar.setFillColor(sf::Color::Red);
 	bar.setSize(sf::Vector2f(hp, 5));
 	showHealthBar();
 }
 void Monster::showHealthBar() {
 	this->bar.setPosition(this->x, this->y - 10);
-	this->window->draw(this->bar);
 }
 
 /////////////////////////////////////////// Hitbox ///////////////////////////////////////////
@@ -176,9 +176,10 @@ void Monster::attackMove() {
 		}
 	}
 	updateHealthBar();
-	if ( hitboxVisibility ) drawHitbox();
+	if (hitboxVisibility) drawHitbox();
 }
 
+// Gets hitboxes for projectiles to give results
 sf::FloatRect Monster::getSpriteGlobalBounds() {
 	return aniSprite.getGlobalBounds();
 }

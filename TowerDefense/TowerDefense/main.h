@@ -20,9 +20,82 @@ const double PI = 3.141592653589793238463;
 const float SKELLY_SPWN_TIMER = 5.0f;
 const float RHINO_SPWN_TIMER = 8.0f;
 const float LANCER_SPWN_TIMER = 10.0f;
+const float DEMON_SPWN_TIMER = 10.0f;
 const int fireTimer = 300;
 
+// Declarations
+bool paused;
+bool shot;
+bool reloading;
+
+// Window
+sf::RenderWindow window;
+Score gameScore;
+sf::Text scoreText;
+sf::Font pixeled;
+sf::RectangleShape menuBar;
+
+// Textures
+sf::Texture backgroundTexture;
+sf::Texture joeTexture;
+sf::Texture armTexture;
+sf::Texture bulletTexture;
+sf::Texture skelly_texture;
+sf::Texture rhino_texture;
+sf::Texture lancer_texture;
+sf::Texture demon_texture;
+
+sf::Vector2f dimensions;
+
+// Sprites
+sf::Sprite background;
+sf::Sprite joeSprite;
+sf::Sprite armSprite;
+sf::Sprite bulletSprite;
+
+// Animations
+std::vector<Animation> skellyAni;
+std::vector<Animation> rhinoAni;
+std::vector<Animation> lancerAni;
+std::vector<Animation> demonAni;
+
+// Mobs
+float targetHealth;
+float targets[3] = { 50, 55, 60 };
+int const maxProjTimer = 250;
+int targetX[3] = { 150, 200, 250 };
+int currentTarget;
+int targetHP;
+int waveRound;
+
+// Timers
+int projTimer;
+int scoreTimer;
+int gameTimer;
+
+// Clocks
+//sf::Clock clock_Skelly;
+//sf::Clock clock_Rhino;
+//sf::Clock clock_Lancer;
+//sf::Clock clock_Demon;
+int randSkellyTimer;
+int randRhinoTimer;
+int randLancerTimer;
+int randDemonTimer;
+sf::Clock clockGame;
+
+// Projectiles
+std::vector<sf::Sprite> ammo;
+std::vector<Projectile> currentProj;
+sf::Vector2f center;
+sf::Vector2f mousePos;
+sf::Vector2f mouseAimDir;
+sf::Vector2f mouseAimDirNorm;
+Projectile p1(3.0);
+int reloaded;
+
 // Spawner
+std::vector<Monster*> wave;
 int skellyMax = 10;
 unsigned int skelly_DMG = 10;
 unsigned int skelly_HP = 100;
@@ -35,8 +108,13 @@ int lancerMax = 4;
 unsigned int lancer_DMG = 25;
 unsigned int lancer_HP = 250;
 
+int demonMax = 4;
+unsigned int demon_DMG = 25;
+unsigned int demon_HP = 175;
+
 unsigned int boundary = 450;
 
 // Declaring functions
 void setSpriteAnimations(std::vector<Animation>* skellyAni, sf::Texture* skelly_texture, char size, std::string name);
-void runSpawners(int* maxSpawn, sf::Clock* clock, int spwn_timer, std::vector<Monster*>* wave, sf::RenderWindow* window, std::vector<Animation>* ani, int dmg, int hp, int boundary, int* targetHP, std::string name, Score* score);
+//void runSpawners(int* maxSpawn, sf::Clock* clock, int spwn_timer, std::vector<Monster*>* wave, sf::RenderWindow* window, std::vector<Animation>* ani, int dmg, int hp, int boundary, int* targetHP, std::string name, Score* score);
+void runSpawners(int* maxSpawn, int &timeThreshold, int spwn_timer, std::vector<Monster*>* wave, sf::RenderWindow* win, std::vector<Animation>* ani, int dmg, int hp, int boundary, int* targetHP, std::string name, Score* score);
