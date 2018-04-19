@@ -35,12 +35,17 @@ int main()
 		std::cerr << "lancer_spriteSheet failed" << std::endl;
 		return -1;
 	}
+	if (!demon_texture.loadFromFile("images/enemies/demon.png")) {
+		std::cerr << "demon_spriteSheet failed" << std::endl;
+		return -1;
+	}
 
 	////////////////////////////// Add animations //////////////////////////////
 
 	setSpriteAnimations(&skellyAni, &skelly_texture, 's', "Skelly");
 	setSpriteAnimations(&rhinoAni, &rhino_texture, 's', "Rhino");
 	setSpriteAnimations(&lancerAni, &lancer_texture, 'm', "Lancer");
+	setSpriteAnimations(&demonAni, &demon_texture, 'd', "Demon");
 
 	////////////////////////////// Create window //////////////////////////////
 	//dimensions.x = backgroundTexture.getSize().x; // DELETE IF WE DECIDE NOT TO DO FULLSCREEN
@@ -179,11 +184,14 @@ int main()
 			name.push_back("Skelly");
 			name.push_back("Rhino");
 			name.push_back("Lancer");
+			name.push_back("Demon");
 
 			// Parameters: maximum spawns, clock, spawn timer, wave vector, window, animation vector, dmg, hp, boundary, target's hp, name, score
 			runSpawners(&skellyMax, &clock_Skelly, SKELLY_SPWN_TIMER, &wave, &window, &skellyAni, skelly_DMG, skelly_HP, boundary, &targetHP, name.at(0), &gameScore);
 			runSpawners(&rhinoMax, &clock_Rhino, RHINO_SPWN_TIMER, &wave, &window, &rhinoAni, rhino_DMG, rhino_HP, boundary, &targetHP, name.at(1), &gameScore);
 			runSpawners(&lancerMax, &clock_Lancer, LANCER_SPWN_TIMER, &wave, &window, &lancerAni, lancer_DMG, lancer_HP, boundary, &targetHP, name.at(2), &gameScore);
+			runSpawners(&demonMax, &clock_Demon, DEMON_SPWN_TIMER, &wave, &window, &demonAni, demon_DMG, demon_HP, boundary, &targetHP, name.at(3), &gameScore);
+
 
 			// Targets and health
 			/*if (targets[0] <= 0) {
@@ -294,8 +302,11 @@ void setSpriteAnimations(std::vector<Animation>* ani, sf::Texture* texture, char
 		break;
 	case 'l':
 		break;
+	case 'd':
+		size_x = 68;
+		size_y = 60;
+		break;
 	}
-
 	Animation idle;
 	idle.setSpriteSheet(*texture);
 	idle.addFrame(sf::IntRect(0, 0, size_x, size_y));
@@ -349,6 +360,14 @@ void runSpawners(int* maxSpawn, sf::Clock* clock, int spwn_timer, std::vector<Mo
 	if (clock->getElapsedTime().asSeconds() > spwn_timer + r && *maxSpawn != 0) {
 		if (name == "Lancer") {
 			Lancer* spawn = new Lancer(win, *ani, dmg, hp, score);
+			spawn->setTarget(boundary, *&targetHP);
+			wave->push_back(spawn);
+		}
+		else if (name == "Demon")
+		{
+			int ran = rand() % 200 + 1;
+			Monster* spawn = new Monster(win, *ani, dmg, hp, score);
+			spawn->setStartingPosition(-25, (300 + ran));
 			spawn->setTarget(boundary, *&targetHP);
 			wave->push_back(spawn);
 		}
