@@ -1,73 +1,21 @@
 #include "main.h"
 
-// Declarations
-bool paused = false;
-bool shot;
-bool reloading;
-sf::Texture backgroundTexture;
-sf::Texture joeTexture;
-sf::Texture armTexture;
-sf::Texture bulletTexture;
-sf::Texture skelly_texture;
-sf::Texture rhino_texture;
-sf::Texture lancer_texture;
-sf::Vector2f dimensions;
-sf::Sprite background;
-sf::Sprite joeSprite;
-sf::Sprite armSprite;
-sf::Sprite bulletSprite;
-Score gameScore;
-sf::Text scoreText;
-std::vector<Animation> skellyAni;
-std::vector<Animation> rhinoAni;
-std::vector<Animation> lancerAni;
-sf::RenderWindow window;
-float targetHealth;
-float targets[3] = { 50, 55, 60 };
-int const maxProjTimer = 250;
-int projTimer;
-int reloaded;
-int scoreTimer;
-int currentTarget;
-int targetHP;
-int waveRound;
-int targetX[3] = { 150, 200, 250 };
-sf::Clock clock_Skelly;
-sf::Clock clock_Rhino;
-sf::Clock clock_Lancer;
-sf::Clock game_clock; // clock renamed to clock_game (error C2365: 'clock': redefinition; previous definition was 'function')
-sf::Font pixeled;
-std::vector<sf::Sprite> ammo;
-std::vector<Projectile> currentProj;
-std::vector<Monster*> wave;
-sf::Vector2f center;
-sf::Vector2f mousePos;
-sf::Vector2f mouseAimDir;
-sf::Vector2f mouseAimDirNorm;
-Projectile p1(3.0);
 
 int main()
 {
 	// Loading files
-	//sf::Texture backgroundTexture;
 	if (!backgroundTexture.loadFromFile("images/background.png")) {
 		std::cerr << "background failed" << std::endl;
 		return -1;
 	}
-
-	//sf::Texture joeTexture;
 	if (!joeTexture.loadFromFile("images/revolverJoe.png")) {
 		std::cerr << "revolverJoe failed" << std::endl;
 		return -1;
 	}
-
-	//sf::Texture armTexture;
 	if (!armTexture.loadFromFile("images/arm.png")) {
 		std::cerr << "arm failed" << std::endl;
 		return -1;
 	}
-
-	//sf::Texture bulletTexture;
 	if (!bulletTexture.loadFromFile("images/bullet.png")) {
 		std::cerr << "bullet failed" << std::endl;
 		return -1;
@@ -75,18 +23,14 @@ int main()
 
 	//////////////////////////////// Load enemy textures ////////////////////////////////
 
-	//sf::Texture skelly_texture;
 	if (!skelly_texture.loadFromFile("images/enemies/skelly.png")) {
 		std::cerr << "skelly_spriteSheet failed" << std::endl;
 		return -1;
 	}
-	//sf::Texture rhino_texture;
 	if (!rhino_texture.loadFromFile("images/enemies/rhino.png")) {
 		std::cerr << "rhino_spriteSheet failed" << std::endl;
 		return -1;
 	}
-
-	//sf::Texture lancer_texture;
 	if (!lancer_texture.loadFromFile("images/enemies/lancer.png")) {
 		std::cerr << "lancer_spriteSheet failed" << std::endl;
 		return -1;
@@ -94,15 +38,11 @@ int main()
 
 	////////////////////////////// Add animations //////////////////////////////
 
-	//std::vector<Animation> skellyAni;
 	setSpriteAnimations(&skellyAni, &skelly_texture, 's', "Skelly");
-	//std::vector<Animation> rhinoAni;
 	setSpriteAnimations(&rhinoAni, &rhino_texture, 's', "Rhino");
-	//std::vector<Animation> lancerAni;
 	setSpriteAnimations(&lancerAni, &lancer_texture, 'm', "Lancer");
 
 	////////////////////////////// Create window //////////////////////////////
-	//sf::Vector2f dimensions;
 	dimensions.x = backgroundTexture.getSize().x;
 	dimensions.y = backgroundTexture.getSize().y;
 	sf::RenderWindow window(sf::VideoMode(1080, 720), "Defend the Joe!");
@@ -110,27 +50,17 @@ int main()
 
 	////////////////////////////// Temporary Placement ///////////////////////////////
 	float targetHealth = 200;
-	//float targets[3] = { 50, 55, 60 };
-	//int targetX[3] = { 150, 200, 250 };
 	int currentTarget = 0;
-	// Clocks
-	//sf::Clock clock_Skelly;
-	//sf::Clock clock_Rhino;
-	//sf::Clock clock_Lancer;
-	//sf::Clock clock;
 
 	//************************ TOWER HITPOINTS ************************//
 	int targetHP = 100;
 
 	//////////////////////////////// Wave of enemies /////////////////////////////////
 	int waveRound = 0;
-	//std::vector<Monster*> wave;
 
 	//////////////////////////////// Scoreboard ////////////////////////////////
-	//Score gameScore;
+
 	int scoreTimer = 1000;
-	//sf::Text scoreText;
-	//sf::Font pixeled;
 
 	if (!pixeled.loadFromFile("fonts/Pixeled.ttf")) {
 		std::cerr << "font failed" << std::endl;
@@ -146,20 +76,11 @@ int main()
 	///////////////////////////////// Projectiles ////////////////////////////////////
 
 	sf::Sprite bulletSprite(bulletTexture);
-	//std::vector<Projectile> currentProj;
-	//std::vector<sf::Sprite> ammo;
 
 	for (int i = 0; i < 6; i++) {
 		ammo.push_back(bulletSprite);
 	}
 
-	//sf::Vector2f center;
-	//sf::Vector2f mousePos;
-	//sf::Vector2f mouseAimDir;
-	//sf::Vector2f mouseAimDirNorm;
-
-	//Projectile p1(3.0);
-	//int const maxProjTimer = 250;
 	int projTimer = maxProjTimer;
 	int reloaded = 0;
 	bool shot = false;
@@ -186,11 +107,8 @@ int main()
 
 		if (!paused)
 		{
-			//--//--//--//--//--//--//--//--//--//--//--/ UPDATE /--//--//--//--//--//--//--//--//--//--//--//--//
-			///////////////////////////////// Gerard //////////////////////////////////////////
-
-			armSprite.setRotation((180.0 / PI) * atan2(0.52 * dimensions.y - sf::Mouse::getPosition(window).y, 0.76 * dimensions.x - sf::Mouse::getPosition(window).x));
 			//sets rotation of arm based on mouse location (gun points at mouse pointer)
+			armSprite.setRotation((180.0 / PI) * atan2(0.52 * dimensions.y - sf::Mouse::getPosition(window).y, 0.76 * dimensions.x - sf::Mouse::getPosition(window).x));
 
 			///////////////////////////////////////////// Samuel /////////////////////////////////////////////
 
@@ -234,7 +152,6 @@ int main()
 			if (!currentProj.empty()) {
 				for (unsigned int i = 0; i < currentProj.size(); i++) {
 					currentProj[i].bullet.move(currentProj[i].vel);
-					//window.draw(currentProj[i].bullet);
 
 					// Checks collision with enemies from the bullet scope
 					if (currentProj[i].checkCollision(&wave)) currentProj.erase(currentProj.begin() + i);
@@ -259,7 +176,7 @@ int main()
 			name.push_back("Rhino");
 			name.push_back("Lancer");
 
-			// Parameters: maximum spawns, clock, spawn timer, wave vector, window, animation vector, dmg, hp, boundary, target's hp
+			// Parameters: maximum spawns, clock, spawn timer, wave vector, window, animation vector, dmg, hp, boundary, target's hp, name, score
 			runSpawners(&skellyMax, &clock_Skelly, SKELLY_SPWN_TIMER, &wave, &window, &skellyAni, skelly_DMG, skelly_HP, boundary, &targetHP, name.at(0), &gameScore);
 			runSpawners(&rhinoMax, &clock_Rhino, RHINO_SPWN_TIMER, &wave, &window, &rhinoAni, rhino_DMG, rhino_HP, boundary, &targetHP, name.at(1), &gameScore);
 			runSpawners(&lancerMax, &clock_Lancer, LANCER_SPWN_TIMER, &wave, &window, &lancerAni, lancer_DMG, lancer_HP, boundary, &targetHP, name.at(2), &gameScore);
@@ -291,7 +208,6 @@ int main()
 			///////////////////////////////////////////////////////////////////////
 			for (unsigned int i = 0; i < wave.size(); i++) {
 				wave[i]->run();
-				//wave[i]->draw();
 				wave[i]->attackMove();
 				if (wave[i]->isDead()) {
 					wave.erase(wave.begin() + i);
@@ -320,34 +236,14 @@ int main()
 
 		if (!currentProj.empty()) {
 			for (unsigned int i = 0; i < currentProj.size(); i++) {
-				//currentProj[i].bullet.move(currentProj[i].vel);
 				window.draw(currentProj[i].bullet);
-
-				// Checks collision with enemies from the bullet scope
-				//if (currentProj[i].checkCollision(&wave)) currentProj.erase(currentProj.begin() + i);
-
-				// Ends the loop if the bullet vector is empty and reading attempt is made to see next element in empty vector
-				//if (currentProj.empty()) {
-				//break;
-				//}
-				// Deletes the bullet if it goes off screen
-				//if (currentProj[i].bullet.getPosition().x < 0 || currentProj[i].bullet.getPosition().x > dimensions.x
-				//|| currentProj[i].bullet.getPosition().y < 0 || currentProj[i].bullet.getPosition().y > dimensions.y)
-				//{
-				//currentProj.erase(currentProj.begin() + i);
-				//}
 			}
 		}
 
 		///////////////////////////////////////////// Janice /////////////////////////////////////////////
 
 		for (unsigned int i = 0; i < wave.size(); i++) {
-			//wave[i]->run();
 			wave[i]->draw();
-			//wave[i]->attackMove();
-			//if (wave[i]->isDead()) {
-			//wave.erase(wave.begin() + i);
-			//}
 		}
 		//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
 

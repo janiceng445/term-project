@@ -8,7 +8,7 @@ Monster::Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, 
 
 	int r = (rand() % 41 - 20) * 2; // For random spawning y coordinate
 
-									// Attributes
+	// Attributes
 	this->AD = AD / 2; // Explanation: attacks ticks twice
 	this->HP = HP;
 	this->max_HP = HP;
@@ -103,7 +103,7 @@ void Monster::draw() {
 	if (!stopDrawing) {
 		this->window->draw(aniSprite);
 		this->window->draw(hitbox);
-		this->window->draw(this->bar);	// added by Ben
+		this->window->draw(this->bar);
 	}
 }
 
@@ -124,7 +124,6 @@ void Monster::updateHealthBar() {
 }
 void Monster::showHealthBar() {
 	this->bar.setPosition(this->x, this->y - 10);
-	//this->window->draw(this->bar);	// removed by Ben
 }
 
 /////////////////////////////////////////// Hitbox ///////////////////////////////////////////
@@ -180,6 +179,7 @@ void Monster::attackMove() {
 	if (hitboxVisibility) drawHitbox();
 }
 
+// Gets hitboxes for projectiles to give results
 sf::FloatRect Monster::getSpriteGlobalBounds() {
 	return aniSprite.getGlobalBounds();
 }
