@@ -1,27 +1,7 @@
 #include "cScreen.hpp"
 #include "GameScreen.hpp"
 
-GameScreen::GameScreen(void) {
-	////////////////////////////// Temporary Placement ///////////////////////////////
-	float targetHealth = 200;
-	int currentTarget = 0;
-
-	//************************ TOWER HITPOINTS ************************//
-	int targetHP = 100;
-
-	//////////////////////////////// Wave of enemies /////////////////////////////////
-	int waveRound = 0;
-
-	//////////////////////////////// Scoreboard ////////////////////////////////
-	int scoreTimer = 1000;
-
-	///////////////////////////////// Projectiles ////////////////////////////////////
-	int maxProjTimer = 250;
-	int projTimer = maxProjTimer;
-	int reloaded = 0;
-	bool shot = false;
-	bool reloading = false;
-}
+GameScreen::GameScreen(void) {}
 
 int GameScreen::Run(sf::RenderWindow &window) {
 	sf::Event event;
