@@ -13,7 +13,7 @@ const float DEFAULT_ANI_SPEED = 0.1f;
 
 class Monster
 {
-protected:
+	protected:
 	// Attributes
 	int AD;
 	int HP;
@@ -27,7 +27,7 @@ protected:
 	int stoppingPoint; // Tower locations
 	int decay_timer; // Time it takes for sprite to disappear
 
-	// Graphics/Animations
+					 // Graphics/Animations
 	int type; // small | medium | large enemies
 	int size; // Goes hand-in-hand with type
 	Animation* currentAnimation;
@@ -39,7 +39,7 @@ protected:
 	bool stopRunning; // Stop running timers and behavioral animation check
 	bool stopDrawing; // Stop drawing sprite
 
-	// Healthbar
+					  // Healthbar
 	sf::RectangleShape bar;
 	// Hitbox
 	sf::RectangleShape hitbox;
@@ -61,7 +61,7 @@ protected:
 	sf::Clock frameClock;
 	Score* score;
 
-public:
+	public:
 	Monster();
 	Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP, Score* score);
 

@@ -2,27 +2,22 @@
 
 Score::Score() {}
 
-int Score::getTotal()
-{
+int Score::getTotal() {
 	return total;
 }
 
-int Score::getHighScore()
-{
+int Score::getHighScore() {
 	return highScore;
 }
 
-void Score::add(int amount)
-{
+void Score::add(int amount) {
 	total += amount;
 }
 
-void Score::subtract(int amount)
-{
+void Score::subtract(int amount) {
 	total += amount;
 }
 
-void Score::setTotal(int amount)
-{
+void Score::setTotal(int amount) {
 	total = amount;
 }
