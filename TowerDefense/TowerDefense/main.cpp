@@ -380,3 +380,10 @@ void runSpawners(int* maxSpawn, sf::Clock* clock, int spwn_timer, std::vector<Mo
 		clock->restart();
 	}
 }
+
+void showPauseScreen() {
+
+}
+void hidePauseScreen() {
+
+}
