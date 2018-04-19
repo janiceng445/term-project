@@ -64,7 +64,7 @@ protected:
 public:
 	Monster();
 	Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP, Score* score);
-	
+
 	// Animation
 	void playAnimation();
 	void update(sf::Time frameTime);
@@ -100,7 +100,7 @@ public:
 	void die();
 	bool isAliveFunc();
 	bool isDead();
-	
+
 	// Other
 
 	~Monster();

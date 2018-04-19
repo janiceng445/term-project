@@ -4,38 +4,46 @@
 int main()
 {
 	// Loading files
-	if (!backgroundTexture.loadFromFile("images/background.png")) {
+	if (!backgroundTexture.loadFromFile("images/background.png"))
+	{
 		std::cerr << "background failed" << std::endl;
 		return -1;
 	}
-	if (!joeTexture.loadFromFile("images/revolverJoe.png")) {
+	if (!joeTexture.loadFromFile("images/revolverJoe.png"))
+	{
 		std::cerr << "revolverJoe failed" << std::endl;
 		return -1;
 	}
-	if (!armTexture.loadFromFile("images/arm.png")) {
+	if (!armTexture.loadFromFile("images/arm.png"))
+	{
 		std::cerr << "arm failed" << std::endl;
 		return -1;
 	}
-	if (!bulletTexture.loadFromFile("images/bullet.png")) {
+	if (!bulletTexture.loadFromFile("images/bullet.png"))
+	{
 		std::cerr << "bullet failed" << std::endl;
 		return -1;
 	}
 
 	//////////////////////////////// Load enemy textures ////////////////////////////////
 
-	if (!skelly_texture.loadFromFile("images/enemies/skelly.png")) {
+	if (!skelly_texture.loadFromFile("images/enemies/skelly.png"))
+	{
 		std::cerr << "skelly_spriteSheet failed" << std::endl;
 		return -1;
 	}
-	if (!rhino_texture.loadFromFile("images/enemies/rhino.png")) {
+	if (!rhino_texture.loadFromFile("images/enemies/rhino.png"))
+	{
 		std::cerr << "rhino_spriteSheet failed" << std::endl;
 		return -1;
 	}
-	if (!lancer_texture.loadFromFile("images/enemies/lancer.png")) {
+	if (!lancer_texture.loadFromFile("images/enemies/lancer.png"))
+	{
 		std::cerr << "lancer_spriteSheet failed" << std::endl;
 		return -1;
 	}
-	if (!demon_texture.loadFromFile("images/enemies/demon.png")) {
+	if (!demon_texture.loadFromFile("images/enemies/demon.png"))
+	{
 		std::cerr << "demon_spriteSheet failed" << std::endl;
 		return -1;
 	}
@@ -72,7 +80,8 @@ int main()
 
 	sf::Sprite bulletSprite(bulletTexture);
 
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < 6; i++)
+	{
 		ammo.push_back(bulletSprite);
 	}
 
@@ -92,7 +101,7 @@ int main()
 	Tower barbedWire(&window, barbedWire_HP, barbedWire_DMG, barbedWireSpr, dimensions.x * 0.5, dimensions.y * 0.7);				//deals damage to enemies who are walking through it
 	Tower basicTower(&window, basicTower_HP, basicTower_DMG, basicTowerSpr, dimensions.x * 0.6, dimensions.y * 0.85);				//a simple barricade
 	Tower shootyTower(&window, shootyTower_HP, shootyTower_DMG, shootyTowerSpr, dimensions.x * 0.7, dimensions.y * 0.7);			//shoots the enemies
-	
+
 	////////////////////////////// Add animations //////////////////////////////
 
 	setSpriteAnimations(&skellyAni, &skelly_texture, 's', "Skelly");
@@ -114,7 +123,8 @@ int main()
 
 	int scoreTimer = 1000;
 
-	if (!pixeled.loadFromFile("fonts/Pixeled.ttf")) {
+	if (!pixeled.loadFromFile("fonts/Pixeled.ttf"))
+	{
 		std::cerr << "Font failed to load." << std::endl;
 		return -1;
 	}
@@ -152,22 +162,23 @@ int main()
 			//sets rotation of arm based on mouse location (gun points at mouse pointer)
 			armSprite.setRotation((180.0 / PI) * atan2(0.52 * dimensions.y - sf::Mouse::getPosition(window).y, 0.76 * dimensions.x - sf::Mouse::getPosition(window).x));
 
-			///////////////////////////////////////////// Samuel /////////////////////////////////////////////
-
 			// Score
 			scoreTimer--;
-			if (scoreTimer == 0) {
+			if (scoreTimer == 0)
+			{
 				gameScore.add(10);
 				scoreTimer = 1000;
 			}
 
+			//==================================================// SHOOTING //==================================================//
 			// Shooting mechanic
 			center = armSprite.getPosition();
 			mousePos = sf::Vector2f(sf::Mouse::getPosition(window));
 			mouseAimDir = mousePos - center;
 			mouseAimDirNorm = mouseAimDir / sqrt(pow(mouseAimDir.x, 2) + pow(mouseAimDir.y, 2));
 
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && projTimer == maxProjTimer && reloading == false && !ammo.empty()) {
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && projTimer == maxProjTimer && reloading == false && !ammo.empty())
+			{
 				shot = true;
 				ammo.pop_back();
 				if (ammo.empty()) reloading = true;
@@ -175,30 +186,37 @@ int main()
 				p1.vel = (mouseAimDirNorm * p1.getMaxVel());
 				currentProj.push_back(Projectile(p1));
 			}
-			else if (reloading) {
-				if (reloaded == 6) {
+			else if (reloading)
+			{
+				if (reloaded == 6)
+				{
 					reloaded = 0;
 					reloading = false;
 				}
 			}
-			if (shot == true) {
+			if (shot == true)
+			{
 				projTimer--;
-				if (projTimer == 0) {
+				if (projTimer == 0)
+				{
 					shot = false;
 					projTimer = maxProjTimer;
 				}
 			}
 
 			// Deleting bullets off screen or collisions
-			if (!currentProj.empty()) {
-				for (unsigned int i = 0; i < currentProj.size(); i++) {
+			if (!currentProj.empty())
+			{
+				for (unsigned int i = 0; i < currentProj.size(); i++)
+				{
 					currentProj[i].bullet.move(currentProj[i].vel);
 
 					// Checks collision with enemies from the bullet scope
 					if (currentProj[i].checkCollision(&wave)) currentProj.erase(currentProj.begin() + i);
 
 					// Ends the loop if the bullet vector is empty and reading attempt is made to see next element in empty vector
-					if (currentProj.empty()) {
+					if (currentProj.empty())
+					{
 						break;
 					}
 					// Deletes the bullet if it goes off screen
@@ -210,7 +228,7 @@ int main()
 				}
 			}
 
-			///////////////////////////////////////////// Janice /////////////////////////////////////////////
+			//==================================================// ENEMY SPAWNING //==================================================//
 
 			std::vector<std::string> name;
 			name.push_back("Skelly");
@@ -250,16 +268,17 @@ int main()
 			temp.restart();
 			}*/
 			///////////////////////////////////////////////////////////////////////
-			for (unsigned int i = 0; i < wave.size(); i++) {
+			for (unsigned int i = 0; i < wave.size(); i++)
+			{
 				wave[i]->run();
 				wave[i]->attackMove();
-				if (wave[i]->isDead()) {
+				if (wave[i]->isDead())
+				{
 					wave.erase(wave.begin() + i);
 				}
 			}
 
-			///////////////////////////////////////////// Ricky /////////////////////////////////////////////
-
+			//==================================================// TOWERS //==================================================//
 			for (int i = 0; i < wave.size(); i++)
 			{
 				//checks to see if the enemy is attacking. The clock keeps the attack from having every game tick
@@ -268,12 +287,12 @@ int main()
 					basicTower.takeDamage(wave.at(i)->getDamage());
 					enemyAtkTimer.restart();
 				}
-				if (basicTower.getHealth() == 0)
+				if (basicTower.getHealth() <= 0)
 				{
 					basicTower.die();
 				}
 
-				if (wave.at(i)->isAliveFunc() == true)
+				if (wave.at(i)->isAliveFunc())
 				{
 					//checks to see if any enemies should take damage from the barbed wire
 					if (wave.at(i)->getSpriteGlobalBounds().intersects(barbedWire.getSpriteGlobalBounds()))
@@ -300,7 +319,8 @@ int main()
 				// Initializes aiming mechanics
 				if (enemyCounter < wave.size())
 				{
-					towerOrigin = shootyTower.getSprite().getPosition();
+					towerOrigin.x = shootyTower.getSprite().getPosition().x + 35;
+					towerOrigin.y = shootyTower.getSprite().getPosition().y + 35;
 					enemyPosition = sf::Vector2f(wave.at(enemyCounter)->getCurrentLocation());
 					towerAimDirection = enemyPosition - towerOrigin;
 					towerAimDirNorm = towerAimDirection / sqrt(pow(towerAimDirection.x, 2) + pow(towerAimDirection.y, 2));
@@ -360,44 +380,46 @@ int main()
 		}
 
 		//--//--//--//--//--//--//--//--//--//--//--/ DRAW /--//--//--//--//--//--//--//--//--//--//--//--//
-		///////////////////////////////////////////// Samuel /////////////////////////////////////////////
 
 		// Score
 		scoreText.setString("$ " + std::to_string(gameScore.getTotal()));
-		
+
 		//////////////////// MIDGROUND : Drawing the main sprites on screen ////////////////////
 		window.draw(armSprite);
 		window.draw(joeSprite);
 
-		if (!currentProj.empty()) {
-			for (unsigned int i = 0; i < currentProj.size(); i++) {
+		if (!currentProj.empty())
+		{
+			for (unsigned int i = 0; i < currentProj.size(); i++)
+			{
 				window.draw(currentProj[i].bullet);
 			}
 		}
 
-		///////////////////////////////////////////// Janice /////////////////////////////////////////////
-
 		//if the tower is alive, it draws it and then sets the enemies to target it
-		if (basicTower.amIAlive()) {
-			for (int i = 0; i < wave.size(); i++) {
+		if (basicTower.amIAlive())
+		{
+			for (int i = 0; i < wave.size(); i++)
+			{
 				wave.at(i)->setTarget(basicTower.getXPosition() - basicTower.getSpriteGlobalBounds().width / 2, &targetHP);
 			}
 			basicTower.draw();
 		}
-		else {
+		else
+		{
 			//if the tower is dead, it resets the enemies' target to what it was before
-			for (int i = 0; i < wave.size(); i++) {
+			for (int i = 0; i < wave.size(); i++)
+			{
 				wave.at(i)->setTarget(shootyTower.getXPosition() - shootyTower.getSpriteGlobalBounds().width / 2, &targetHP);
 			}
 		}
 
 		// Draws enemies
-		for (unsigned int i = 0; i < wave.size(); i++) {
+		for (unsigned int i = 0; i < wave.size(); i++)
+		{
 			wave[i]->draw();
 		}
 
-		///////////////////////////////////////////// Ricky /////////////////////////////////////////////
-		
 		shootyTower.draw();
 		//barbedWire.draw();
 
@@ -405,7 +427,8 @@ int main()
 		window.draw(menuBar);
 		window.draw(scoreText);
 		// Drawing the bullets
-		for (unsigned int i = 0; i < ammo.size(); i++) {
+		for (unsigned int i = 0; i < ammo.size(); i++)
+		{
 			ammo[i].setPosition(sf::Vector2f((float)(i * 11) + 1 + 10, 15 + scoreText.getGlobalBounds().height));
 			window.draw(ammo[i]);
 		}
@@ -418,8 +441,10 @@ int main()
 		{
 			if (event.type == sf::Event::Closed)
 				window.close();
-			else if (event.type == sf::Event::MouseWheelMoved) {
-				if (reloaded != 6 && reloading == true) {
+			else if (event.type == sf::Event::MouseWheelMoved)
+			{
+				if (reloaded != 6 && reloading == true)
+				{
 					reloaded++;
 					ammo.push_back(bulletSprite);
 					continue;
@@ -440,10 +465,12 @@ int main()
 	return 0;
 }
 
-void setSpriteAnimations(std::vector<Animation>* ani, sf::Texture* texture, char size, std::string name) {
+void setSpriteAnimations(std::vector<Animation>* ani, sf::Texture* texture, char size, std::string name)
+{
 	int size_x;
 	int size_y;
-	switch (size) {
+	switch (size)
+	{
 	case 's':
 		size_x = 40;
 		size_y = 49;
@@ -470,14 +497,16 @@ void setSpriteAnimations(std::vector<Animation>* ani, sf::Texture* texture, char
 
 	Animation attack;
 	attack.setSpriteSheet(*texture);
-	if (name == "Lancer") {
+	if (name == "Lancer")
+	{
 		attack.addFrame(sf::IntRect(0, size_y, size_x, size_y));
 		attack.addFrame(sf::IntRect(size_x, size_y, size_x, size_y));
 		attack.addFrame(sf::IntRect(size_x * 2, size_y, size_x * 2, size_y));
 		attack.addFrame(sf::IntRect(size_x * 2, size_y, size_x * 2, size_y));
 		attack.addFrame(sf::IntRect(size_x * 4, size_y, size_x, size_y));
 	}
-	else {
+	else
+	{
 		attack.addFrame(sf::IntRect(0, size_y, size_x, size_y));
 		attack.addFrame(sf::IntRect(size_x, size_y, size_x, size_y));
 		attack.addFrame(sf::IntRect(size_x * 2, size_y, size_x, size_y));
@@ -495,7 +524,8 @@ void setSpriteAnimations(std::vector<Animation>* ani, sf::Texture* texture, char
 	death.addFrame(sf::IntRect(size_x * 4, size_y * 2, size_x, size_y));
 	ani->push_back(death);
 
-	if (size == 'm' || size == 'l') {
+	if (size == 'm' || size == 'l')
+	{
 		Animation special;
 		special.setSpriteSheet(*texture);
 		special.addFrame(sf::IntRect(0, size_y * 3, size_x, size_y));
@@ -507,10 +537,13 @@ void setSpriteAnimations(std::vector<Animation>* ani, sf::Texture* texture, char
 	}
 }
 
-void runSpawners(int* maxSpawn, sf::Clock* clock, int spwn_timer, std::vector<Monster*>* wave, sf::RenderWindow* win, std::vector<Animation>* ani, int dmg, int hp, int boundary, int* targetHP, std::string name, Score* score) {
+void runSpawners(int* maxSpawn, sf::Clock* clock, int spwn_timer, std::vector<Monster*>* wave, sf::RenderWindow* win, std::vector<Animation>* ani, int dmg, int hp, int boundary, int* targetHP, std::string name, Score* score)
+{
 	int r = (rand() % 6) - 3;
-	if (clock->getElapsedTime().asSeconds() > spwn_timer + r && *maxSpawn != 0) {
-		if (name == "Lancer") {
+	if (clock->getElapsedTime().asSeconds() > spwn_timer + r && *maxSpawn != 0)
+	{
+		if (name == "Lancer")
+		{
 			Lancer* spawn = new Lancer(win, *ani, dmg, hp, score);
 			spawn->setTarget(boundary, *&targetHP);
 			wave->push_back(spawn);
@@ -523,7 +556,8 @@ void runSpawners(int* maxSpawn, sf::Clock* clock, int spwn_timer, std::vector<Mo
 			spawn->setTarget(boundary, *&targetHP);
 			wave->push_back(spawn);
 		}
-		else {
+		else
+		{
 			Monster* spawn = new Monster(win, *ani, dmg, hp, score);
 			spawn->setTarget(boundary, *&targetHP);
 			wave->push_back(spawn);
@@ -533,9 +567,11 @@ void runSpawners(int* maxSpawn, sf::Clock* clock, int spwn_timer, std::vector<Mo
 	}
 }
 
-void showPauseScreen() {
+void showPauseScreen()
+{
 
 }
-void hidePauseScreen() {
+void hidePauseScreen()
+{
 
 }

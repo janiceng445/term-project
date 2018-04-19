@@ -9,8 +9,6 @@
 #include "Animation.hpp"
 #include "AnimatedSprite.hpp"
 #include "Monster.h"
-#include "Enemy.h"
-#include "Timer.h"
 #include "Projectile.h"
 #include "Lancer.h"
 #include "Score.h"
