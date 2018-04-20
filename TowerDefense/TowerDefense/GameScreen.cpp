@@ -96,9 +96,9 @@ int GameScreen::Run(sf::RenderWindow &window) {
 	shootyTowerSpr.setTexture(shootyTowerTx);
 	barbedWireSpr.setTexture(barbedWireTx);
 
-	Tower barbedWire(&window, barbedWire_HP, barbedWire_DMG, barbedWireSpr, dimensions.x * 0.5, dimensions.y * 0.7);				//deals damage to enemies who are walking through it
-	Tower basicTower(&window, basicTower_HP, basicTower_DMG, basicTowerSpr, dimensions.x * 0.6, dimensions.y * 0.85);				//a simple barricade
-	Tower shootyTower(&window, shootyTower_HP, shootyTower_DMG, shootyTowerSpr, dimensions.x * 0.7, dimensions.y * 0.7);			//shoots the enemies
+	Tower barbedWire(&window, barbedWire_HP, barbedWire_DMG, barbedWireSpr, dimensions.x * 0.5f, dimensions.y * 0.7f);				//deals damage to enemies who are walking through it
+	Tower basicTower(&window, basicTower_HP, basicTower_DMG, basicTowerSpr, dimensions.x * 0.6f, dimensions.y * 0.85f);				//a simple barricade
+	Tower shootyTower(&window, shootyTower_HP, shootyTower_DMG, shootyTowerSpr, dimensions.x * 0.7f, dimensions.y * 0.7f);			//shoots the enemies
 
 																																	////////////////////////////// Add animations //////////////////////////////
 
@@ -115,7 +115,11 @@ int GameScreen::Run(sf::RenderWindow &window) {
 	int targetHP = 100;
 
 	//////////////////////////////// Wave of enemies /////////////////////////////////
-	int waveRound = 0;
+	test.push_back(skellyAmount);
+	test.push_back(rhinoAmount);
+	test.push_back(lancerAmount);
+	test.push_back(demonAmount);
+	createRounds();
 
 	//////////////////////////////// Scoreboard ////////////////////////////////
 
@@ -132,12 +136,11 @@ int GameScreen::Run(sf::RenderWindow &window) {
 	scoreText.setFillColor(sf::Color::White);
 	scoreText.setPosition(10, 10);
 
-	///////////////////////////////// Gerard //////////////////////////////////////////
-
+	// Joe
 	sf::Sprite background(backgroundTexture);
 	background.setScale((float)(dimensions.x / background.getGlobalBounds().width), (float)(dimensions.y / background.getGlobalBounds().height));
 	joeSprite.setTexture(joeTexture);
-	joeSprite.setPosition(0.92 * dimensions.x, 0.62 * dimensions.y);
+	joeSprite.setPosition(0.92f * dimensions.x, 0.62f * dimensions.y);
 	armSprite.setTexture(armTexture);
 	armSprite.setPosition(joeSprite.getPosition().x + joeSprite.getGlobalBounds().width / 2 - 3,
 		joeSprite.getPosition().y + joeSprite.getGlobalBounds().height / 2 + 5);
@@ -155,7 +158,7 @@ int GameScreen::Run(sf::RenderWindow &window) {
 		if (!paused)
 		{
 			//sets rotation of arm based on mouse location (gun points at mouse pointer)
-			armSprite.setRotation((180.0 / PI) * atan2(0.52 * dimensions.y - sf::Mouse::getPosition(window).y, 0.76 * dimensions.x - sf::Mouse::getPosition(window).x));
+			armSprite.setRotation((float) ((180.0 / PI) * atan2(0.52 * dimensions.y - sf::Mouse::getPosition(window).y, 0.76f * dimensions.x - sf::Mouse::getPosition(window).x)));
 
 			// Score
 			scoreTimer--;
@@ -230,13 +233,25 @@ int GameScreen::Run(sf::RenderWindow &window) {
 			name.push_back("Rhino");
 			name.push_back("Lancer");
 			name.push_back("Demon");
-
+			//waveRound = 9;
 			// Parameters: maximum spawns, clock, spawn timer, wave vector, window, animation vector, dmg, hp, boundary, target's hp, name, score
-			runSpawners(&skellyMax, &clock_Skelly, SKELLY_SPWN_TIMER, &wave, &window, &skellyAni, skelly_DMG, skelly_HP, boundary, &targetHP, name.at(0), &gameScore);
-			runSpawners(&rhinoMax, &clock_Rhino, RHINO_SPWN_TIMER, &wave, &window, &rhinoAni, rhino_DMG, rhino_HP, boundary, &targetHP, name.at(1), &gameScore);
-			runSpawners(&lancerMax, &clock_Lancer, LANCER_SPWN_TIMER, &wave, &window, &lancerAni, lancer_DMG, lancer_HP, boundary, &targetHP, name.at(2), &gameScore);
-			runSpawners(&demonMax, &clock_Demon, DEMON_SPWN_TIMER, &wave, &window, &demonAni, demon_DMG, demon_HP, boundary, &targetHP, name.at(3), &gameScore);
-
+			runSpawners(&skellyAmount[waveRound], &clock_Skelly, SKELLY_SPWN_TIMER, &wave, &window, &skellyAni, skelly_DMG, skelly_HP, boundary, &targetHP, name.at(0), &gameScore);
+			runSpawners(&rhinoAmount[waveRound], &clock_Rhino, RHINO_SPWN_TIMER, &wave, &window, &rhinoAni, rhino_DMG, rhino_HP, boundary, &targetHP, name.at(1), &gameScore);
+			runSpawners(&lancerAmount[waveRound], &clock_Lancer, LANCER_SPWN_TIMER, &wave, &window, &lancerAni, lancer_DMG, lancer_HP, boundary, &targetHP, name.at(2), &gameScore);
+			runSpawners(&demonAmount[waveRound], &clock_Demon, DEMON_SPWN_TIMER, &wave, &window, &demonAni, demon_DMG, demon_HP, boundary, &targetHP, name.at(3), &gameScore);
+			if (!waves.empty() && waves.at(waveRound)->getNumMobs() == 0)
+			{
+				breakCounter++;
+				if (breakCounter == breakTimer)
+				{
+					breakCounter = 0;
+					breakTimer += 250;
+					if (waveRound < numLevels - 1)
+					{
+						waveRound++;
+					}
+				}
+			}
 
 			// Targets and health
 			/*if (targets[0] <= 0) {
@@ -263,18 +278,20 @@ int GameScreen::Run(sf::RenderWindow &window) {
 			temp.restart();
 			}*/
 			///////////////////////////////////////////////////////////////////////
+			// Controlling waves of mobs, updating animations, and moving
 			for (unsigned int i = 0; i < wave.size(); i++)
 			{
 				wave[i]->run();
 				wave[i]->attackMove();
 				if (wave[i]->isDead())
 				{
+					if(waves.at(waveRound)->getNumMobs() > 0) waves.at(waveRound)->deductMob();
 					wave.erase(wave.begin() + i);
 				}
 			}
 
 			//==================================================// TOWERS //==================================================//
-			for (int i = 0; i < wave.size(); i++)
+			for (unsigned int i = 0; i < wave.size(); i++)
 			{
 				//checks to see if the enemy is attacking. The clock keeps the attack from having every game tick
 				if (wave.at(i)->isCurrAttacking() == true && enemyAtkTimer.getElapsedTime().asSeconds() > 0.5f)
@@ -301,7 +318,7 @@ int GameScreen::Run(sf::RenderWindow &window) {
 				}
 			}
 
-			int enemyCounter = 0;
+			unsigned int enemyCounter = 0;
 
 			// Shoot only when wave is not empty
 			if (!wave.empty())
@@ -378,6 +395,8 @@ int GameScreen::Run(sf::RenderWindow &window) {
 
 		// Score
 		scoreText.setString("$ " + std::to_string(gameScore.getTotal()));
+		// Displays Round # text
+		drawRound(&window);
 
 		//////////////////// MIDGROUND : Drawing the main sprites on screen ////////////////////
 		window.draw(armSprite);
@@ -394,18 +413,18 @@ int GameScreen::Run(sf::RenderWindow &window) {
 		//if the tower is alive, it draws it and then sets the enemies to target it
 		if (basicTower.amIAlive())
 		{
-			for (int i = 0; i < wave.size(); i++)
+			for (unsigned int i = 0; i < wave.size(); i++)
 			{
-				wave.at(i)->setTarget(basicTower.getXPosition() - basicTower.getSpriteGlobalBounds().width / 2, &targetHP);
+				wave.at(i)->setTarget(basicTower.getXPosition() - (int) (basicTower.getSpriteGlobalBounds().width / 2), &targetHP);
 			}
 			basicTower.draw();
 		}
 		else
 		{
 			//if the tower is dead, it resets the enemies' target to what it was before
-			for (int i = 0; i < wave.size(); i++)
+			for (unsigned int i = 0; i < wave.size(); i++)
 			{
-				wave.at(i)->setTarget(shootyTower.getXPosition() - shootyTower.getSpriteGlobalBounds().width / 2, &targetHP);
+				wave.at(i)->setTarget(shootyTower.getXPosition() - (int) (shootyTower.getSpriteGlobalBounds().width / 2), &targetHP);
 			}
 		}
 
@@ -529,7 +548,7 @@ void GameScreen::setSpriteAnimations(std::vector<Animation>* ani, sf::Texture* t
 		ani->push_back(special);
 	}
 }
-void GameScreen::runSpawners(int* maxSpawn, sf::Clock* clock, int spwn_timer, std::vector<Monster*>* wave, sf::RenderWindow* win, std::vector<Animation>* ani, int dmg, int hp, int boundary, int* targetHP, std::string name, Score* score) {
+void GameScreen::runSpawners(int* maxSpawn, sf::Clock* clock, float spwn_timer, std::vector<Monster*>* wave, sf::RenderWindow* win, std::vector<Animation>* ani, int dmg, int hp, int boundary, int* targetHP, std::string name, Score* score) {
 	int r = (rand() % 6) - 3;
 	if (clock->getElapsedTime().asSeconds() > spwn_timer + r && *maxSpawn != 0) {
 		if (name == "Lancer") {
@@ -574,4 +593,29 @@ void GameScreen::drawPauseScreen(sf::RenderWindow* win)
 {
 	win->draw(pauseScreen);
 	win->draw(pauseText);
+}
+void GameScreen::drawRound(sf::RenderWindow* win)
+{
+	//win->draw(pauseText);
+	roundText.setFont(pixeled);
+	roundText.setCharacterSize(20);
+	roundText.setFillColor(sf::Color::White);
+	roundText.setString("Round " + std::to_string(waveRound + 1));
+	roundText.setPosition(dimensions.x / 2 - roundText.getGlobalBounds().width / 2, 90);
+	win->draw(roundText);
+}
+
+void GameScreen::createRounds()
+{
+	// Format Order: Round #, # of skelly, # of rhino, # of lancer, # of demon
+	waves.push_back(new Wave(1, skellyAmount[0], rhinoAmount[0], lancerAmount[0], demonAmount[0])); // Round 1
+	waves.push_back(new Wave(2, skellyAmount[1], rhinoAmount[1], lancerAmount[1], demonAmount[1])); // Round 2
+	waves.push_back(new Wave(3, skellyAmount[2], rhinoAmount[2], lancerAmount[2], demonAmount[2])); // Round 3
+	waves.push_back(new Wave(4, skellyAmount[3], rhinoAmount[3], lancerAmount[3], demonAmount[3])); // Round 4
+	waves.push_back(new Wave(5, skellyAmount[4], rhinoAmount[4], lancerAmount[4], demonAmount[4])); // Round 5
+	waves.push_back(new Wave(6, skellyAmount[5], rhinoAmount[5], lancerAmount[5], demonAmount[5])); // Round 6
+	waves.push_back(new Wave(7, skellyAmount[6], rhinoAmount[6], lancerAmount[6], demonAmount[6])); // Round 7
+	waves.push_back(new Wave(8, skellyAmount[7], rhinoAmount[7], lancerAmount[7], demonAmount[7])); // Round 8
+	waves.push_back(new Wave(9, skellyAmount[8], rhinoAmount[8], lancerAmount[8], demonAmount[8])); // Round 9
+	waves.push_back(new Wave(10, skellyAmount[9], rhinoAmount[9], lancerAmount[9], demonAmount[9])); // Round 10
 }

@@ -12,7 +12,8 @@ Monster::Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, 
 	this->AD = AD / 2; // Explanation: attacks ticks twice
 	this->HP = HP;
 	this->max_HP = HP;
-	this->movementSpeed = DEFAULT_MVMT_SPEED;
+	float s = rand() / (float)RAND_MAX * 0.15;
+	this->movementSpeed = DEFAULT_MVMT_SPEED + s;
 	this->animationSpeed = DEFAULT_ANI_SPEED;
 	this->isAlive = true;
 	this->isAttacking = false;
@@ -21,6 +22,7 @@ Monster::Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, 
 	// Location Default
 	this->x = -25;
 	this->y = 0.84 * win->getSize().y + (float)r + 5;
+	sprite_yCounter = 0;
 
 	// Animation
 	this->stopRunning = false;
@@ -46,6 +48,22 @@ Monster::Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, 
 	this->window = win;
 	this->targetedHealth = 0;
 	this->score = score;
+	c = rand() % 3 + 1; // Flip a coin
+
+	// Sprite starting left or right stagger move
+	if (c == 1)
+	{
+		distance_y = -movementSpeed * 0.7;
+	}
+	else if (c == 2)
+	{
+		distance_y = movementSpeed * 0.7;
+	}
+	else
+	{
+		distance_y = 0;
+	}
+	distance_y = 0; // <-- remove this to enable stagger movement
 }
 
 /////////////////////////////////////////// Animation ///////////////////////////////////////////
@@ -164,13 +182,21 @@ void Monster::setStartingPosition(float x, float y) {
 }
 // Moves the sprite
 void Monster::attackMove() {
+	sprite_yCounter++;
+	// Moving monster along y axis
+	if (y <= window->getSize().y * 0.8 || 
+		sprite_yCounter == sprite_yTimer)
+	{
+		distance_y  = distance_y * -1;
+		sprite_yCounter = 0;
+	}
 	// Updates x and y with current location
 	this->x = aniSprite.getPosition().x;
 	this->y = aniSprite.getPosition().y;
 	// Move
 	if (this->isAlive) {
 		if (this->x < this->stoppingPoint) {
-			this->aniSprite.move(movementSpeed, 0);
+			this->aniSprite.move(movementSpeed, distance_y);
 		}
 		if (this->x > this->stoppingPoint - 10 && this->aniSprite.getCurrentFrame() == 3) {
 			attack();

@@ -22,7 +22,7 @@ Lancer::Lancer(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, in
 	barrierDurationMax = 500;
 	barrierDuration = barrierDurationMax;
 	barrierRecharge = 0;
-
+	distance_y = 0;
 }
 
 // Override Monster run
@@ -148,7 +148,7 @@ float Lancer::getDetectionDistance() {
 /////////////////////////////////// Behavior ///////////////////////////////////
 void Lancer::takeDamage(int dmg) {
 	if (usingSpecial && canSpecial) {
-		this->barrierHP -= 0.25 * barrierHPMax;
+		this->barrierHP -= 0.1 * barrierHPMax;
 	}
 	else {
 		this->HP -= dmg;

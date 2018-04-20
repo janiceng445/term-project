@@ -10,6 +10,7 @@
 
 const float DEFAULT_MVMT_SPEED = 0.05f;
 const float DEFAULT_ANI_SPEED = 0.1f;
+const int sprite_yTimer = 325;
 
 class Monster
 {
@@ -52,6 +53,8 @@ class Monster
 	// Location
 	float x;
 	float y;
+	int sprite_yCounter;
+	float distance_y;
 
 	// Others
 	sf::RenderWindow* window;
@@ -60,6 +63,7 @@ class Monster
 	sf::Clock clock;
 	sf::Clock frameClock;
 	Score* score;
+	int c;
 
 	public:
 	Monster();
@@ -85,7 +89,7 @@ class Monster
 	// Location
 	void changeY();
 	void setStartingPosition(float x, float y);
-	void attackMove();
+	void virtual attackMove();
 	sf::Vector2f getCurrentLocation();
 	sf::FloatRect virtual getSpriteGlobalBounds();
 	float virtual getDetectionDistance();

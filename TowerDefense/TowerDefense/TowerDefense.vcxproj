@@ -135,6 +135,7 @@
     <ClCompile Include="Score.cpp" />
     <ClCompile Include="StartScreen.cpp" />
     <ClCompile Include="Tower.cpp" />
+    <ClCompile Include="Wave.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.hpp" />
@@ -149,6 +150,7 @@
     <ClInclude Include="Screens.hpp" />
     <ClInclude Include="StartScreen.hpp" />
     <ClInclude Include="Tower.h" />
+    <ClInclude Include="Wave.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="TowerDefense.rc" />
