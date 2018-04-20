@@ -92,14 +92,14 @@ void Tower::addHealthBar()
 	barMaxWidth = spriteWidth * 1.2;
 	barOutline.setSize(sf::Vector2f(barMaxWidth, 15));
 	barOutline.setOrigin(barOutline.getSize().x / 2, barOutline.getSize().y / 2);
-	barOutline.setPosition(originSprite.x, originSprite.y - spriteHeight - 10);
+	barOutline.setPosition(originSprite.x, originSprite.y - spriteHeight - 20);
 	barOutline.setFillColor(sf::Color::Transparent);
 	barOutline.setOutlineColor(sf::Color::Black);
 	barOutline.setOutlineThickness(2);
 
 	bar.setSize(sf::Vector2f(barMaxWidth, 15));
 	bar.setOrigin(bar.getSize().x / 2, bar.getSize().y / 2);
-	bar.setPosition(originSprite.x, originSprite.y - spriteHeight - 10);
+	bar.setPosition(originSprite.x, originSprite.y - spriteHeight - 20);
 	bar.setFillColor(sf::Color::Green);
 }
 void Tower::updateHealthBar()

@@ -125,14 +125,14 @@ int GameScreen::Run(sf::RenderWindow &window){
 	shootyTowerSpr.setTexture(shootyTowerTx);
 	barbedWireSpr.setTexture(barbedWireTx);
 
-	Tower barbedWire(&window, barbedWire_HP, barbedWire_DMG, barbedWireSpr, dimensions.x * 0.5f, dimensions.y * 0.7f);				//deals damage to enemies who are walking through it
+	Tower barbedWire(&window, barbedWire_HP, barbedWire_DMG, barbedWireSpr, dimensions.x * 0.5f, dimensions.y * 0.82f);				//deals damage to enemies who are walking through it
 	Tower basicTower(&window, basicTower_HP, basicTower_DMG, basicTowerSpr, dimensions.x * 0.6f, dimensions.y * 0.85f);				//a simple barricade
 	Tower shootyTower(&window, shootyTower_HP, shootyTower_DMG, shootyTowerSpr, dimensions.x * 0.7f, dimensions.y * 0.7f);			//shoots the enemies
 	
 	towersHP.push_back(barbedWire.getHP());
 	towersHP.push_back(basicTower.getHP());
 	towersHP.push_back(shootyTower.getHP());
-	towersLocation.push_back(barbedWire.getXPosition());
+	towersLocation.push_back(barbedWire.getXPosition() - basicTower.getSpriteGlobalBounds().width / 2);
 	towersLocation.push_back(basicTower.getXPosition() - basicTower.getSpriteGlobalBounds().width / 2);
 	towersLocation.push_back(shootyTower.getXPosition() - shootyTower.getSpriteGlobalBounds().width / 2 + 10);
 	tower.push_back(barbedWire);
@@ -145,10 +145,6 @@ int GameScreen::Run(sf::RenderWindow &window){
 	setSpriteAnimations(&rhinoAni, &rhino_texture, 's', "Rhino");
 	setSpriteAnimations(&lancerAni, &lancer_texture, 'm', "Lancer");
 	setSpriteAnimations(&demonAni, &demon_texture, 'd', "Demon");
-
-	////////////////////////////// Temporary Placement ///////////////////////////////
-	float targetHealth = 200;
-	int currentTarget = 0;
 
 	//************************ TOWER HITPOINTS ************************//
 	int targetHP = 100;
@@ -301,10 +297,8 @@ int GameScreen::Run(sf::RenderWindow &window){
 			{
 				wave[i]->setTarget(towersLocation.at(currentTarget), towersHP.at(currentTarget));
 				if (currentTarget == 2 && !tower.at(currentTarget).amIAlive())
-				{ // Game should be over after this
-					wave[i]->setTarget(dimensions.x - wave[i]->getSpriteGlobalBounds().width - 150, new int(1)); // Moves mobs to Joe	
-					//*****@@*****// GAME OVER //*****@@*****//
-					return 3;
+				{
+					wave[i]->setTarget(dimensions.x - 175, new int(1));
 				}
 				wave[i]->run();
 				wave[i]->attackMove();
@@ -436,6 +430,10 @@ int GameScreen::Run(sf::RenderWindow &window){
 		for (unsigned int i = 0; i < wave.size(); i++)
 		{
 			wave[i]->draw();
+			if (wave[i]->getCurrentLocation().x >= dimensions.x - 175)
+			{
+				return 3;
+			}
 		}
 
 		// Draws towers
