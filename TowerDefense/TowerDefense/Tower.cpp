@@ -34,6 +34,12 @@ int Tower::getHealth()
 	return this->health;
 }
 
+int* Tower::getHP()
+{
+	HP = &health;
+	return HP;
+}
+
 void Tower::assignTexture()
 {
 	this->towerTexture.loadFromFile("images/Towers/BasicBarrier.png");
@@ -45,6 +51,7 @@ void Tower::draw()
 	// Health bar features
 	updateHealthBar();
 	this->renWin->draw(bar);
+	this->renWin->draw(barOutline);
 }
 
 void Tower::die()
@@ -69,6 +76,7 @@ sf::FloatRect Tower::getSpriteGlobalBounds()
 
 void Tower::takeDamage(int dmg)
 {
+	std::cout << "Dying" << std::endl;
 	this->health -= dmg;
 	if (this->health <= 0)
 	{
@@ -81,21 +89,22 @@ void Tower::takeDamage(int dmg)
 
 void Tower::addHealthBar()
 {
-	bar.setSize(sf::Vector2f(spriteWidth * 1.2, 15));
-	bar.setOrigin(bar.getSize().x / 2, bar.getSize().y / 2);
-	bar.setPosition(originSprite.x, originSprite.y - spriteHeight - 10);
-	bar.setFillColor(sf::Color::Transparent);
-	bar.setOutlineColor(sf::Color::Black);
-	bar.setOutlineThickness(2);
+	barMaxWidth = spriteWidth * 1.2;
+	barOutline.setSize(sf::Vector2f(barMaxWidth, 15));
+	barOutline.setOrigin(barOutline.getSize().x / 2, barOutline.getSize().y / 2);
+	barOutline.setPosition(originSprite.x, originSprite.y - spriteHeight - 10);
+	barOutline.setFillColor(sf::Color::Transparent);
+	barOutline.setOutlineColor(sf::Color::Black);
+	barOutline.setOutlineThickness(2);
 
-	bar.setSize(sf::Vector2f(spriteWidth * 1.2, 15));
+	bar.setSize(sf::Vector2f(barMaxWidth, 15));
 	bar.setOrigin(bar.getSize().x / 2, bar.getSize().y / 2);
 	bar.setPosition(originSprite.x, originSprite.y - spriteHeight - 10);
 	bar.setFillColor(sf::Color::Green);
 }
 void Tower::updateHealthBar()
 {
-	float hp = (float)this->health / this->maxHealth * this->bar.getSize().x;
+	float hp = (float)this->health / this->maxHealth * barMaxWidth;
 	// Changing color of bar if < 50%
 	hp > 0.50 * this->spriteWidth ? bar.setFillColor(sf::Color::Green) :
 		bar.setFillColor(sf::Color::Red);

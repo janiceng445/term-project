@@ -7,6 +7,7 @@ class Tower
 private:
 	int health;
 	int maxHealth;
+	int* HP;
 	int atk;
 	int defense;
 	float posX;
@@ -22,6 +23,7 @@ private:
 
 	// Health bar
 	sf::RectangleShape bar;
+	int barMaxWidth;
 	sf::RectangleShape barOutline;
 	int spriteWidth;
 	int spriteHeight;
@@ -39,6 +41,8 @@ public:
 	int getXPosition();
 
 	int getHealth();
+
+	int* getHP(); // returns pointer to health
 
 	void draw();
 
