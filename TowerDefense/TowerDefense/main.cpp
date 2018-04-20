@@ -1,6 +1,7 @@
-#include <SFML/Audio.hpp>
-
+//#include "main.h"
 #include "Screens.hpp"
+
+enum screenType { start = 0, game = 1, win = 2, lose = 3};
 
 int main()
 {
@@ -8,38 +9,32 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(1080, 720), "Defend the Joe!");
 	//sf::RenderWindow window(sf::VideoMode(dimensions.x, dimensions.y), "Defend the Joe!", sf::Style::Fullscreen);
 
-	std::vector<cScreen*> screens;
 	int screen = 0;
 
-	StartScreen start;
-	screens.push_back(&start);
-	GameScreen game;
-	screens.push_back(&game);
-
-	//Start Screen Music
-	sf::Music startscreenMusic;
-	if (!startscreenMusic.openFromFile("Audio/startscreenMusic.wav"))
-	{
-		std::cerr << "music failed to load" << std::endl;
-		return -1;
-	}
-	startscreenMusic.setLoop(true);
-	startscreenMusic.setVolume(40);
-	startscreenMusic.play();
-
-	//Main loop
+	//main screens loop
 	while (screen >= 0)
 	{
-		screen = screens[screen]->Run(window);
-		if (screen != -1)
-		{
-			screen++;
+		//screen = screens[screen]->Run(window);
+		if (screen == screenType::start) {
+			StartScreen* start = new StartScreen;
+			screen = start->Run(window);
+			delete start;
 		}
-		if ((unsigned)screen > screens.size()) 
-		{
-			return 0;
+		else if (screen == screenType::game) {
+			GameScreen* game = new GameScreen;
+			screen = game->Run(window);
+			delete game;
 		}
-		startscreenMusic.stop();
+		else if (screen == screenType::win) {
+			WinScreen* win = new WinScreen;
+			screen = win->Run(window);
+			delete win;
+		}
+		else if (screen == screenType::lose) {
+			LoseScreen* lose = new LoseScreen;
+			screen = lose->Run(window);
+			delete lose;
+		}
 	}
 	return 0;
 }
