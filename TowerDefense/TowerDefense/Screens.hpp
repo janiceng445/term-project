@@ -8,5 +8,7 @@
 
 #include "StartScreen.hpp"
 #include "GameScreen.hpp"
+#include "WinScreen.hpp"
+#include "LoseScreen.hpp"
 
 #endif

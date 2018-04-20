@@ -3,11 +3,11 @@
 #define SCORE_H
 
 class Score {
-	private:
+private:
 	int total = 0;
 	int highScore = 0;
 
-	public:
+public:
 	Score();
 	int getTotal();
 	int getHighScore();

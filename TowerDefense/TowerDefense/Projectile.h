@@ -1,4 +1,4 @@
-#pragma once
+//#pragma once
 #ifndef PROJECTILE_H
 #define PROJECTILE_H
 #include "Monster.h"
@@ -6,10 +6,10 @@
 #include <vector>
 
 class Projectile {
-	private:
-	float maxVel = 1.f;
+private:
+	float maxVel = 3.0f;
 
-	public:
+public:
 	Projectile(float radius);
 	sf::Vector2f vel;
 	sf::CircleShape bullet;
@@ -20,7 +20,7 @@ class Projectile {
 	// Get sprite
 	sf::Vector2f getLocation();
 	sf::FloatRect getSpriteGlobalBounds();
-	bool checkCollision(std::vector<Monster>* m);
+	bool checkCollision(std::vector<Monster*>* m);
 };
 
 #endif

@@ -8,6 +8,10 @@
 #include "Score.h"
 #include <cstdlib>
 
+const float DEFAULT_MVMT_SPEED = 0.05f;
+const float DEFAULT_ANI_SPEED = 0.1f;
+const int sprite_yTimer = 325;
+
 class Monster
 {
 	protected:
@@ -15,6 +19,8 @@ class Monster
 	int AD;
 	int HP;
 	int max_HP;
+	float movementSpeed;
+	float animationSpeed;
 	bool isAlive; // State of enemy
 	bool isPermaDead; // Decaying process (animation purposes)
 	bool isAttacking;
@@ -22,7 +28,7 @@ class Monster
 	int stoppingPoint; // Tower locations
 	int decay_timer; // Time it takes for sprite to disappear
 
-					 // Graphics/Animations
+	// Graphics/Animations
 	int type; // small | medium | large enemies
 	int size; // Goes hand-in-hand with type
 	Animation* currentAnimation;
@@ -34,7 +40,7 @@ class Monster
 	bool stopRunning; // Stop running timers and behavioral animation check
 	bool stopDrawing; // Stop drawing sprite
 
-					  // Healthbar
+	// Healthbar
 	sf::RectangleShape bar;
 	// Hitbox
 	sf::RectangleShape hitbox;
@@ -47,6 +53,8 @@ class Monster
 	// Location
 	float x;
 	float y;
+	int sprite_yCounter;
+	float distance_y;
 
 	// Others
 	sf::RenderWindow* window;
@@ -55,6 +63,7 @@ class Monster
 	sf::Clock clock;
 	sf::Clock frameClock;
 	Score* score;
+	int c;
 
 	public:
 	Monster();
@@ -80,14 +89,18 @@ class Monster
 	// Location
 	void changeY();
 	void setStartingPosition(float x, float y);
-	void attackMove();
-	sf::FloatRect getSpriteGlobalBounds();
+	void virtual attackMove();
+	sf::Vector2f getCurrentLocation();
+	sf::FloatRect virtual getSpriteGlobalBounds();
+	float virtual getDetectionDistance();
 
 	// Behavior
 	void setTarget(int x, int* targetedHealth);
 	void attack();
 	void virtual useSpecialAbility();
-	void takeDamage(int dmg);
+	void virtual takeDamage(int dmg);
+	int getDamage();
+	bool isCurrAttacking();
 	void die();
 	bool isAliveFunc();
 	bool isDead();

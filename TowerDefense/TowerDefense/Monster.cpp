@@ -1,24 +1,34 @@
-#include <iostream>
 #include "Monster.h"
-#include "Score.h"
 
-Monster::Monster() {}
+Monster::Monster()
+{
+}
 Monster::Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP, Score* score)
 {
-	if (type == 1) size = 98;
+	if (type == 1) 
+	{
+		size = 98;
+	}
+
 
 	int r = (rand() % 41 - 20) * 2; // For random spawning y coordinate
+
 									// Attributes
 	this->AD = AD / 2; // Explanation: attacks ticks twice
 	this->HP = HP;
 	this->max_HP = HP;
+	float s = rand() / (float)RAND_MAX * 0.15;
+	this->movementSpeed = DEFAULT_MVMT_SPEED + s;
+	this->movementSpeed = 1.0f;							// Dev cheat
+	this->animationSpeed = DEFAULT_ANI_SPEED;
 	this->isAlive = true;
 	this->isAttacking = false;
-	this->decay_timer = 10000;
+	this->decay_timer = 1000;
 
 	// Location Default
 	this->x = -25;
-	this->y = 375 + (float)r;
+	this->y = 0.84 * win->getSize().y + (float)r + 5;
+	sprite_yCounter = 0;
 
 	// Animation
 	this->stopRunning = false;
@@ -44,6 +54,22 @@ Monster::Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, 
 	this->window = win;
 	this->targetedHealth = 0;
 	this->score = score;
+	c = rand() % 3 + 1; // Flip a coin
+
+	// Sprite starting left or right stagger move
+	if (c == 1)
+	{
+		distance_y = -movementSpeed * 0.7;
+	}
+	else if (c == 2)
+	{
+		distance_y = movementSpeed * 0.7;
+	}
+	else
+	{
+		distance_y = 0;
+	}
+	distance_y = 0; // <-- remove this to enable stagger movement
 }
 
 /////////////////////////////////////////// Animation ///////////////////////////////////////////
@@ -75,16 +101,15 @@ void Monster::run() {
 			if (aniSprite.getCurrentFrame() == 4) {
 				currentFrame = 0;
 			}
-			aniSprite.setFrameTime(sf::seconds(0.1f));
+			aniSprite.setFrameTime(sf::seconds(animationSpeed));
 			changeCurrentAnimation(2);
-			if (aniSprite.getCurrentFrame() == 4 /*&& aniSprite.getAnimation()->getSize() != 0*/
-				&& aniSprite.getAnimation()->getFrame(aniSprite.getCurrentFrame()).top == spriteHeight * 2) 
-			{
+			if (aniSprite.getCurrentFrame() == 4 && aniSprite.getAnimation()->getFrame(aniSprite.getCurrentFrame()).top == spriteHeight * 2) {
 				stopRunning = true;
 				isPermaDead = true;
 			}
 		}
 		else {
+			isAttacking = false;
 			changeCurrentAnimation(0);
 		}
 		playAnimation();
@@ -103,15 +128,14 @@ void Monster::draw() {
 	if (!stopDrawing) {
 		this->window->draw(aniSprite);
 		this->window->draw(hitbox);
+		this->window->draw(this->bar);
 	}
 }
 
 /////////////////////////////////////////// Health Bar ///////////////////////////////////////////
 
 void Monster::addHealthBar() {
-	sf::RectangleShape bar;
 	bar.setSize(sf::Vector2f((float)this->spriteWidth, 5));
-	this->bar = bar;
 }
 void Monster::updateHealthBar() {
 	float hp = (float)this->HP / this->max_HP * this->spriteWidth;
@@ -123,7 +147,6 @@ void Monster::updateHealthBar() {
 }
 void Monster::showHealthBar() {
 	this->bar.setPosition(this->x, this->y - 10);
-	this->window->draw(this->bar);
 }
 
 /////////////////////////////////////////// Hitbox ///////////////////////////////////////////
@@ -155,7 +178,7 @@ void Monster::changeY() {
 	int r = (rand() % 41 - 20) * 3; // For random spawning y coordinate
 	this->y += r;
 }
-
+// Set spawn's starting position
 void Monster::setStartingPosition(float x, float y) {
 	this->x = x;
 	this->y = y;
@@ -163,13 +186,21 @@ void Monster::setStartingPosition(float x, float y) {
 }
 // Moves the sprite
 void Monster::attackMove() {
+	sprite_yCounter++;
+	// Moving monster along y axis
+	if (y <= window->getSize().y * 0.8 || 
+		sprite_yCounter == sprite_yTimer)
+	{
+		distance_y  = distance_y * -1;
+		sprite_yCounter = 0;
+	}
 	// Updates x and y with current location
 	this->x = aniSprite.getPosition().x;
 	this->y = aniSprite.getPosition().y;
 	// Move
 	if (this->isAlive) {
 		if (this->x < this->stoppingPoint) {
-			this->aniSprite.move(0.05f, 0);
+			this->aniSprite.move(movementSpeed, distance_y);
 		}
 		if (this->x > this->stoppingPoint - 10 && this->aniSprite.getCurrentFrame() == 3) {
 			attack();
@@ -178,9 +209,20 @@ void Monster::attackMove() {
 	updateHealthBar();
 	if (hitboxVisibility) drawHitbox();
 }
+// Gets spawn's current location
+sf::Vector2f Monster::getCurrentLocation() {
+	sf::Vector2f location;
+	location.x = aniSprite.getPosition().x + (spriteWidth / 2);
+	location.y = aniSprite.getPosition().y + (spriteHeight / 2);
+	return location;
+}
 
+// Gets hitboxes for projectiles to give results
 sf::FloatRect Monster::getSpriteGlobalBounds() {
 	return aniSprite.getGlobalBounds();
+}
+float Monster::getDetectionDistance() {
+	return aniSprite.getPosition().x;
 }
 
 /////////////////////////////////////////// Behavior ///////////////////////////////////////////
@@ -214,12 +256,18 @@ void Monster::takeDamage(int dmg) {
 		die();
 	}
 }
-
+// Gets damage
+int Monster::getDamage() {
+	return this->AD;
+}
+// Checks if Monster is attacking
+bool Monster::isCurrAttacking() {
+	return this->isAttacking;
+}
 // Dies
 void Monster::die() {
 	this->isAlive = false;
 	score->add(100);
-	//std::cout << score->getTotal() << std::endl;
 }
 // Gets isAlive value
 bool Monster::isAliveFunc() {

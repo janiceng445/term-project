@@ -1,25 +1,40 @@
-#include "main.h"
+//#include "main.h"
 #include "Screens.hpp"
+
+enum screenType { start = 0, game = 1, win = 2, lose = 3};
 
 int main()
 {
 	////////////////////////////// Create window //////////////////////////////
-	dimensions.x = backgroundTexture.getSize().x;
-	dimensions.y = backgroundTexture.getSize().y;
 	sf::RenderWindow window(sf::VideoMode(1080, 720), "Defend the Joe!");
 	//sf::RenderWindow window(sf::VideoMode(dimensions.x, dimensions.y), "Defend the Joe!", sf::Style::Fullscreen);
 
-	std::vector<cScreen*> Screens;
 	int screen = 0;
 
-	//StartScreen start;
-	//Screens.push_back(&start);
-	GameScreen game;
-	Screens.push_back(&game);
-
-	//Main loop
+	//main screens loop
 	while (screen >= 0)
 	{
-		screen = Screens[screen]->Run(window);
+		//screen = screens[screen]->Run(window);
+		if (screen == screenType::start) {
+			StartScreen* start = new StartScreen;
+			screen = start->Run(window);
+			delete start;
+		}
+		else if (screen == screenType::game) {
+			GameScreen* game = new GameScreen;
+			screen = game->Run(window);
+			delete game;
+		}
+		else if (screen == screenType::win) {
+			WinScreen* win = new WinScreen;
+			screen = win->Run(window);
+			delete win;
+		}
+		else if (screen == screenType::lose) {
+			LoseScreen* lose = new LoseScreen;
+			screen = lose->Run(window);
+			delete lose;
+		}
 	}
+	return 0;
 }
