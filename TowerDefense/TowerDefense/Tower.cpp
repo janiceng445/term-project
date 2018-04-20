@@ -3,7 +3,8 @@
 Tower::Tower(sf::RenderWindow* renderWin, int hitpoints, int attack, sf::Sprite towerSprite, float xPos, float yPos)
 {
 	//changeable attributes
-	this->health = hitpoints;
+	this->maxHealth = hitpoints;
+	this->health = maxHealth;
 	this->atk = attack;
 
 	//defaults
@@ -12,8 +13,15 @@ Tower::Tower(sf::RenderWindow* renderWin, int hitpoints, int attack, sf::Sprite 
 	this->posX = xPos;
 	this->posY = yPos;
 	this->sprite = towerSprite;
+	spriteWidth = sprite.getGlobalBounds().width;
+	spriteHeight = sprite.getGlobalBounds().height;
 
 	this->sprite.setPosition(this->posX, this->posY);
+
+	// Setting origin
+	originSprite.x = sprite.getPosition().x + sprite.getGlobalBounds().width / 2;
+	originSprite.y = sprite.getPosition().y + sprite.getGlobalBounds().height;
+	addHealthBar();
 }
 
 int Tower::getXPosition()
@@ -34,6 +42,9 @@ void Tower::assignTexture()
 void Tower::draw()
 {
 	this->renWin->draw(this->sprite);
+	// Health bar features
+	updateHealthBar();
+	this->renWin->draw(bar);
 }
 
 void Tower::die()
@@ -66,5 +77,29 @@ void Tower::takeDamage(int dmg)
 	}
 }
 
+/////////////////////////////////////////// Health Bar ///////////////////////////////////////////
+
+void Tower::addHealthBar()
+{
+	bar.setSize(sf::Vector2f(spriteWidth * 1.2, 15));
+	bar.setOrigin(bar.getSize().x / 2, bar.getSize().y / 2);
+	bar.setPosition(originSprite.x, originSprite.y - spriteHeight - 10);
+	bar.setFillColor(sf::Color::Transparent);
+	bar.setOutlineColor(sf::Color::Black);
+	bar.setOutlineThickness(2);
+
+	bar.setSize(sf::Vector2f(spriteWidth * 1.2, 15));
+	bar.setOrigin(bar.getSize().x / 2, bar.getSize().y / 2);
+	bar.setPosition(originSprite.x, originSprite.y - spriteHeight - 10);
+	bar.setFillColor(sf::Color::Green);
+}
+void Tower::updateHealthBar()
+{
+	float hp = (float)this->health / this->maxHealth * this->bar.getSize().x;
+	// Changing color of bar if < 50%
+	hp > 0.50 * this->spriteWidth ? bar.setFillColor(sf::Color::Green) :
+		bar.setFillColor(sf::Color::Red);
+	bar.setSize(sf::Vector2f(hp, 15));
+}
 
 Tower::~Tower() {}

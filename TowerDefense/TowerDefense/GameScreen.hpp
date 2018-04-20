@@ -48,9 +48,9 @@ class GameScreen : public cScreen {
 	unsigned int boundary = (int) dimensions.x;
 
 	// Tower Power
-	unsigned int barbedWire_HP = 50;
-	unsigned int basicTower_HP = 100;
-	unsigned int shootyTower_HP = 75;
+	unsigned int barbedWire_HP = 1000;
+	unsigned int basicTower_HP = 2000;
+	unsigned int shootyTower_HP = 3000;
 	unsigned int barbedWire_DMG = 0;
 	unsigned int basicTower_DMG = 25;
 	unsigned int shootyTower_DMG = 0;

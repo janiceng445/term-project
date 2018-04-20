@@ -20,6 +20,14 @@ private:
 	sf::RenderWindow* renWin;
 	int windowWidth;
 
+	// Health bar
+	sf::RectangleShape bar;
+	sf::RectangleShape barOutline;
+	int spriteWidth;
+	int spriteHeight;
+	int x;
+	int y;
+	sf::Vector2f originSprite;
 
 public:
 
@@ -43,6 +51,11 @@ public:
 	sf::Sprite getSprite();
 
 	sf::FloatRect getSpriteGlobalBounds();
+
+	/////////////////////////////////////////// Health Bar ///////////////////////////////////////////
+	void addHealthBar();
+	void updateHealthBar();
+
 
 	~Tower();
 
