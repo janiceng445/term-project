@@ -157,6 +157,13 @@ class GameScreen : public cScreen {
 	sf::Vector2f towerAimDirNorm;
 	int reloaded;
 
+	//Audio
+	sf::SoundBuffer gunshot_buffer;
+	sf::SoundBuffer reload_buffer;
+	sf::Sound gunshotSound;
+	sf::Sound reloadSound;
+	sf::Music MUSIC;
+
 	public:
 	// Declaring functions
 	GameScreen(void);
