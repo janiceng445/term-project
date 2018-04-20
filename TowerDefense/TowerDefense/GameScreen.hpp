@@ -30,11 +30,11 @@ class GameScreen : public cScreen {
 	// Spawner
 	std::vector<Monster*> wave;
 	int skellyMax = 8;
-	unsigned int skelly_DMG = 10;
+	unsigned int skelly_DMG = 7;
 	unsigned int skelly_HP = 100;
 
 	int rhinoMax = 0;
-	unsigned int rhino_DMG = 20;
+	unsigned int rhino_DMG = 15;
 	unsigned int rhino_HP = 75;
 
 	int lancerMax = 3;
@@ -48,8 +48,8 @@ class GameScreen : public cScreen {
 	unsigned int boundary = (int) dimensions.x;
 
 	// Tower Power
-	unsigned int barbedWire_HP = 70;
-	unsigned int basicTower_HP = 100;
+	unsigned int barbedWire_HP = 100;
+	unsigned int basicTower_HP = 125;
 	unsigned int shootyTower_HP = 150;
 	unsigned int barbedWire_DMG = 0;
 	unsigned int basicTower_DMG = 0;
@@ -99,11 +99,11 @@ class GameScreen : public cScreen {
 	std::vector<Animation> lancerAni;
 	std::vector<Animation> demonAni;
 
-	// Mobs
+	// Towers
 	float targetHealth;
 	std::vector<int*> towersHP;
 	std::vector<int> towersLocation;
-	std::vector<Tower> targetedTower;
+	std::vector<Tower> tower;
 	int const maxProjTimer = 250;
 	int currentTarget = 0;
 	int targetHP;
