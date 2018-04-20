@@ -109,12 +109,12 @@ class GameScreen : public cScreen {
 	// Rounds
 	std::vector<Wave*> waves;
 	std::vector<int*> test;
-	int numLevels = 10;
+	const static int numLevels = 10;
 	int waveRound = 0;
-	int skellyAmount[10] = { 3, 4, 5, 5, 7, 7, 0, 0, 9, 10 };
-	int rhinoAmount[10] =  { 0, 2, 3, 5, 3, 3, 10, 9, 5, 4 };
-	int lancerAmount[10] = { 0, 0, 1, 2, 2, 3, 4, 7, 3, 3 };
-	int demonAmount[10] =  { 0, 0, 0, 3, 4, 3, 7, 5, 5, 5 };
+	int skellyAmount[numLevels] = { 3, 4, 5, 5, 7, 7, 0, 0, 9, 10 };
+	int rhinoAmount[numLevels] =  { 0, 2, 3, 5, 3, 3, 10, 9, 5, 4 };
+	int lancerAmount[numLevels] = { 0, 0, 1, 2, 2, 3, 4, 7, 3, 3 };
+	int demonAmount[numLevels] =  { 0, 0, 0, 3, 4, 3, 7, 5, 5, 5 };
 	int breakCounter = 0;
 	int breakTimer = 500;
 	sf::Text roundText;
