@@ -11,9 +11,6 @@ int StartScreen::Run(sf::RenderWindow &window)
 
 	dimensions.x = window.getSize().x;
 	dimensions.y = window.getSize().y;
-	
-	
-	
 
 	//loading background
 	if (!menuBack.loadFromFile("Images/menuback.png"))
@@ -30,6 +27,17 @@ int StartScreen::Run(sf::RenderWindow &window)
 		return -1;
 	}
 
+	//start screen music
+	sf::Music startscreenMusic;
+	if (!startscreenMusic.openFromFile("Audio/startscreenMusic.wav"))
+	{
+		std::cerr << "music failed to load" << std::endl;
+		return -1;
+	}
+	startscreenMusic.setLoop(true);
+	startscreenMusic.setVolume(40);
+	startscreenMusic.play();
+
 	//setting up menu text
 	startGameText.setFont(pixeled);
 	fillerText.setFont(pixeled);
@@ -39,17 +47,17 @@ int StartScreen::Run(sf::RenderWindow &window)
 	fillerText.setCharacterSize(24);
 	exitGameText.setCharacterSize(24);
 
-	startGameText.setFillColor(sf::Color::Magenta);
-	fillerText.setFillColor(sf::Color::Magenta);
-	exitGameText.setFillColor(sf::Color::Magenta);
+	startGameText.setFillColor(sf::Color::White);
+	fillerText.setFillColor(sf::Color::White);
+	exitGameText.setFillColor(sf::Color::White);
 
 	startGameText.setString("Start Game");
 	fillerText.setString("Credits");
 	exitGameText.setString("Exit Game");
 
-	startGameText.setPosition(dimensions.x / 2, (dimensions.y / 2) - 30);
-	fillerText.setPosition(dimensions.x / 2, (dimensions.y / 2));
-	exitGameText.setPosition(dimensions.x / 2, (dimensions.y / 2) + 30);
+	startGameText.setPosition((dimensions.x / 2) - 72, (dimensions.y / 2) - 35);
+	fillerText.setPosition((dimensions.x / 2) - 72, (dimensions.y / 2));
+	exitGameText.setPosition((dimensions.x / 2) - 72, (dimensions.y / 2) + 35);
 
 	//preparing menu cursor
 	menuCursor.setRadius(6.0);
@@ -63,6 +71,7 @@ int StartScreen::Run(sf::RenderWindow &window)
 			if (event.type == sf::Event::Closed)
 			{
 				window.close();
+				return -1;
 			}
 			else if (event.type == sf::Event::KeyPressed)
 			{
@@ -108,7 +117,7 @@ int StartScreen::Run(sf::RenderWindow &window)
 					if (selected == 0)
 					{
 						window.clear();
-						return 0;
+						return 1;
 					}
 					else if (selected == 2) return -1;
 					break;

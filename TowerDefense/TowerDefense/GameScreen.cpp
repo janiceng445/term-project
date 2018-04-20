@@ -504,6 +504,14 @@ int GameScreen::Run(sf::RenderWindow &window){
 				{
 					paused = !paused;
 				}
+				/////////test commands for win and lose screens delete after win/lose conditions implemented
+				else if (event.key.code == sf::Keyboard::W) {
+					return 2;
+				}
+				else if (event.key.code == sf::Keyboard::L) {
+					return 3;
+				}
+				////////////////////////////////////////////////////////////////////////////////////////////
 			}
 
 		}
