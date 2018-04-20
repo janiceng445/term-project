@@ -303,17 +303,8 @@ int GameScreen::Run(sf::RenderWindow &window){
 				if (currentTarget == 2 && !tower.at(currentTarget).amIAlive())
 				{ // Game should be over after this
 					wave[i]->setTarget(dimensions.x - wave[i]->getSpriteGlobalBounds().width - 150, new int(1)); // Moves mobs to Joe	
-
 					//*****@@*****// GAME OVER //*****@@*****//
-					/*
-					GAME OVER
-					GAME OVER
-					GAME OVER
-					GAME OVER
-					GAME OVER
-					GAME OVER
-					GAME OVER
-					*/
+					return 3;
 				}
 				wave[i]->run();
 				wave[i]->attackMove();
