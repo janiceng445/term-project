@@ -7,6 +7,7 @@ class Tower
 private:
 	int health;
 	int maxHealth;
+	int* HP;
 	int atk;
 	int defense;
 	float posX;
@@ -20,6 +21,15 @@ private:
 	sf::RenderWindow* renWin;
 	int windowWidth;
 
+	// Health bar
+	sf::RectangleShape bar;
+	int barMaxWidth;
+	sf::RectangleShape barOutline;
+	int spriteWidth;
+	int spriteHeight;
+	int x;
+	int y;
+	sf::Vector2f originSprite;
 
 public:
 
@@ -32,6 +42,8 @@ public:
 
 	int getHealth();
 
+	int* getHP(); // returns pointer to health
+
 	void draw();
 
 	void takeDamage(int dmg);
@@ -43,6 +55,11 @@ public:
 	sf::Sprite getSprite();
 
 	sf::FloatRect getSpriteGlobalBounds();
+
+	/////////////////////////////////////////// Health Bar ///////////////////////////////////////////
+	void addHealthBar();
+	void updateHealthBar();
+
 
 	~Tower();
 

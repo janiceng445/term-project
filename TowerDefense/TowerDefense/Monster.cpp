@@ -19,6 +19,7 @@ Monster::Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, 
 	this->max_HP = HP;
 	float s = rand() / (float)RAND_MAX * 0.15;
 	this->movementSpeed = DEFAULT_MVMT_SPEED + s;
+	this->movementSpeed = 1.0f;							// Dev cheat
 	this->animationSpeed = DEFAULT_ANI_SPEED;
 	this->isAlive = true;
 	this->isAttacking = false;
@@ -134,9 +135,7 @@ void Monster::draw() {
 /////////////////////////////////////////// Health Bar ///////////////////////////////////////////
 
 void Monster::addHealthBar() {
-	sf::RectangleShape bar;
 	bar.setSize(sf::Vector2f((float)this->spriteWidth, 5));
-	this->bar = bar;
 }
 void Monster::updateHealthBar() {
 	float hp = (float)this->HP / this->max_HP * this->spriteWidth;

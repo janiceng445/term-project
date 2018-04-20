@@ -48,11 +48,11 @@ class GameScreen : public cScreen {
 	unsigned int boundary = (int) dimensions.x;
 
 	// Tower Power
-	unsigned int barbedWire_HP = 50;
+	unsigned int barbedWire_HP = 70;
 	unsigned int basicTower_HP = 100;
-	unsigned int shootyTower_HP = 75;
+	unsigned int shootyTower_HP = 150;
 	unsigned int barbedWire_DMG = 0;
-	unsigned int basicTower_DMG = 25;
+	unsigned int basicTower_DMG = 0;
 	unsigned int shootyTower_DMG = 0;
 
 	// Declarations
@@ -101,10 +101,11 @@ class GameScreen : public cScreen {
 
 	// Mobs
 	float targetHealth;
-	float targets[3] = { 50, 55, 60 };
+	std::vector<int*> towersHP;
+	std::vector<int> towersLocation;
+	std::vector<Tower> targetedTower;
 	int const maxProjTimer = 250;
-	int targetX[3] = { 150, 200, 250 };
-	int currentTarget;
+	int currentTarget = 0;
 	int targetHP;
 
 	// Rounds

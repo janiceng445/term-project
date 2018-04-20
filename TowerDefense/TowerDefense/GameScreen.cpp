@@ -128,8 +128,18 @@ int GameScreen::Run(sf::RenderWindow &window){
 	Tower barbedWire(&window, barbedWire_HP, barbedWire_DMG, barbedWireSpr, dimensions.x * 0.5f, dimensions.y * 0.7f);				//deals damage to enemies who are walking through it
 	Tower basicTower(&window, basicTower_HP, basicTower_DMG, basicTowerSpr, dimensions.x * 0.6f, dimensions.y * 0.85f);				//a simple barricade
 	Tower shootyTower(&window, shootyTower_HP, shootyTower_DMG, shootyTowerSpr, dimensions.x * 0.7f, dimensions.y * 0.7f);			//shoots the enemies
-
-																																	////////////////////////////// Add animations //////////////////////////////
+	
+	towersHP.push_back(barbedWire.getHP());
+	towersHP.push_back(basicTower.getHP());
+	towersHP.push_back(shootyTower.getHP());
+	towersLocation.push_back(barbedWire.getXPosition());
+	towersLocation.push_back(basicTower.getXPosition());
+	towersLocation.push_back(shootyTower.getXPosition());
+	targetedTower.push_back(barbedWire);
+	targetedTower.push_back(basicTower);
+	targetedTower.push_back(shootyTower);
+																																	
+	////////////////////////////// Add animations //////////////////////////////
 
 	setSpriteAnimations(&skellyAni, &skelly_texture, 's', "Skelly");
 	setSpriteAnimations(&rhinoAni, &rhino_texture, 's', "Rhino");
@@ -282,35 +292,23 @@ int GameScreen::Run(sf::RenderWindow &window){
 					}
 				}
 			}
+			// Targets of mobs and targeted health
+			if (towersHP.at(0) <= 0) {
+				currentTarget = 1;
+			}
+			if (towersHP.at(1) <= 0) {
+				currentTarget = 2;
+			}
+			if (towersHP.at(2) <= 0) { // Game should be over after this
+				for (unsigned int i = 0; i < wave.size(); i++) {
+					wave[i]->setTarget(dimensions.x, 0); // Moves mobs to Joe
+				}
+			}
 
-			// Targets and health
-			/*if (targets[0] <= 0) {
-			targets[0] = 0;
-			currentTarget = 1;
-			}
-			if (targets[1] <= 0) {
-			targets[1] = 0;
-			currentTarget = 2;
-			}
-			if (targets[2] <= 0) { // Game should be over after this
-			targets[2] = 0;
-			for (unsigned int i = 0; i < wave.size(); i++) {
-			wave[i].setTarget(720, 0);
-			}
-			}*/
-
-			//////////////////////// TEST TAKE DAMAGE CODE ////////////////////////
-			/*if (!wave.empty() && wave.back().getX() >= 100 && temp.getElapsedTime().asSeconds() > 1.5f) {
-			wave.back().takeDamage(25);
-			if (wave.back().getHealth() == 0) {
-			wave.pop_back();
-			}
-			temp.restart();
-			}*/
-			///////////////////////////////////////////////////////////////////////
 			// Controlling waves of mobs, updating animations, and moving
 			for (unsigned int i = 0; i < wave.size(); i++)
 			{
+				wave[i]->setTarget(towersLocation.at(currentTarget), towersHP.at(currentTarget));
 				wave[i]->run();
 				wave[i]->attackMove();
 				if (wave[i]->isDead())
@@ -321,17 +319,18 @@ int GameScreen::Run(sf::RenderWindow &window){
 			}
 
 			//==================================================// TOWERS //==================================================//
+			// Sets towers' targets
 			for (unsigned int i = 0; i < wave.size(); i++)
 			{
 				//checks to see if the enemy is attacking. The clock keeps the attack from having every game tick
 				if (wave.at(i)->isCurrAttacking() == true && enemyAtkTimer.getElapsedTime().asSeconds() > 0.5f)
 				{
-					basicTower.takeDamage(wave.at(i)->getDamage());
+					targetedTower.at(currentTarget).takeDamage(wave.at(i)->getDamage());
 					enemyAtkTimer.restart();
 				}
-				if (basicTower.getHealth() <= 0)
+				if (targetedTower.at(currentTarget).getHealth() <= 0)
 				{
-					basicTower.die();
+					targetedTower.at(currentTarget).die();
 				}
 
 				if (wave.at(i)->isAliveFunc())
@@ -444,20 +443,20 @@ int GameScreen::Run(sf::RenderWindow &window){
 		//if the tower is alive, it draws it and then sets the enemies to target it
 		if (basicTower.amIAlive())
 		{
-			for (unsigned int i = 0; i < wave.size(); i++)
+			/*for (unsigned int i = 0; i < wave.size(); i++)
 			{
-				wave.at(i)->setTarget(basicTower.getXPosition() - (int) (basicTower.getSpriteGlobalBounds().width / 2), &targetHP);
-			}
+				wave.at(i)->setTarget(towersLocation.at(currentTarget), towersHP.at(currentTarget));
+			}*/
 			basicTower.draw();
 		}
-		else
-		{
-			//if the tower is dead, it resets the enemies' target to what it was before
-			for (unsigned int i = 0; i < wave.size(); i++)
-			{
-				wave.at(i)->setTarget(shootyTower.getXPosition() - (int) (shootyTower.getSpriteGlobalBounds().width / 2), &targetHP);
-			}
-		}
+		//else
+		//{
+		//	//if the tower is dead, it resets the enemies' target to what it was before
+		//	for (unsigned int i = 0; i < wave.size(); i++)
+		//	{
+		//		wave.at(i)->setTarget(shootyTower.getXPosition() - (int) (shootyTower.getSpriteGlobalBounds().width / 2), &targetHP);
+		//	}
+		//}
 
 		// Draws enemies
 		for (unsigned int i = 0; i < wave.size(); i++)
@@ -466,7 +465,7 @@ int GameScreen::Run(sf::RenderWindow &window){
 		}
 
 		shootyTower.draw();
-		//barbedWire.draw();
+		barbedWire.draw();
 
 		//////////////////// FOREGROUND : Draw menu bar on top of all other images ////////////////////
 		window.draw(menuBar);
