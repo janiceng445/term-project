@@ -62,22 +62,29 @@ int GameScreen::Run(sf::RenderWindow &window){
 		return -1;
 	}
 	//////////////////////////////// Load audio files ////////////////////////////////
-
-	sf::SoundBuffer soundBuffer1;
-	sf::SoundBuffer soundBuffer2;
-	if (!soundBuffer1.loadFromFile("Audio/gunshotSound.wav")) 
+	if (!MUSIC.openFromFile("Audio/MUSIC.wav"))
+	{
+		std::cout << "Music could not be loaded. Check filepath" << std::endl;
+		return -1;
+	}
+	MUSIC.setLoop(true);
+	MUSIC.setVolume(50);
+	MUSIC.play();
+	
+	if (!gunshot_buffer.loadFromFile("Audio/gunshotSound.wav")) 
 	{
 		std::cout << "Gunshot sound could not be loaded. Check filepath" << std::endl;
 	}
-	sf::Sound gunshotSound;
-	gunshotSound.setBuffer(soundBuffer1);
-	gunshotSound.setVolume(50);
-	if (!soundBuffer2.loadFromFile("Audio/reloadSound.wav")) 
+	gunshotSound.setBuffer(gunshot_buffer);
+	gunshotSound.setVolume(20);
+
+	if (!reload_buffer.loadFromFile("Audio/reloadSound.wav")) 
 	{
 		std::cout << "Reload sound could not be loaded. Check filepath" << std::endl;
 	}
-	sf::Sound reloadSound;
-	reloadSound.setBuffer(soundBuffer2);
+	reloadSound.setBuffer(reload_buffer);
+	reloadSound.setVolume(50);
+
 	////////////////////////////// Create window //////////////////////////////
 	//dimensions.x = backgroundTexture.getSize().x; // DELETE IF WE DECIDE NOT TO DO FULLSCREEN
 	//dimensions.y = backgroundTexture.getSize().y; // DELETE IF WE DECIDE NOT TO DO FULLSCREEN
