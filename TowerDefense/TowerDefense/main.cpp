@@ -1,4 +1,5 @@
-//#include "main.h"
+#include <SFML/Audio.hpp>
+
 #include "Screens.hpp"
 
 int main()
@@ -15,6 +16,17 @@ int main()
 	GameScreen game;
 	screens.push_back(&game);
 
+	//Start Screen Music
+	sf::Music startscreenMusic;
+	if (!startscreenMusic.openFromFile("Audio/startscreenMusic.wav"))
+	{
+		std::cerr << "music failed to load" << std::endl;
+		return -1;
+	}
+	startscreenMusic.setLoop(true);
+	startscreenMusic.setVolume(40);
+	startscreenMusic.play();
+
 	//Main loop
 	while (screen >= 0)
 	{
@@ -27,6 +39,7 @@ int main()
 		{
 			return 0;
 		}
+		startscreenMusic.stop();
 	}
 	return 0;
 }

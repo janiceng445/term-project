@@ -160,9 +160,11 @@ class GameScreen : public cScreen {
 	//Audio
 	sf::SoundBuffer gunshot_buffer;
 	sf::SoundBuffer reload_buffer;
+	sf::SoundBuffer towershot_buffer;
+	sf::Sound towershotSound;
 	sf::Sound gunshotSound;
 	sf::Sound reloadSound;
-	sf::Music MUSIC;
+	sf::Music gameMusic;
 
 	public:
 	// Declaring functions

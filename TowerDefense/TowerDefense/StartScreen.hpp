@@ -1,6 +1,7 @@
 #pragma once
 #include "cScreen.hpp"
 
+
 class StartScreen : public cScreen {
 	private:
 	sf::Vector2f dimensions;
@@ -12,6 +13,7 @@ class StartScreen : public cScreen {
 	sf::Font pixeled;
 	sf::CircleShape menuCursor;
 
+	
 	public:
 	StartScreen(void);
 	virtual int Run(sf::RenderWindow &window);

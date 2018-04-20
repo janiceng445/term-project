@@ -148,6 +148,7 @@
     <ClInclude Include="cScreen.hpp" />
     <ClInclude Include="GameScreen.hpp" />
     <ClInclude Include="Lancer.h" />
+    <ClInclude Include="main.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="resource.h" />

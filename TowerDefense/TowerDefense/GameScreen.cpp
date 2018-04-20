@@ -62,21 +62,21 @@ int GameScreen::Run(sf::RenderWindow &window){
 		return -1;
 	}
 	//////////////////////////////// Load audio files ////////////////////////////////
-	if (!MUSIC.openFromFile("Audio/MUSIC.wav"))
+	if (!gameMusic.openFromFile("Audio/gameMusic.wav"))
 	{
 		std::cout << "Music could not be loaded. Check filepath" << std::endl;
 		return -1;
 	}
-	MUSIC.setLoop(true);
-	MUSIC.setVolume(50);
-	MUSIC.play();
+	gameMusic.setLoop(true);
+	gameMusic.setVolume(50);
+	gameMusic.play();
 	
 	if (!gunshot_buffer.loadFromFile("Audio/gunshotSound.wav")) 
 	{
 		std::cout << "Gunshot sound could not be loaded. Check filepath" << std::endl;
 	}
 	gunshotSound.setBuffer(gunshot_buffer);
-	gunshotSound.setVolume(20);
+	gunshotSound.setVolume(30);
 
 	if (!reload_buffer.loadFromFile("Audio/reloadSound.wav")) 
 	{
@@ -85,6 +85,12 @@ int GameScreen::Run(sf::RenderWindow &window){
 	reloadSound.setBuffer(reload_buffer);
 	reloadSound.setVolume(50);
 
+	if (!towershot_buffer.loadFromFile("Audio/towershotSound.wav"))
+	{
+		std::cout << "Gunshot sound could not be loaded. Check filepath" << std::endl;
+	}
+	towershotSound.setBuffer(towershot_buffer);
+	towershotSound.setVolume(20);
 	////////////////////////////// Create window //////////////////////////////
 	//dimensions.x = backgroundTexture.getSize().x; // DELETE IF WE DECIDE NOT TO DO FULLSCREEN
 	//dimensions.y = backgroundTexture.getSize().y; // DELETE IF WE DECIDE NOT TO DO FULLSCREEN
@@ -366,6 +372,7 @@ int GameScreen::Run(sf::RenderWindow &window){
 				{
 					if (timer == fireTimer)
 					{
+						towershotSound.play();
 						towerShot = true;
 						p2.bullet.setPosition(towerOrigin);
 						p2.vel = (towerAimDirNorm * p2.getMaxVel());

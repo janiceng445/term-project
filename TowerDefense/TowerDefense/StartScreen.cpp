@@ -11,6 +11,9 @@ int StartScreen::Run(sf::RenderWindow &window)
 
 	dimensions.x = window.getSize().x;
 	dimensions.y = window.getSize().y;
+	
+	
+	
 
 	//loading background
 	if (!menuBack.loadFromFile("Images/menuback.png"))
@@ -124,6 +127,8 @@ int StartScreen::Run(sf::RenderWindow &window)
 		window.display();
 		window.clear();
 	}
+
+	
 
 	return -1;
 }
