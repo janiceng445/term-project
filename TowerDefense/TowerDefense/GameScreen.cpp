@@ -3,7 +3,7 @@
 
 GameScreen::GameScreen(void) {}
 
-int GameScreen::Run(sf::RenderWindow &window) {
+int GameScreen::Run(sf::RenderWindow &window){
 	sf::Event event;
 	bool running = true;
 
@@ -61,7 +61,23 @@ int GameScreen::Run(sf::RenderWindow &window) {
 		std::cout << "Barbed Wire could not be loaded. Check filepath" << std::endl;
 		return -1;
 	}
+	//////////////////////////////// Load audio files ////////////////////////////////
 
+	sf::SoundBuffer soundBuffer1;
+	sf::SoundBuffer soundBuffer2;
+	if (!soundBuffer1.loadFromFile("Audio/gunshotSound.wav")) 
+	{
+		std::cout << "Gunshot sound could not be loaded. Check filepath" << std::endl;
+	}
+	sf::Sound gunshotSound;
+	gunshotSound.setBuffer(soundBuffer1);
+	gunshotSound.setVolume(50);
+	if (!soundBuffer2.loadFromFile("Audio/reloadSound.wav")) 
+	{
+		std::cout << "Reload sound could not be loaded. Check filepath" << std::endl;
+	}
+	sf::Sound reloadSound;
+	reloadSound.setBuffer(soundBuffer2);
 	////////////////////////////// Create window //////////////////////////////
 	//dimensions.x = backgroundTexture.getSize().x; // DELETE IF WE DECIDE NOT TO DO FULLSCREEN
 	//dimensions.y = backgroundTexture.getSize().y; // DELETE IF WE DECIDE NOT TO DO FULLSCREEN
@@ -177,6 +193,7 @@ int GameScreen::Run(sf::RenderWindow &window) {
 
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && projTimer == maxProjTimer && reloading == false && !ammo.empty())
 			{
+				gunshotSound.play();
 				shot = true;
 				ammo.pop_back();
 				if (ammo.empty()) reloading = true;
@@ -462,6 +479,7 @@ int GameScreen::Run(sf::RenderWindow &window) {
 			}
 			else if (event.type == sf::Event::MouseWheelMoved) {
 				if (reloaded != 6 && reloading == true) {
+					reloadSound.play();
 					reloaded++;
 					ammo.push_back(bulletSprite);
 					continue;

@@ -1,9 +1,14 @@
 #include "Monster.h"
 
-Monster::Monster() {}
+Monster::Monster()
+{
+}
 Monster::Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP, Score* score)
 {
-	if (type == 1) size = 98;
+	if (type == 1) 
+	{
+		size = 98;
+	}
 
 
 	int r = (rand() % 41 - 20) * 2; // For random spawning y coordinate

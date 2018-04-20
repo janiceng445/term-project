@@ -41,7 +41,7 @@ int StartScreen::Run(sf::RenderWindow &window)
 	exitGameText.setFillColor(sf::Color::Magenta);
 
 	startGameText.setString("Start Game");
-	fillerText.setString("Filler Text");
+	fillerText.setString("Credits");
 	exitGameText.setString("Exit Game");
 
 	startGameText.setPosition(dimensions.x / 2, (dimensions.y / 2) - 30);

@@ -19,8 +19,14 @@ int main()
 	while (screen >= 0)
 	{
 		screen = screens[screen]->Run(window);
-		if (screen != -1) screen++;
-		if ((unsigned)screen > screens.size()) return 0;
+		if (screen != -1)
+		{
+			screen++;
+		}
+		if ((unsigned)screen > screens.size()) 
+		{
+			return 0;
+		}
 	}
 	return 0;
 }
