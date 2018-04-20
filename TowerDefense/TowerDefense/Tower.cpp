@@ -22,6 +22,7 @@ Tower::Tower(sf::RenderWindow* renderWin, int hitpoints, int attack, sf::Sprite 
 	originSprite.x = sprite.getPosition().x + sprite.getGlobalBounds().width / 2;
 	originSprite.y = sprite.getPosition().y + sprite.getGlobalBounds().height;
 	addHealthBar();
+	HP = &health;
 }
 
 int Tower::getXPosition()
@@ -36,7 +37,6 @@ int Tower::getHealth()
 
 int* Tower::getHP()
 {
-	HP = &health;
 	return HP;
 }
 
@@ -76,13 +76,13 @@ sf::FloatRect Tower::getSpriteGlobalBounds()
 
 void Tower::takeDamage(int dmg)
 {
-	std::cout << "Dying" << std::endl;
 	this->health -= dmg;
 	if (this->health <= 0)
 	{
 		this->health = 0;
 		die();
 	}
+	std::cout << health << " " << *HP << std::endl;
 }
 
 /////////////////////////////////////////// Health Bar ///////////////////////////////////////////
@@ -104,7 +104,7 @@ void Tower::addHealthBar()
 }
 void Tower::updateHealthBar()
 {
-	float hp = (float)this->health / this->maxHealth * barMaxWidth;
+	float hp = (float)*this->HP / this->maxHealth * barMaxWidth;
 	// Changing color of bar if < 50%
 	hp > 0.50 * this->spriteWidth ? bar.setFillColor(sf::Color::Green) :
 		bar.setFillColor(sf::Color::Red);

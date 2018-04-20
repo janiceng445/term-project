@@ -447,7 +447,7 @@ int GameScreen::Run(sf::RenderWindow &window){
 			{
 				wave.at(i)->setTarget(towersLocation.at(currentTarget), towersHP.at(currentTarget));
 			}*/
-			basicTower.draw();
+			//basicTower.draw();
 		}
 		//else
 		//{
@@ -464,7 +464,7 @@ int GameScreen::Run(sf::RenderWindow &window){
 			wave[i]->draw();
 		}
 
-		shootyTower.draw();
+		//shootyTower.draw();
 		barbedWire.draw();
 
 		//////////////////// FOREGROUND : Draw menu bar on top of all other images ////////////////////
