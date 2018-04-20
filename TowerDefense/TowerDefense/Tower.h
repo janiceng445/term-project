@@ -46,7 +46,7 @@ public:
 
 	void draw();
 
-	void takeDamage(int dmg);
+	void takeDamage();
 
 	void die();
 

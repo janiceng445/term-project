@@ -230,7 +230,7 @@ float Monster::getDetectionDistance() {
 // Sets target via x-location and health
 void Monster::setTarget(int x, int* targetedHealth) {
 	this->stoppingPoint = x;
-	this->targetedHealth = *targetedHealth;
+	this->targetedHealth = targetedHealth;
 }
 
 // Attacks a targeted health
@@ -238,7 +238,7 @@ void Monster::attack() {
 	if (isAlive) {
 		isAttacking = true;
 		if (clock.getElapsedTime().asSeconds() > 0.17f) {
-			this->targetedHealth -= this->AD;
+			*this->targetedHealth -= this->AD;
 			clock.restart();
 		}
 	}

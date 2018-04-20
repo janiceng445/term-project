@@ -47,9 +47,10 @@ void Tower::assignTexture()
 
 void Tower::draw()
 {
+	// Draws the tower
 	this->renWin->draw(this->sprite);
+
 	// Health bar features
-	updateHealthBar();
 	this->renWin->draw(bar);
 	this->renWin->draw(barOutline);
 }
@@ -74,15 +75,14 @@ sf::FloatRect Tower::getSpriteGlobalBounds()
 	return this->sprite.getGlobalBounds();
 }
 
-void Tower::takeDamage(int dmg)
+void Tower::takeDamage()
 {
-	this->health -= dmg;
+	health = *HP;
 	if (this->health <= 0)
 	{
 		this->health = 0;
 		die();
 	}
-	std::cout << health << " " << *HP << std::endl;
 }
 
 /////////////////////////////////////////// Health Bar ///////////////////////////////////////////
@@ -104,11 +104,12 @@ void Tower::addHealthBar()
 }
 void Tower::updateHealthBar()
 {
-	float hp = (float)*this->HP / this->maxHealth * barMaxWidth;
+	float hp = ((float) *HP / (float) maxHealth) * barMaxWidth;
 	// Changing color of bar if < 50%
 	hp > 0.50 * this->spriteWidth ? bar.setFillColor(sf::Color::Green) :
 		bar.setFillColor(sf::Color::Red);
 	bar.setSize(sf::Vector2f(hp, 15));
+	takeDamage();
 }
 
 Tower::~Tower() {}

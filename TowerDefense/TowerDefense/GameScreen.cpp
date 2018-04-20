@@ -133,11 +133,11 @@ int GameScreen::Run(sf::RenderWindow &window){
 	towersHP.push_back(basicTower.getHP());
 	towersHP.push_back(shootyTower.getHP());
 	towersLocation.push_back(barbedWire.getXPosition());
-	towersLocation.push_back(basicTower.getXPosition());
-	towersLocation.push_back(shootyTower.getXPosition());
-	targetedTower.push_back(barbedWire);
-	targetedTower.push_back(basicTower);
-	targetedTower.push_back(shootyTower);
+	towersLocation.push_back(basicTower.getXPosition() - basicTower.getSpriteGlobalBounds().width / 2);
+	towersLocation.push_back(shootyTower.getXPosition() - shootyTower.getSpriteGlobalBounds().width / 2 + 10);
+	tower.push_back(barbedWire);
+	tower.push_back(basicTower);
+	tower.push_back(shootyTower);
 																																	
 	////////////////////////////// Add animations //////////////////////////////
 
@@ -273,7 +273,6 @@ int GameScreen::Run(sf::RenderWindow &window){
 			name.push_back("Rhino");
 			name.push_back("Lancer");
 			name.push_back("Demon");
-			//waveRound = 9;
 			// Parameters: maximum spawns, clock, spawn timer, wave vector, window, animation vector, dmg, hp, boundary, target's hp, name, score
 			runSpawners(&skellyAmount[waveRound], &clock_Skelly, SKELLY_SPWN_TIMER, &wave, &window, &skellyAni, skelly_DMG, skelly_HP, boundary, &targetHP, name.at(0), &gameScore);
 			runSpawners(&rhinoAmount[waveRound], &clock_Rhino, RHINO_SPWN_TIMER, &wave, &window, &rhinoAni, rhino_DMG, rhino_HP, boundary, &targetHP, name.at(1), &gameScore);
@@ -293,22 +292,29 @@ int GameScreen::Run(sf::RenderWindow &window){
 				}
 			}
 			// Targets of mobs and targeted health
-			if (towersHP.at(0) <= 0) {
-				currentTarget = 1;
-			}
-			if (towersHP.at(1) <= 0) {
-				currentTarget = 2;
-			}
-			if (towersHP.at(2) <= 0) { // Game should be over after this
-				for (unsigned int i = 0; i < wave.size(); i++) {
-					wave[i]->setTarget(dimensions.x, 0); // Moves mobs to Joe
-				}
+			if (!tower.at(currentTarget).amIAlive()) {
+				if(currentTarget < 2) currentTarget++;
 			}
 
 			// Controlling waves of mobs, updating animations, and moving
 			for (unsigned int i = 0; i < wave.size(); i++)
 			{
 				wave[i]->setTarget(towersLocation.at(currentTarget), towersHP.at(currentTarget));
+				if (currentTarget == 2 && !tower.at(currentTarget).amIAlive())
+				{ // Game should be over after this
+					wave[i]->setTarget(dimensions.x - wave[i]->getSpriteGlobalBounds().width - 150, new int(1)); // Moves mobs to Joe	
+
+					//*****@@*****// GAME OVER //*****@@*****//
+					/*
+					GAME OVER
+					GAME OVER
+					GAME OVER
+					GAME OVER
+					GAME OVER
+					GAME OVER
+					GAME OVER
+					*/
+				}
 				wave[i]->run();
 				wave[i]->attackMove();
 				if (wave[i]->isDead())
@@ -323,14 +329,10 @@ int GameScreen::Run(sf::RenderWindow &window){
 			for (unsigned int i = 0; i < wave.size(); i++)
 			{
 				//checks to see if the enemy is attacking. The clock keeps the attack from having every game tick
-				if (wave.at(i)->isCurrAttacking() == true && enemyAtkTimer.getElapsedTime().asSeconds() > 0.5f)
+				if (wave.at(i)->isCurrAttacking() && wave.at(i)->getCurrentLocation().x >= towersLocation.at(currentTarget) - 10)
 				{
-					targetedTower.at(currentTarget).takeDamage(wave.at(i)->getDamage());
-					enemyAtkTimer.restart();
-				}
-				if (targetedTower.at(currentTarget).getHealth() <= 0)
-				{
-					targetedTower.at(currentTarget).die();
+					//tower.at(currentTarget).takeDamage(wave.at(i)->getDamage());
+					tower.at(currentTarget).updateHealthBar();
 				}
 
 				if (wave.at(i)->isAliveFunc())
@@ -439,33 +441,17 @@ int GameScreen::Run(sf::RenderWindow &window){
 				window.draw(currentProj[i].bullet);
 			}
 		}
-
-		//if the tower is alive, it draws it and then sets the enemies to target it
-		if (basicTower.amIAlive())
-		{
-			/*for (unsigned int i = 0; i < wave.size(); i++)
-			{
-				wave.at(i)->setTarget(towersLocation.at(currentTarget), towersHP.at(currentTarget));
-			}*/
-			//basicTower.draw();
-		}
-		//else
-		//{
-		//	//if the tower is dead, it resets the enemies' target to what it was before
-		//	for (unsigned int i = 0; i < wave.size(); i++)
-		//	{
-		//		wave.at(i)->setTarget(shootyTower.getXPosition() - (int) (shootyTower.getSpriteGlobalBounds().width / 2), &targetHP);
-		//	}
-		//}
-
 		// Draws enemies
 		for (unsigned int i = 0; i < wave.size(); i++)
 		{
 			wave[i]->draw();
 		}
 
-		//shootyTower.draw();
-		barbedWire.draw();
+		// Draws towers
+		for (unsigned int i = 0; i < tower.size(); i++)
+		{
+			if (tower.at(i).amIAlive()) tower[i].draw();
+		}
 
 		//////////////////// FOREGROUND : Draw menu bar on top of all other images ////////////////////
 		window.draw(menuBar);
@@ -479,6 +465,7 @@ int GameScreen::Run(sf::RenderWindow &window){
 
 		// Draws the pause screen
 		if (paused)	{ drawPauseScreen(&window); }
+
 		//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
 
 		window.display();

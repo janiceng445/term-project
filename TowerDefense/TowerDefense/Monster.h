@@ -58,7 +58,7 @@ class Monster
 
 	// Others
 	sf::RenderWindow* window;
-	int targetedHealth;
+	int* targetedHealth;
 	int currentFrame;
 	sf::Clock clock;
 	sf::Clock frameClock;
