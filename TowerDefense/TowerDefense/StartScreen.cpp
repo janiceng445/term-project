@@ -163,6 +163,33 @@ int StartScreen::Run(sf::RenderWindow &window)
 					break;
 				}
 			}
+			else if (event.type == sf::Event::MouseMoved)
+			{
+				if (sf::Mouse::getPosition(window).y < startGameText.getPosition().y + sg_height)
+				{
+					selected = 0;
+					menuCursor.setPosition(startGameText.getPosition().x - 30, startGameText.getPosition().y);
+				}
+				else if (sf::Mouse::getPosition(window).y < fillerText.getPosition().y + ft_height)
+				{
+					selected = 1;
+					menuCursor.setPosition(startGameText.getPosition().x - 30, fillerText.getPosition().y);
+				}
+				else
+				{
+					selected = 2;
+					menuCursor.setPosition(startGameText.getPosition().x - 30, exitGameText.getPosition().y);
+				}
+			}
+			else if (event.type == sf::Event::MouseButtonReleased)
+			{
+				if (selected == 0)
+				{
+					window.clear();
+					return 1;
+				}
+				else if (selected == 2) return -1;
+			}
 		}
 		//drawing menu objects
 		window.draw(menuSprite);
