@@ -249,7 +249,7 @@ int GameScreen::Run(sf::RenderWindow &window){
 				shot = true;
 				ammo.pop_back();
 				if (ammo.empty()) reloading = true;
-				p1.bullet.setPosition(center + sf::Vector2f(19, 4));
+				p1.bullet.setPosition(center + sf::Vector2f(-5, 0));
 				p1.vel = (mouseAimDirNorm * p1.getMaxVel());
 				currentProj.push_back(Projectile(p1));
 			}
@@ -373,17 +373,10 @@ int GameScreen::Run(sf::RenderWindow &window){
 			}
 
 			unsigned int enemyCounter = 0;
-			//unsigned int enemyCounter = wave.size();
 			int targetValue = 0;
 			// Shoot only when wave is not empty
 			if (tower.at(2).amIAlive() && !wave.empty())
 			{
-				// Keeps a counter of how many enemies are alive
-				//while (enemyCounter < wave.size() && wave.at(enemyCounter)->isAliveFunc() == false)
-				//{
-					//enemyCounter++;
-				//}
-
 				for (int m = 0; m < wave.size(); m++)
 				{
 					Monster* targetTemp = wave.at(m);
@@ -538,7 +531,6 @@ int GameScreen::Run(sf::RenderWindow &window){
 			{
 				incomeRate_lvl++;
 				incomeRate = incomeRateDefault * incomeRate_lvl;
-				std::cout << "income rate: " << incomeRate << std::endl;
 				gameScore.setTotal(gameScore.getTotal() - moneyDeduction * incomeRate_lvl);
 				clicked = true;
 			}
