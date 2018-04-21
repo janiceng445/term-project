@@ -7,6 +7,7 @@
 #include <vector>
 #include <math.h>
 #include <cstdlib>
+#include <Windows.h>
 #include "cScreen.hpp"
 #include "Animation.hpp"
 #include "AnimatedSprite.hpp"
@@ -54,7 +55,7 @@ class GameScreen : public cScreen {
 	unsigned int boundary = (int) dimensions.x;
 
 	// Tower Power
-	unsigned int barbedWire_HP = 100;
+	unsigned int barbedWire_HP = 70;
 	unsigned int basicTower_HP = 125;
 	unsigned int shootyTower_HP = 150;
 	unsigned int barbedWire_DMG = 0;
@@ -76,7 +77,31 @@ class GameScreen : public cScreen {
 	sf::RectangleShape pauseScreen;
 	sf::Text pauseText;
 	bool pauseScreenVisibility;
+	int incomeRateDefault = 5;
+	int incomeRate = 10;
 
+	// Upgrades
+	int barbedWire_lvl = 1;
+	int barricade_lvl = 1;
+	int shootingTower_lvl = 1;
+	int incomeRate_lvl = 1;
+	int moneyDeduction = 100;
+	
+	// Buttons
+	sf::Texture upgrade_01_texture;
+	sf::Texture upgrade_02_texture;
+	sf::Texture upgrade_03_texture;
+	sf::Texture upgrade_04_texture;
+	sf::Texture quit_texture;
+	sf::Texture mute_texture_on;
+	sf::Texture mute_texture_off;
+	sf::Sprite upgrade_01_btn;
+	sf::Sprite upgrade_02_btn;
+	sf::Sprite upgrade_03_btn;
+	sf::Sprite upgrade_04_btn;
+	sf::Sprite quit_btn;
+	sf::Sprite mute_btn;
+	bool clicked = false;
 
 	// Textures
 	sf::Texture backgroundTexture;
@@ -112,13 +137,11 @@ class GameScreen : public cScreen {
 	std::vector<int*> towersHP;
 	std::vector<int> towersLocation;
 	std::vector<Tower> tower;
-	int const maxProjTimer = 250;
 	int currentTarget = 0;
 	int targetHP;
 
 	// Rounds
 	std::vector<Wave*> waves;
-	std::vector<int*> test;
 	const static int numLevels = 10;
 	int waveRound = 0;
 	int skellyAmount[numLevels] = { 3, 4, 5, 5, 7, 7, 0, 0, 9, 10 };
@@ -135,7 +158,10 @@ class GameScreen : public cScreen {
 
 	// Timers
 	int projTimer;
+	int const maxProjTimer = 250;
 	int scoreTimer;
+	int btnTimer;
+	int const maxBtnTimer = 250;
 
 	// Clocks
 	sf::Clock clock_Skelly;
@@ -160,6 +186,7 @@ class GameScreen : public cScreen {
 	sf::Vector2f mousePos;
 	sf::Vector2f mouseAimDir;
 	sf::Vector2f mouseAimDirNorm;
+
 	//tower projectiles
 	std::vector<Projectile> towerProjectiles;
 	sf::Vector2f towerOrigin;
@@ -176,6 +203,7 @@ class GameScreen : public cScreen {
 	sf::Sound gunshotSound;
 	sf::Sound reloadSound;
 	sf::Music gameMusic;
+	bool sound;
 
 	public:
 	// Declaring functions
@@ -191,4 +219,8 @@ class GameScreen : public cScreen {
 
 	// Set up rounds and waves configuration
 	void createRounds();
+
+	// Create buttons
+	void createButtons();
+	bool buttonIsClicked(sf::Sprite* sprite, sf::RenderWindow* win);
 };

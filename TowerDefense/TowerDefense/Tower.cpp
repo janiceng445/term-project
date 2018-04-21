@@ -80,6 +80,7 @@ void Tower::takeDamage()
 	health = *HP;
 	if (this->health <= 0)
 	{
+		*HP = 0;
 		this->health = 0;
 		die();
 	}

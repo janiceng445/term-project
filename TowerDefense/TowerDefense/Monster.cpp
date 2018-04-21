@@ -19,7 +19,7 @@ Monster::Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, 
 	this->max_HP = HP;
 	float s = rand() / (float)RAND_MAX * 0.15;
 	this->movementSpeed = DEFAULT_MVMT_SPEED + s;
-	this->movementSpeed = 1.0f;							// Dev cheat
+	//this->movementSpeed = 1.0f;							// Dev cheat
 	this->animationSpeed = DEFAULT_ANI_SPEED;
 	this->isAlive = true;
 	this->isAttacking = false;
@@ -201,6 +201,7 @@ void Monster::attackMove() {
 	// Move
 	if (this->isAlive) {
 		if (this->x < this->stoppingPoint) {
+			isAttacking = false;
 			this->aniSprite.move(movementSpeed, distance_y);
 		}
 		if (this->x > this->stoppingPoint - 10 && this->aniSprite.getCurrentFrame() == 3) {
@@ -244,7 +245,6 @@ void Monster::attack() {
 		}
 	}
 }
-
 void Monster::useSpecialAbility() {
 	// Do nothing as base monster
 }

@@ -43,10 +43,6 @@ int GameScreen::Run(sf::RenderWindow &window){
 		std::cerr << "demon_spriteSheet failed" << std::endl;
 		return -1;
 	}
-	if (!gunner_texture.loadFromFile("images/enemies/skelly.png")) { // needs art, using skelly
-		std::cerr << "gunner_spriteSheet failed" << std::endl;
-		return -1;
-	}
 
 	//////////////////////////////// Load tower textures ////////////////////////////////
 
@@ -96,13 +92,32 @@ int GameScreen::Run(sf::RenderWindow &window){
 	towershotSound.setBuffer(towershot_buffer);
 	towershotSound.setVolume(20);
 	////////////////////////////// Create window //////////////////////////////
-	//dimensions.x = backgroundTexture.getSize().x; // DELETE IF WE DECIDE NOT TO DO FULLSCREEN
-	//dimensions.y = backgroundTexture.getSize().y; // DELETE IF WE DECIDE NOT TO DO FULLSCREEN
+
 	dimensions.x = 1080;
 	dimensions.y = 720;
 	menuBar.setSize(sf::Vector2f(dimensions.x, 70));
 	menuBar.setFillColor(sf::Color(0, 0, 0, 255));
+
+	// Create buttons
+	createButtons();
+
+	// Create pause screen overlay
 	createPauseScreen();
+
+	///////////////////////////////// Mouse Cursor ////////////////////////////////////
+
+	sf::View fixed = window.getView();
+	sf::Texture mouseTexture_target;
+	if (!mouseTexture_target.loadFromFile("images/target.png"))
+	{
+		std::cout << "Mouse cursor01 file not found. Check filepath" << std::endl;
+	}
+	sf::Texture mouseTexture_wrench;
+	if (!mouseTexture_wrench.loadFromFile("images/wrench.png"))
+	{
+		std::cout << "Mouse cursor02 file not found. Check filepath" << std::endl;
+	}
+	sf::Sprite mouse;
 
 	///////////////////////////////// Projectiles ////////////////////////////////////
 
@@ -136,9 +151,9 @@ int GameScreen::Run(sf::RenderWindow &window){
 	towersHP.push_back(barbedWire.getHP());
 	towersHP.push_back(basicTower.getHP());
 	towersHP.push_back(shootyTower.getHP());
-	towersLocation.push_back(barbedWire.getXPosition() - basicTower.getSpriteGlobalBounds().width / 2);
-	towersLocation.push_back(basicTower.getXPosition() - basicTower.getSpriteGlobalBounds().width / 2);
-	towersLocation.push_back(shootyTower.getXPosition() - shootyTower.getSpriteGlobalBounds().width / 2 + 10);
+	towersLocation.push_back( (int) (barbedWire.getXPosition() - basicTower.getSpriteGlobalBounds().width / 2));
+	towersLocation.push_back( (int) (basicTower.getXPosition() - basicTower.getSpriteGlobalBounds().width / 2));
+	towersLocation.push_back( (int) (shootyTower.getXPosition() - shootyTower.getSpriteGlobalBounds().width / 2 + 10));
 	tower.push_back(barbedWire);
 	tower.push_back(basicTower);
 	tower.push_back(shootyTower);
@@ -149,17 +164,8 @@ int GameScreen::Run(sf::RenderWindow &window){
 	setSpriteAnimations(&rhinoAni, &rhino_texture, 's', "Rhino");
 	setSpriteAnimations(&lancerAni, &lancer_texture, 'm', "Lancer");
 	setSpriteAnimations(&demonAni, &demon_texture, 'd', "Demon");
-	setSpriteAnimations(&gunnerAni, &gunner_texture, 's', "Gunner");
-
-	//************************ TOWER HITPOINTS ************************//
-	int targetHP = 100;
 
 	//////////////////////////////// Wave of enemies /////////////////////////////////
-	test.push_back(skellyAmount);
-	test.push_back(rhinoAmount);
-	test.push_back(lancerAmount);
-	test.push_back(demonAmount);
-	test.push_back(gunnerAmount);
 	createRounds();
 
 	//////////////////////////////// Scoreboard ////////////////////////////////
@@ -193,11 +199,24 @@ int GameScreen::Run(sf::RenderWindow &window){
 	///////////////////////MAIN GAME LOOP/////////////////////////
 	while (running)
 	{
+		// Mouse cursor change
+		if (sf::Mouse::getPosition(window).y > menuBar.getGlobalBounds().height)
+		{
+			mouse.setTexture(mouseTexture_target);
+			mouse.setOrigin(mouse.getGlobalBounds().width / 2, mouse.getGlobalBounds().height / 2);
+		}
+		else
+		{
+			mouse.setTexture(mouseTexture_wrench);
+			mouse.setOrigin(0, 0);
+		}
+
 		//////////////////// BACKGROUND : Draw background image beneath all other images ////////////////////
 		window.draw(background);
 
 		if (!paused)
 		{
+			window.setMouseCursorVisible(false);
 			//sets rotation of arm based on mouse location (gun points at mouse pointer)
 			armSprite.setRotation((float) ((180.0 / PI) * atan2(0.52 * dimensions.y - sf::Mouse::getPosition(window).y, 0.76f * dimensions.x - sf::Mouse::getPosition(window).x)));
 
@@ -205,7 +224,7 @@ int GameScreen::Run(sf::RenderWindow &window){
 			scoreTimer--;
 			if (scoreTimer == 0)
 			{
-				gameScore.add(10);
+				gameScore.add(incomeRate);
 				scoreTimer = 1000;
 			}
 
@@ -215,8 +234,10 @@ int GameScreen::Run(sf::RenderWindow &window){
 			mousePos = sf::Vector2f(sf::Mouse::getPosition(window));
 			mouseAimDir = mousePos - center;
 			mouseAimDirNorm = mouseAimDir / sqrt(pow(mouseAimDir.x, 2) + pow(mouseAimDir.y, 2));
-
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && projTimer == maxProjTimer && reloading == false && !ammo.empty())
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left) 
+				&& sf::Mouse::getPosition(window).y > menuBar.getGlobalBounds().height
+				&& projTimer == maxProjTimer && reloading == false 
+				&& !ammo.empty())
 			{
 				gunshotSound.play();
 				shot = true;
@@ -270,18 +291,16 @@ int GameScreen::Run(sf::RenderWindow &window){
 
 			//==================================================// ENEMY SPAWNING //==================================================//
 
-			std::vector<MonsterType> name;
-			name.push_back(SKELLY);
-			name.push_back(RHINO);
-			name.push_back(LANCER);
-			name.push_back(DEMON);
-			name.push_back(GUNNER);
+			std::vector<std::string> name;
+			name.push_back("Skelly");
+			name.push_back("Rhino");
+			name.push_back("Lancer");
+			name.push_back("Demon");
 			// Parameters: maximum spawns, clock, spawn timer, wave vector, window, animation vector, dmg, hp, boundary, target's hp, name, score
 			runSpawners(&skellyAmount[waveRound], &clock_Skelly, SKELLY_SPWN_TIMER, &wave, &window, &skellyAni, skelly_DMG, skelly_HP, boundary, &targetHP, name.at(0), &gameScore);
 			runSpawners(&rhinoAmount[waveRound], &clock_Rhino, RHINO_SPWN_TIMER, &wave, &window, &rhinoAni, rhino_DMG, rhino_HP, boundary, &targetHP, name.at(1), &gameScore);
 			runSpawners(&lancerAmount[waveRound], &clock_Lancer, LANCER_SPWN_TIMER, &wave, &window, &lancerAni, lancer_DMG, lancer_HP, boundary, &targetHP, name.at(2), &gameScore);
 			runSpawners(&demonAmount[waveRound], &clock_Demon, DEMON_SPWN_TIMER, &wave, &window, &demonAni, demon_DMG, demon_HP, boundary, &targetHP, name.at(3), &gameScore);
-			runSpawners(&gunnerAmount[waveRound], &clock_Gunner, GUNNER_SPWN_TIMER, &wave, &window, &gunnerAni, gunner_DMG, gunner_HP, boundary, &targetHP, name.at(4), &gameScore);
 			if (!waves.empty() && waves.at(waveRound)->getNumMobs() == 0)
 			{
 				breakCounter++;
@@ -297,7 +316,10 @@ int GameScreen::Run(sf::RenderWindow &window){
 			}
 			// Targets of mobs and targeted health
 			if (!tower.at(currentTarget).amIAlive()) {
-				if(currentTarget < 2) currentTarget++;
+				if (currentTarget < 2)
+				{
+					currentTarget++;
+				}
 			}
 
 			// Controlling waves of mobs, updating animations, and moving
@@ -306,7 +328,7 @@ int GameScreen::Run(sf::RenderWindow &window){
 				wave[i]->setTarget(towersLocation.at(currentTarget), towersHP.at(currentTarget));
 				if (currentTarget == 2 && !tower.at(currentTarget).amIAlive())
 				{
-					wave[i]->setTarget(dimensions.x - 175, new int(1));
+					wave[i]->setTarget((int) (dimensions.x - 175), new int(1));
 				}
 				wave[i]->run();
 				wave[i]->attackMove();
@@ -343,9 +365,8 @@ int GameScreen::Run(sf::RenderWindow &window){
 			}
 
 			unsigned int enemyCounter = 0;
-
 			// Shoot only when wave is not empty
-			if (!wave.empty())
+			if (tower.at(2).amIAlive() && !wave.empty())
 			{
 				// Keeps a counter of how many enemies are alive
 				while (enemyCounter < wave.size() && wave.at(enemyCounter)->isAliveFunc() == false)
@@ -451,14 +472,83 @@ int GameScreen::Run(sf::RenderWindow &window){
 		}
 
 		//////////////////// FOREGROUND : Draw menu bar on top of all other images ////////////////////
+
+		//************// Bar //************//
 		window.draw(menuBar);
 		window.draw(scoreText);
-		// Drawing the bullets
+
+		//************// Buttons //************//
+		window.draw(upgrade_01_btn);
+		window.draw(upgrade_02_btn);
+		window.draw(upgrade_03_btn);
+		window.draw(upgrade_04_btn);
+		window.draw(quit_btn);
+		window.draw(mute_btn);
+
+		//************// Button clicking events //************//
+		if (!clicked)
+		{
+			if (buttonIsClicked(&upgrade_01_btn, &window) 
+				&& gameScore.getTotal() - moneyDeduction * barbedWire_lvl >= 0)			// Upgrades barbed wire
+			{
+				barbedWire_lvl++;
+				std::cout << "btn01 is pressed" << std::endl;
+				clicked = true;
+			}
+			if (buttonIsClicked(&upgrade_02_btn, &window)
+				&& gameScore.getTotal() - moneyDeduction * barricade_lvl >= 0)			// Upgrades barricade
+			{
+				barricade_lvl++;
+				std::cout << "btn02 is pressed" << std::endl;
+				clicked = true;
+			}
+			if (buttonIsClicked(&upgrade_03_btn, &window)
+				&& gameScore.getTotal() - moneyDeduction * shootingTower_lvl >= 0)			// Upgrades shooty tower
+			{
+				shootingTower_lvl++;
+				std::cout << "btn03 is pressed" << std::endl;
+				clicked = true;
+			}
+			if (buttonIsClicked(&upgrade_04_btn, &window)
+				&& gameScore.getTotal() - moneyDeduction * incomeRate_lvl >= 0)			// Upgrades income rate
+			{
+				incomeRate_lvl++;
+				incomeRate = incomeRateDefault * incomeRate_lvl;
+				std::cout << "income rate: " << incomeRate << std::endl;
+				gameScore.setTotal(gameScore.getTotal() - moneyDeduction * incomeRate_lvl);
+				clicked = true;
+			}
+			if (buttonIsClicked(&quit_btn, &window))				// Exits game
+			{
+				return 2;
+			}
+			if (buttonIsClicked(&mute_btn, &window))				// Mutes sound
+			{
+				std::swap(mute_texture_on, mute_texture_off);
+				clicked = true;
+			}
+		}
+		if (clicked)
+		{
+			btnTimer--;
+			if (btnTimer <= 0)
+			{
+				clicked = false;
+				btnTimer = maxBtnTimer;
+			}
+		}
+
+		//************// Bullet Reload Images //************//
 		for (unsigned int i = 0; i < ammo.size(); i++)
 		{
 			ammo[i].setPosition(sf::Vector2f((float)(i * 11) + 1 + 10, 15 + scoreText.getGlobalBounds().height));
 			window.draw(ammo[i]);
 		}
+
+		//************// Mouse cursor //************//
+		mouse.setPosition(static_cast<sf::Vector2f>(sf::Mouse::getPosition(window)));
+		window.setView(fixed);
+		window.draw(mouse);
 
 		// Draws the pause screen
 		if (paused)	{ drawPauseScreen(&window); }
@@ -495,10 +585,16 @@ int GameScreen::Run(sf::RenderWindow &window){
 				else if (event.key.code == sf::Keyboard::L) {
 					return 3;
 				}
+				else if (event.key.code == sf::Keyboard::C) // Increase monster AD
+				{
+					//skelly_DMG = 500;
+					skelly_HP = 1000;
+				}
 				////////////////////////////////////////////////////////////////////////////////////////////
 			}
 
 		}
+
 		window.clear();
 	}
 
@@ -571,30 +667,24 @@ void GameScreen::setSpriteAnimations(std::vector<Animation>* ani, sf::Texture* t
 		ani->push_back(special);
 	}
 }
-void GameScreen::runSpawners(int* maxSpawn, sf::Clock* clock, float spwn_timer, std::vector<Monster*>* wave, sf::RenderWindow* win, std::vector<Animation>* ani, int dmg, int hp, int boundary, int* targetHP, MonsterType name, Score* score) {
+void GameScreen::runSpawners(int* maxSpawn, sf::Clock* clock, float spwn_timer, std::vector<Monster*>* wave, sf::RenderWindow* win, std::vector<Animation>* ani, int dmg, int hp, int boundary, int* targetHP, std::string name, Score* score) {
 	int r = (rand() % 6) - 3;
 	if (clock->getElapsedTime().asSeconds() > spwn_timer + r && *maxSpawn != 0) {
-		if (name == LANCER) {
-			Lancer* spawn = new Lancer(win, *ani, dmg, hp, score, name);
+		if (name == "Lancer") {
+			Lancer* spawn = new Lancer(win, *ani, dmg, hp, score);
 			spawn->setTarget(boundary, *&targetHP);
 			wave->push_back(spawn);
 		}
-		else if (name == DEMON)
+		else if (name == "Demon")
 		{
 			int ran = rand() % 200 + 1;
-			Monster* spawn = new Monster(win, *ani, dmg, hp, score, name);
+			Monster* spawn = new Monster(win, *ani, dmg, hp, score);
 			spawn->setStartingPosition((float)-25, (float) (300 + ran));
 			spawn->setTarget(boundary, *&targetHP);
 			wave->push_back(spawn);
 		}
-		else if (name == GUNNER)
-		{
-			Gunner* spawn = new Gunner(win, *ani, dmg, hp, score, name, wave);
-			spawn->setTarget(boundary, *&targetHP);
-			wave->push_back(spawn);
-		}
 		else {
-			Monster* spawn = new Monster(win, *ani, dmg, hp, score, name);
+			Monster* spawn = new Monster(win, *ani, dmg, hp, score);
 			spawn->setTarget(boundary, *&targetHP);
 			wave->push_back(spawn);
 		}
@@ -636,15 +726,99 @@ void GameScreen::drawRound(sf::RenderWindow* win)
 
 void GameScreen::createRounds()
 {
-	// Format Order: Round #, # of skelly, # of rhino, # of lancer, # of demon, # of gunner
-	waves.push_back(new Wave(1, skellyAmount[0], rhinoAmount[0], lancerAmount[0], demonAmount[0], gunnerAmount[0])); // Round 1
-	waves.push_back(new Wave(2, skellyAmount[1], rhinoAmount[1], lancerAmount[1], demonAmount[1], gunnerAmount[1])); // Round 2
-	waves.push_back(new Wave(3, skellyAmount[2], rhinoAmount[2], lancerAmount[2], demonAmount[2], gunnerAmount[2])); // Round 3
-	waves.push_back(new Wave(4, skellyAmount[3], rhinoAmount[3], lancerAmount[3], demonAmount[3], gunnerAmount[3])); // Round 4
-	waves.push_back(new Wave(5, skellyAmount[4], rhinoAmount[4], lancerAmount[4], demonAmount[4], gunnerAmount[4])); // Round 5
-	waves.push_back(new Wave(6, skellyAmount[5], rhinoAmount[5], lancerAmount[5], demonAmount[5], gunnerAmount[5])); // Round 6
-	waves.push_back(new Wave(7, skellyAmount[6], rhinoAmount[6], lancerAmount[6], demonAmount[6], gunnerAmount[6])); // Round 7
-	waves.push_back(new Wave(8, skellyAmount[7], rhinoAmount[7], lancerAmount[7], demonAmount[7], gunnerAmount[7])); // Round 8
-	waves.push_back(new Wave(9, skellyAmount[8], rhinoAmount[8], lancerAmount[8], demonAmount[8], gunnerAmount[8])); // Round 9
-	waves.push_back(new Wave(10, skellyAmount[9], rhinoAmount[9], lancerAmount[9], demonAmount[9], gunnerAmount[9])); // Round 10
+	// Format Order: Round #, # of skelly, # of rhino, # of lancer, # of demon
+	waves.push_back(new Wave(1, skellyAmount[0], rhinoAmount[0], lancerAmount[0], demonAmount[0])); // Round 1
+	waves.push_back(new Wave(2, skellyAmount[1], rhinoAmount[1], lancerAmount[1], demonAmount[1])); // Round 2
+	waves.push_back(new Wave(3, skellyAmount[2], rhinoAmount[2], lancerAmount[2], demonAmount[2])); // Round 3
+	waves.push_back(new Wave(4, skellyAmount[3], rhinoAmount[3], lancerAmount[3], demonAmount[3])); // Round 4
+	waves.push_back(new Wave(5, skellyAmount[4], rhinoAmount[4], lancerAmount[4], demonAmount[4])); // Round 5
+	waves.push_back(new Wave(6, skellyAmount[5], rhinoAmount[5], lancerAmount[5], demonAmount[5])); // Round 6
+	waves.push_back(new Wave(7, skellyAmount[6], rhinoAmount[6], lancerAmount[6], demonAmount[6])); // Round 7
+	waves.push_back(new Wave(8, skellyAmount[7], rhinoAmount[7], lancerAmount[7], demonAmount[7])); // Round 8
+	waves.push_back(new Wave(9, skellyAmount[8], rhinoAmount[8], lancerAmount[8], demonAmount[8])); // Round 9
+	waves.push_back(new Wave(10, skellyAmount[9], rhinoAmount[9], lancerAmount[9], demonAmount[9])); // Round 10
+}
+
+// Create buttons
+void GameScreen::createButtons()
+{
+	// Load textures
+	if (!upgrade_01_texture.loadFromFile("images/buttons/btn_01.png"))
+	{
+		std::cout << "Unable to load upgrade_01_texture. Check file path." << std::endl;
+	}
+	if (!upgrade_02_texture.loadFromFile("images/buttons/btn_02.png"))
+	{
+		std::cout << "Unable to load upgrade_02_texture. Check file path." << std::endl;
+	}
+	if (!upgrade_03_texture.loadFromFile("images/buttons/btn_03.png"))
+	{
+		std::cout << "Unable to load upgrade_03_texture. Check file path." << std::endl;
+	}
+	if (!upgrade_04_texture.loadFromFile("images/buttons/btn_04.png"))
+	{
+		std::cout << "Unable to load upgrade_04_texture. Check file path." << std::endl;
+	}
+	if (!quit_texture.loadFromFile("images/buttons/btn_05.png"))
+	{
+		std::cout << "Unable to load quit_texture. Check file path." << std::endl;
+	}
+	if (!mute_texture_on.loadFromFile("images/buttons/mute_01.png"))
+	{
+		std::cout << "Unable to load mute_texture_01. Check file path." << std::endl;
+	}
+	if (!mute_texture_off.loadFromFile("images/buttons/mute_02.png"))
+	{
+		std::cout << "Unable to load mute_texture_02. Check file path." << std::endl;
+	}
+
+	int center_y_menuBar = menuBar.getGlobalBounds().height / 2;
+	int width = 60;
+	int height = 60;
+	int center_x_btn = width / 2;
+	int center_y_btn = height / 2;
+	int offset_x = 100;
+	int gap = 100;
+
+	// Set textures for sprites
+	upgrade_01_btn.setTexture(upgrade_01_texture);
+	upgrade_02_btn.setTexture(upgrade_02_texture);
+	upgrade_03_btn.setTexture(upgrade_03_texture);
+	upgrade_04_btn.setTexture(upgrade_04_texture);
+	quit_btn.setTexture(quit_texture);
+	mute_btn.setTexture(mute_texture_on);
+
+	// Set origin for sprites
+	upgrade_01_btn.setOrigin(center_x_btn, center_y_btn);
+	upgrade_02_btn.setOrigin(center_x_btn, center_y_btn);
+	upgrade_03_btn.setOrigin(center_x_btn, center_y_btn);
+	upgrade_04_btn.setOrigin(center_x_btn, center_y_btn);
+	quit_btn.setOrigin(center_x_btn, center_y_btn);
+	mute_btn.setOrigin(center_x_btn, center_y_btn);
+
+	// Set positions of sprites
+	upgrade_01_btn.setPosition(gap + width, center_y_menuBar);
+	upgrade_02_btn.setPosition(gap + width * 2 + 10, center_y_menuBar);
+	upgrade_03_btn.setPosition(gap + width * 3 + 20, center_y_menuBar);
+	upgrade_04_btn.setPosition(gap + width * 4 + 30, center_y_menuBar);
+	quit_btn.setPosition(gap + width * 5 + 40, center_y_menuBar);
+	mute_btn.setPosition(gap + width * 6 + 50, center_y_menuBar);
+}
+bool GameScreen::buttonIsClicked(sf::Sprite* sprite, sf::RenderWindow* window)
+{
+	int x1 = sprite->getPosition().x - sprite->getGlobalBounds().width / 2;
+	int x2 = x1 + sprite->getGlobalBounds().width;
+	int y1 = sprite->getPosition().y - sprite->getGlobalBounds().height / 2;
+	int y2 = y1 + sprite->getGlobalBounds().height;
+	int mouse_x = sf::Mouse::getPosition(*window).x;
+	int mouse_y = sf::Mouse::getPosition(*window).y;
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)
+		&& mouse_x > x1
+		&& mouse_x < x2
+		&& mouse_y > y1
+		&& mouse_y < y2)
+	{
+		return true;
+	}
+	return false;
 }
