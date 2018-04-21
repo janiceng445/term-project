@@ -45,22 +45,32 @@ int StartScreen::Run(sf::RenderWindow &window)
 	box.setOrigin(box.getSize().x / 2, box.getSize().y /2);
 	box.setPosition(dimensions.x / 2, dimensions.y / 2 - 35);
 
+	sf::RectangleShape boxCredits;
+	boxCredits.setFillColor(sf::Color(0, 0, 0, 175));
+	boxCredits.setSize(sf::Vector2f(180, 200));
+	boxCredits.setOrigin(boxCredits.getSize().x / 2, box.getSize().y / 2);
+	boxCredits.setPosition(dimensions.x / 2, dimensions.y * 0.75f);
+
 	//setting up menu text
 	startGameText.setFont(pixeled);
 	fillerText.setFont(pixeled);
 	exitGameText.setFont(pixeled);
+	creditsTxt.setFont(pixeled);
 
 	startGameText.setCharacterSize(24);
 	fillerText.setCharacterSize(24);
 	exitGameText.setCharacterSize(24);
+	creditsTxt.setCharacterSize(10);
 
 	startGameText.setFillColor(sf::Color::White);
 	fillerText.setFillColor(sf::Color::White);
 	exitGameText.setFillColor(sf::Color::White);
+	creditsTxt.setFillColor(sf::Color::White);
 
 	startGameText.setString("Start Game");
 	fillerText.setString("Credits");
 	exitGameText.setString("Exit Game");
+	creditsTxt.setString("Ben Anouge\nGerard Avecilla\nTom Ennis\nJanice Ng\nRicky Posada\nCaleb Reed\nSam Whittenberger");
 
 	int sg_width = startGameText.getGlobalBounds().width;
 	int sg_height = startGameText.getGlobalBounds().height;
@@ -75,6 +85,7 @@ int StartScreen::Run(sf::RenderWindow &window)
 	startGameText.setPosition((dimensions.x / 2) - x_offset, (dimensions.y / 2) - sg_height - 10 - y_offset);
 	fillerText.setPosition((dimensions.x / 2) - x_offset, (dimensions.y / 2) - y_offset);
 	exitGameText.setPosition((dimensions.x / 2) - x_offset, (dimensions.y / 2) + ft_height + eg_height / 2 - y_offset);
+	creditsTxt.setPosition(boxCredits.getPosition().x - boxCredits.getSize().x / 2 + 10, boxCredits.getPosition().y - boxCredits.getSize().y / 2 + 15);
 
 	// Copyright
 	sf::Text copyright;
@@ -161,6 +172,13 @@ int StartScreen::Run(sf::RenderWindow &window)
 		window.draw(exitGameText);
 		window.draw(menuCursor);
 		window.draw(copyright);
+
+		if (selected == 1)
+		{
+			window.draw(boxCredits);
+			window.draw(creditsTxt);
+		}
+
 		window.display();
 		window.clear();
 	}

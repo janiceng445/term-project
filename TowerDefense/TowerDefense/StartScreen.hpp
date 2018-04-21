@@ -10,6 +10,7 @@ class StartScreen : public cScreen {
 	sf::Text startGameText;
 	sf::Text fillerText;
 	sf::Text exitGameText;
+	sf::Text creditsTxt;
 	sf::Font pixeled;
 	sf::CircleShape menuCursor;
 
