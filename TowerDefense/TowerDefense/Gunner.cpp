@@ -65,10 +65,10 @@ void Gunner::attackMove()
 			stoppingPoint = 10;
 		}
 
-		if (this->x < this->stoppingPoint - 5) {
+		if (this->x < this->stoppingPoint - 50) {
 			this->aniSprite.move(movementSpeed, distance_y);
 		}
-		else if (this->x > this->stoppingPoint + 5) {
+		else if (this->x > this->stoppingPoint + 50) {
 			this->aniSprite.move(-movementSpeed, distance_y);
 		}
 		else if (this->aniSprite.getCurrentFrame() == 3) {
