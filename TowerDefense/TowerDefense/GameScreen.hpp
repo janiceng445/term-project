@@ -16,6 +16,7 @@
 #include "Score.h"
 #include "Tower.h"
 #include "Wave.h"
+#include "Gunner.h"
 
 class GameScreen : public cScreen {
 	private:
@@ -25,6 +26,7 @@ class GameScreen : public cScreen {
 	const float RHINO_SPWN_TIMER = 8.0f;
 	const float LANCER_SPWN_TIMER = 10.0f;
 	const float DEMON_SPWN_TIMER = 7.0f;
+	const float GUNNER_SPWN_TIMER = 5.0f;
 	const int fireTimer = 300;
 
 	// Spawner
@@ -44,6 +46,10 @@ class GameScreen : public cScreen {
 	int demonMax = 0;
 	unsigned int demon_DMG = 25;
 	unsigned int demon_HP = 175;
+
+	int gunnerMax = 6;
+	unsigned int gunner_DMG = 5;
+	unsigned int gunner_HP = 50;
 
 	unsigned int boundary = (int) dimensions.x;
 
@@ -81,6 +87,7 @@ class GameScreen : public cScreen {
 	sf::Texture rhino_texture;
 	sf::Texture lancer_texture;
 	sf::Texture demon_texture;
+	sf::Texture gunner_texture;
 	sf::Texture basicTowerTx;
 	sf::Texture shootyTowerTx;
 	sf::Texture barbedWireTx;
@@ -98,6 +105,7 @@ class GameScreen : public cScreen {
 	std::vector<Animation> rhinoAni;
 	std::vector<Animation> lancerAni;
 	std::vector<Animation> demonAni;
+	std::vector<Animation> gunnerAni;
 
 	// Towers
 	float targetHealth;
@@ -117,6 +125,7 @@ class GameScreen : public cScreen {
 	int rhinoAmount[numLevels] =  { 0, 2, 3, 5, 3, 3, 10, 9, 5, 4 };
 	int lancerAmount[numLevels] = { 0, 0, 1, 2, 2, 3, 4, 7, 3, 3 };
 	int demonAmount[numLevels] =  { 0, 0, 0, 3, 4, 3, 7, 5, 5, 5 };
+	int gunnerAmount[numLevels] = { 0, 0, 2, 3, 4, 5, 6, 7, 3, 5 };
 	int breakCounter = 0;
 	int breakTimer = 500;
 	sf::Text roundText;
@@ -133,6 +142,7 @@ class GameScreen : public cScreen {
 	sf::Clock clock_Rhino;
 	sf::Clock clock_Lancer;
 	sf::Clock clock_Demon;
+	sf::Clock clock_Gunner;
 	sf::Clock game_clock;
 	sf::Clock barbedTimer;
 	sf::Clock shootyTimer;
@@ -174,7 +184,7 @@ class GameScreen : public cScreen {
 
 	void setSpriteAnimations(std::vector<Animation>* skellyAni, sf::Texture* skelly_texture, char size, std::string name);
 	void runSpawners(int* maxSpawn, sf::Clock* clock, float spwn_timer, std::vector<Monster*>* wave, sf::RenderWindow* window,
-		std::vector<Animation>* ani, int dmg, int hp, int boundary, int* targetHP, std::string name, Score* score);
+		std::vector<Animation>* ani, int dmg, int hp, int boundary, int* targetHP, MonsterType name, Score* score);
 	void createPauseScreen();
 	void drawPauseScreen(sf::RenderWindow* win);
 	void drawRound(sf::RenderWindow* win);

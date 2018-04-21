@@ -4,7 +4,7 @@ Lancer::Lancer()
 {
 }
 
-Lancer::Lancer(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP, Score* score) : Monster(win, aniPack, AD, HP, score) {
+Lancer::Lancer(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP, Score* score, MonsterType monsterType) : Monster(win, aniPack, AD, HP, score, monsterType) {
 	special = true;
 	canSpecial = true;
 	usingSpecial = false;
@@ -128,6 +128,12 @@ void Lancer::drawBarrier() {
 	}
 	window->draw(barrier);
 }
+
+bool Lancer::isUsingSpecial()
+{
+	return usingSpecial;
+}
+
 /////////////////////////////////// Radar ///////////////////////////////////
 
 void Lancer::detect() {

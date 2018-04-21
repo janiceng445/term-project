@@ -134,6 +134,7 @@
     <ClCompile Include="AnimatedSprite.cpp" />
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="GameScreen.cpp" />
+    <ClCompile Include="Gunner.cpp" />
     <ClCompile Include="Lancer.cpp" />
     <ClCompile Include="LoseScreen.cpp" />
     <ClCompile Include="main.cpp" />
@@ -150,9 +151,9 @@
     <ClInclude Include="AnimatedSprite.hpp" />
     <ClInclude Include="cScreen.hpp" />
     <ClInclude Include="GameScreen.hpp" />
+    <ClInclude Include="Gunner.h" />
     <ClInclude Include="Lancer.h" />
     <ClInclude Include="LoseScreen.hpp" />
-    <ClInclude Include="main.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="resource.h" />

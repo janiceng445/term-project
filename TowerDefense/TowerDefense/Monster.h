@@ -12,6 +12,8 @@ const float DEFAULT_MVMT_SPEED = 0.05f;
 const float DEFAULT_ANI_SPEED = 0.1f;
 const int sprite_yTimer = 325;
 
+enum MonsterType {SKELLY, RHINO, LANCER, DEMON, GUNNER};
+
 class Monster
 {
 	protected:
@@ -67,7 +69,7 @@ class Monster
 
 	public:
 	Monster();
-	Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP, Score* score);
+	Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP, Score* score, MonsterType monsterType);
 
 	// Animation
 	void playAnimation();
@@ -104,8 +106,10 @@ class Monster
 	void die();
 	bool isAliveFunc();
 	bool isDead();
+	bool virtual isUsingSpecial(); // should only be true for Lancer
 
 	// Other
 
+	MonsterType monsterType;
 	~Monster();
 };

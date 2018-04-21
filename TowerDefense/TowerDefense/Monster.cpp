@@ -3,7 +3,7 @@
 Monster::Monster()
 {
 }
-Monster::Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP, Score* score)
+Monster::Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP, Score* score, MonsterType monsterType)
 {
 	if (type == 1) 
 	{
@@ -24,6 +24,7 @@ Monster::Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, 
 	this->isAlive = true;
 	this->isAttacking = false;
 	this->decay_timer = 1000;
+	this->monsterType = monsterType;
 
 	// Location Default
 	this->x = -25;
@@ -281,6 +282,11 @@ bool Monster::isDead() {
 	if (this->isPermaDead) {
 		return true;
 	}
+	return false;
+}
+
+bool Monster::isUsingSpecial()
+{
 	return false;
 }
 
