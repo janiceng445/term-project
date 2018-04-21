@@ -7,6 +7,7 @@
 #include <vector>
 #include <math.h>
 #include <cstdlib>
+#include <Windows.h>
 #include "cScreen.hpp"
 #include "Animation.hpp"
 #include "AnimatedSprite.hpp"
@@ -70,7 +71,18 @@ class GameScreen : public cScreen {
 	sf::RectangleShape pauseScreen;
 	sf::Text pauseText;
 	bool pauseScreenVisibility;
-
+	
+	// Buttons
+	sf::Texture upgrade_01_texture;
+	sf::Texture upgrade_02_texture;
+	sf::Texture upgrade_03_texture;
+	sf::Texture mute_texture;
+	sf::Texture quit_texture;
+	sf::Sprite upgrade_01_btn;
+	sf::Sprite upgrade_02_btn;
+	sf::Sprite upgrade_03_btn;
+	sf::Sprite mute_btn;
+	sf::Sprite quit_btn;
 
 	// Textures
 	sf::Texture backgroundTexture;
@@ -149,6 +161,7 @@ class GameScreen : public cScreen {
 	sf::Vector2f mousePos;
 	sf::Vector2f mouseAimDir;
 	sf::Vector2f mouseAimDirNorm;
+
 	//tower projectiles
 	std::vector<Projectile> towerProjectiles;
 	sf::Vector2f towerOrigin;
@@ -180,4 +193,7 @@ class GameScreen : public cScreen {
 
 	// Set up rounds and waves configuration
 	void createRounds();
+
+	// Create buttons
+	void createButtons();
 };

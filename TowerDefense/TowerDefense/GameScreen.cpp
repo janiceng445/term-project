@@ -92,13 +92,31 @@ int GameScreen::Run(sf::RenderWindow &window){
 	towershotSound.setBuffer(towershot_buffer);
 	towershotSound.setVolume(20);
 	////////////////////////////// Create window //////////////////////////////
-	//dimensions.x = backgroundTexture.getSize().x; // DELETE IF WE DECIDE NOT TO DO FULLSCREEN
-	//dimensions.y = backgroundTexture.getSize().y; // DELETE IF WE DECIDE NOT TO DO FULLSCREEN
+
 	dimensions.x = 1080;
 	dimensions.y = 720;
 	menuBar.setSize(sf::Vector2f(dimensions.x, 70));
 	menuBar.setFillColor(sf::Color(0, 0, 0, 255));
+
+	// Create buttons
+	// Create upgrade 1
+	// Create upgrade 2
+	// Create upgrade 3
+	// Create mute
+	// Create quit
+
 	createPauseScreen();
+
+	///////////////////////////////// Mouse Cursor ////////////////////////////////////
+
+	window.setMouseCursorVisible(false);
+	sf::View fixed = window.getView();
+	sf::Texture mouseTexture;
+	if (!mouseTexture.loadFromFile("images/target.png"))
+	{
+		std::cout << "Mouse cursor file not found. Check filepath" << std::endl;
+	}
+	sf::Sprite mouse(mouseTexture);
 
 	///////////////////////////////// Projectiles ////////////////////////////////////
 
@@ -450,6 +468,11 @@ int GameScreen::Run(sf::RenderWindow &window){
 			window.draw(ammo[i]);
 		}
 
+		// Mouse cursor
+		mouse.setPosition(static_cast<sf::Vector2f>(sf::Mouse::getPosition(window)));
+		window.setView(fixed);
+		window.draw(mouse);
+
 		// Draws the pause screen
 		if (paused)	{ drawPauseScreen(&window); }
 
@@ -494,6 +517,7 @@ int GameScreen::Run(sf::RenderWindow &window){
 			}
 
 		}
+
 		window.clear();
 	}
 
@@ -636,4 +660,44 @@ void GameScreen::createRounds()
 	waves.push_back(new Wave(8, skellyAmount[7], rhinoAmount[7], lancerAmount[7], demonAmount[7])); // Round 8
 	waves.push_back(new Wave(9, skellyAmount[8], rhinoAmount[8], lancerAmount[8], demonAmount[8])); // Round 9
 	waves.push_back(new Wave(10, skellyAmount[9], rhinoAmount[9], lancerAmount[9], demonAmount[9])); // Round 10
+}
+
+// Create buttons
+void GameScreen::createButtons()
+{
+	// Load textures
+	if (!upgrade_01_texture.loadFromFile("images/buttons/btn_01"))
+	{
+		std::cout << "Unable to load upgrade_01_texture. Check file path." << std::endl;
+	}
+	if (!upgrade_02_texture.loadFromFile("images/buttons/btn_02"))
+	{
+		std::cout << "Unable to load upgrade_02_texture. Check file path." << std::endl;
+	}
+	if (!upgrade_03_texture.loadFromFile("images/buttons/btn_03"))
+	{
+		std::cout << "Unable to load upgrade_03_texture. Check file path." << std::endl;
+	}
+	if (!mute_texture.loadFromFile("images/buttons/btn_04"))
+	{
+		std::cout << "Unable to load mute_texture. Check file path." << std::endl;
+	}
+	if (!quit_texture.loadFromFile("images/buttons/btn_05"))
+	{
+		std::cout << "Unable to load quit_texture. Check file path." << std::endl;
+	}
+
+	// Set textures for sprites
+	upgrade_01_btn.setTexture(upgrade_01_texture);
+	upgrade_02_btn.setTexture(upgrade_02_texture);
+	upgrade_03_btn.setTexture(upgrade_03_texture);
+	mute_btn.setTexture(mute_texture);
+	quit_btn.setTexture(quit_texture);
+
+	// Set positions of sprites
+	upgrade_01_btn.setPosition(0, 0);
+	upgrade_02_btn.setPosition(0, 0);
+	upgrade_03_btn.setPosition(0, 0);
+	mute_btn.setPosition(0, 0);
+	quit_btn.setPosition(0, 0);
 }
