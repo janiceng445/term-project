@@ -54,6 +54,9 @@
     <ClCompile Include="WinScreen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Gunner.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -80,22 +83,25 @@
     <ClInclude Include="Tower.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="cScreen.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GameScreen.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Screens.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="StartScreen.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="Wave.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="main.h">
+    <ClInclude Include="cScreen.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScreen.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Screens.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StartScreen.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WinScreen.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LoseScreen.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="LoseScreen.hpp">
@@ -103,6 +109,9 @@
     </ClInclude>
     <ClInclude Include="WinScreen.hpp">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Gunner.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

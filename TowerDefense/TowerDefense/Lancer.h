@@ -21,9 +21,10 @@ class Lancer : public Monster
 
 	public:
 	Lancer();
-	Lancer(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP, Score* score);
+	Lancer(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP, Score* score, MonsterType monsterType);
 	void run() override;
 	void useSpecialAbility();
+	bool isUsingSpecial() override;
 
 	// Barrier
 	void drawBarrier();
