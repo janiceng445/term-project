@@ -26,6 +26,7 @@ class Monster
 	bool isAlive; // State of enemy
 	bool isPermaDead; // Decaying process (animation purposes)
 	bool isAttacking;
+	bool isMoving;
 	bool special;
 	int stoppingPoint; // Tower locations
 	int decay_timer; // Time it takes for sprite to disappear

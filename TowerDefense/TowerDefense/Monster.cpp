@@ -96,9 +96,11 @@ void Monster::run() {
 	if (!stopRunning) {
 		sf::Time frameTime = this->frameClock.restart();
 		if (isAttacking && isAlive) {
+			isMoving = false;
 			changeCurrentAnimation(1);
 		}
 		else if (!isAlive) {
+			isMoving = false;
 			if (aniSprite.getCurrentFrame() == 4) {
 				currentFrame = 0;
 			}
@@ -110,6 +112,7 @@ void Monster::run() {
 			}
 		}
 		else {
+			isMoving = true;
 			isAttacking = false;
 			changeCurrentAnimation(0);
 		}
@@ -201,10 +204,12 @@ void Monster::attackMove() {
 	// Move
 	if (this->isAlive) {
 		if (this->x < this->stoppingPoint) {
+			isMoving = true;
 			isAttacking = false;
 			this->aniSprite.move(movementSpeed, distance_y);
 		}
 		if (this->x > this->stoppingPoint - 10 && this->aniSprite.getCurrentFrame() == 3) {
+			isMoving = false;
 			attack();
 		}
 	}

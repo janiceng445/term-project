@@ -17,6 +17,9 @@ Gunner::Gunner(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, in
 	: Monster(win, aniPack, AD, HP, score, monsterType)
 {
 	this->wave = wave;
+	randomPoint = rand() % 50 + 125;
+
+	r = rand() % 10 + 5;
 }
 
 Monster* Gunner::findLancer()
@@ -28,7 +31,7 @@ Monster* Gunner::findLancer()
 	{
 		Monster* monster = wave->at(i);
 		float dist2 = absVal(monster->getCurrentLocation().x - x);
-		
+
 		if (monster->monsterType == LANCER && monster->isUsingSpecial() && dist2 < dist)
 		{
 			lancer = monster;
@@ -53,26 +56,45 @@ void Gunner::attackMove()
 	this->x = aniSprite.getPosition().x;
 	this->y = aniSprite.getPosition().y;
 	// Move
-	if (this->isAlive) {
+	if (this->isAlive)
+	{
+		shootingPoint = stoppingPoint - randomPoint;
 		Monster* lancer = findLancer();
 
+		// Gravitates towards lancer
 		if (lancer != nullptr)
 		{
 			stoppingPoint = lancer->getCurrentLocation().x;
 		}
+		// Default stopping place
 		else
 		{
-			stoppingPoint = 10;
+			stoppingPoint = stoppingPoint - randomPoint;
 		}
-
-		if (this->x < this->stoppingPoint - 5) {
+		
+		// Attack if at place
+		if (this->aniSprite.getCurrentFrame() == 3 && x > shootingPoint - 10)
+		{
+			isMoving = false;
+			attack();
+		}
+		// Moves gunner forward
+		else if (this->x < this->stoppingPoint - r && !isAttacking)
+		{
+			isMoving = true;
 			this->aniSprite.move(movementSpeed, distance_y);
 		}
-		else if (this->x > this->stoppingPoint + 5) {
+		// Moves gunner backwards
+		else if (this->x > this->stoppingPoint + r && !isAttacking)
+		{
+			isMoving = true;
 			this->aniSprite.move(-movementSpeed, distance_y);
 		}
-		else if (this->aniSprite.getCurrentFrame() == 3) {
-			attack();
+
+		// disables attacking animation if moving
+		if (isMoving || x < shootingPoint - 10)
+		{
+			isAttacking = false;
 		}
 	}
 	updateHealthBar();

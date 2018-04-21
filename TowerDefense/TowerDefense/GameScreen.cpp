@@ -43,6 +43,11 @@ int GameScreen::Run(sf::RenderWindow &window){
 		std::cerr << "demon_spriteSheet failed" << std::endl;
 		return -1;
 	}
+	if (!gunner_texture.loadFromFile("images/enemies/skelly.png"))
+	{ // needs art, using skelly
+		std::cerr << "gunner_spriteSheet failed" << std::endl;
+		return -1;
+	}
 
 	//////////////////////////////// Load tower textures ////////////////////////////////
 
@@ -164,6 +169,7 @@ int GameScreen::Run(sf::RenderWindow &window){
 	setSpriteAnimations(&rhinoAni, &rhino_texture, 's', "Rhino");
 	setSpriteAnimations(&lancerAni, &lancer_texture, 'm', "Lancer");
 	setSpriteAnimations(&demonAni, &demon_texture, 'd', "Demon");
+	setSpriteAnimations(&gunnerAni, &gunner_texture, 's', "Gunner");
 
 	//////////////////////////////// Wave of enemies /////////////////////////////////
 	createRounds();
@@ -291,16 +297,19 @@ int GameScreen::Run(sf::RenderWindow &window){
 
 			//==================================================// ENEMY SPAWNING //==================================================//
 
-			std::vector<std::string> name;
-			name.push_back("Skelly");
-			name.push_back("Rhino");
-			name.push_back("Lancer");
-			name.push_back("Demon");
+			std::vector<MonsterType> name;
+			name.push_back(SKELLY);
+			name.push_back(RHINO);
+			name.push_back(LANCER);
+			name.push_back(DEMON);
+			name.push_back(GUNNER);
 			// Parameters: maximum spawns, clock, spawn timer, wave vector, window, animation vector, dmg, hp, boundary, target's hp, name, score
 			runSpawners(&skellyAmount[waveRound], &clock_Skelly, SKELLY_SPWN_TIMER, &wave, &window, &skellyAni, skelly_DMG, skelly_HP, boundary, &targetHP, name.at(0), &gameScore);
 			runSpawners(&rhinoAmount[waveRound], &clock_Rhino, RHINO_SPWN_TIMER, &wave, &window, &rhinoAni, rhino_DMG, rhino_HP, boundary, &targetHP, name.at(1), &gameScore);
 			runSpawners(&lancerAmount[waveRound], &clock_Lancer, LANCER_SPWN_TIMER, &wave, &window, &lancerAni, lancer_DMG, lancer_HP, boundary, &targetHP, name.at(2), &gameScore);
 			runSpawners(&demonAmount[waveRound], &clock_Demon, DEMON_SPWN_TIMER, &wave, &window, &demonAni, demon_DMG, demon_HP, boundary, &targetHP, name.at(3), &gameScore);
+			runSpawners(&gunnerAmount[waveRound], &clock_Gunner, GUNNER_SPWN_TIMER, &wave, &window, &gunnerAni, gunner_DMG, gunner_HP, boundary, &targetHP, name.at(4), &gameScore);
+
 			if (!waves.empty() && waves.at(waveRound)->getNumMobs() == 0)
 			{
 				breakCounter++;
@@ -344,9 +353,8 @@ int GameScreen::Run(sf::RenderWindow &window){
 			for (unsigned int i = 0; i < wave.size(); i++)
 			{
 				//checks to see if the enemy is attacking. The clock keeps the attack from having every game tick
-				if (wave.at(i)->isCurrAttacking() && wave.at(i)->getCurrentLocation().x >= towersLocation.at(currentTarget) - 10)
+				if (wave.at(i)->isCurrAttacking())
 				{
-					//tower.at(currentTarget).takeDamage(wave.at(i)->getDamage());
 					tower.at(currentTarget).updateHealthBar();
 				}
 
@@ -520,7 +528,7 @@ int GameScreen::Run(sf::RenderWindow &window){
 			}
 			if (buttonIsClicked(&quit_btn, &window))				// Exits game
 			{
-				return 2;
+				return -1;
 			}
 			if (buttonIsClicked(&mute_btn, &window))				// Mutes sound
 			{
@@ -667,24 +675,32 @@ void GameScreen::setSpriteAnimations(std::vector<Animation>* ani, sf::Texture* t
 		ani->push_back(special);
 	}
 }
-void GameScreen::runSpawners(int* maxSpawn, sf::Clock* clock, float spwn_timer, std::vector<Monster*>* wave, sf::RenderWindow* win, std::vector<Animation>* ani, int dmg, int hp, int boundary, int* targetHP, std::string name, Score* score) {
+void GameScreen::runSpawners(int* maxSpawn, sf::Clock* clock, float spwn_timer, std::vector<Monster*>* wave, sf::RenderWindow* win, std::vector<Animation>* ani, int dmg, int hp, int boundary, int* targetHP, MonsterType name, Score* score) {
 	int r = (rand() % 6) - 3;
 	if (clock->getElapsedTime().asSeconds() > spwn_timer + r && *maxSpawn != 0) {
-		if (name == "Lancer") {
-			Lancer* spawn = new Lancer(win, *ani, dmg, hp, score);
+		if (name == LANCER)
+		{
+			Lancer* spawn = new Lancer(win, *ani, dmg, hp, score, name);
 			spawn->setTarget(boundary, *&targetHP);
 			wave->push_back(spawn);
 		}
-		else if (name == "Demon")
+		else if (name == DEMON)
 		{
 			int ran = rand() % 200 + 1;
-			Monster* spawn = new Monster(win, *ani, dmg, hp, score);
-			spawn->setStartingPosition((float)-25, (float) (300 + ran));
+			Monster* spawn = new Monster(win, *ani, dmg, hp, score, name);
+			spawn->setStartingPosition((float)-25, (float)(300 + ran));
 			spawn->setTarget(boundary, *&targetHP);
 			wave->push_back(spawn);
 		}
-		else {
-			Monster* spawn = new Monster(win, *ani, dmg, hp, score);
+		else if (name == GUNNER)
+		{
+			Gunner* spawn = new Gunner(win, *ani, dmg, hp, score, name, wave);
+			spawn->setTarget(boundary, *&targetHP);
+			wave->push_back(spawn);
+		}
+		else
+		{
+			Monster* spawn = new Monster(win, *ani, dmg, hp, score, name);
 			spawn->setTarget(boundary, *&targetHP);
 			wave->push_back(spawn);
 		}
@@ -726,17 +742,17 @@ void GameScreen::drawRound(sf::RenderWindow* win)
 
 void GameScreen::createRounds()
 {
-	// Format Order: Round #, # of skelly, # of rhino, # of lancer, # of demon
-	waves.push_back(new Wave(1, skellyAmount[0], rhinoAmount[0], lancerAmount[0], demonAmount[0])); // Round 1
-	waves.push_back(new Wave(2, skellyAmount[1], rhinoAmount[1], lancerAmount[1], demonAmount[1])); // Round 2
-	waves.push_back(new Wave(3, skellyAmount[2], rhinoAmount[2], lancerAmount[2], demonAmount[2])); // Round 3
-	waves.push_back(new Wave(4, skellyAmount[3], rhinoAmount[3], lancerAmount[3], demonAmount[3])); // Round 4
-	waves.push_back(new Wave(5, skellyAmount[4], rhinoAmount[4], lancerAmount[4], demonAmount[4])); // Round 5
-	waves.push_back(new Wave(6, skellyAmount[5], rhinoAmount[5], lancerAmount[5], demonAmount[5])); // Round 6
-	waves.push_back(new Wave(7, skellyAmount[6], rhinoAmount[6], lancerAmount[6], demonAmount[6])); // Round 7
-	waves.push_back(new Wave(8, skellyAmount[7], rhinoAmount[7], lancerAmount[7], demonAmount[7])); // Round 8
-	waves.push_back(new Wave(9, skellyAmount[8], rhinoAmount[8], lancerAmount[8], demonAmount[8])); // Round 9
-	waves.push_back(new Wave(10, skellyAmount[9], rhinoAmount[9], lancerAmount[9], demonAmount[9])); // Round 10
+	// Format Order: Round #, # of skelly, # of rhino, # of lancer, # of demon, # of gunner
+	waves.push_back(new Wave(1, skellyAmount[0], rhinoAmount[0], lancerAmount[0], demonAmount[0], gunnerAmount[0])); // Round 1
+	waves.push_back(new Wave(2, skellyAmount[1], rhinoAmount[1], lancerAmount[1], demonAmount[1], gunnerAmount[1])); // Round 2
+	waves.push_back(new Wave(3, skellyAmount[2], rhinoAmount[2], lancerAmount[2], demonAmount[2], gunnerAmount[2])); // Round 3
+	waves.push_back(new Wave(4, skellyAmount[3], rhinoAmount[3], lancerAmount[3], demonAmount[3], gunnerAmount[3])); // Round 4
+	waves.push_back(new Wave(5, skellyAmount[4], rhinoAmount[4], lancerAmount[4], demonAmount[4], gunnerAmount[4])); // Round 5
+	waves.push_back(new Wave(6, skellyAmount[5], rhinoAmount[5], lancerAmount[5], demonAmount[5], gunnerAmount[5])); // Round 6
+	waves.push_back(new Wave(7, skellyAmount[6], rhinoAmount[6], lancerAmount[6], demonAmount[6], gunnerAmount[6])); // Round 7
+	waves.push_back(new Wave(8, skellyAmount[7], rhinoAmount[7], lancerAmount[7], demonAmount[7], gunnerAmount[7])); // Round 8
+	waves.push_back(new Wave(9, skellyAmount[8], rhinoAmount[8], lancerAmount[8], demonAmount[8], gunnerAmount[8])); // Round 9
+	waves.push_back(new Wave(10, skellyAmount[9], rhinoAmount[9], lancerAmount[9], demonAmount[9], gunnerAmount[9])); // Round 10
 }
 
 // Create buttons
@@ -772,11 +788,11 @@ void GameScreen::createButtons()
 		std::cout << "Unable to load mute_texture_02. Check file path." << std::endl;
 	}
 
-	int center_y_menuBar = menuBar.getGlobalBounds().height / 2;
+	float center_y_menuBar = (float) (menuBar.getGlobalBounds().height / 2);
 	int width = 60;
 	int height = 60;
-	int center_x_btn = width / 2;
-	int center_y_btn = height / 2;
+	float center_x_btn = (float) width / 2;
+	float center_y_btn = (float) height / 2;
 	int offset_x = 100;
 	int gap = 100;
 
@@ -797,19 +813,19 @@ void GameScreen::createButtons()
 	mute_btn.setOrigin(center_x_btn, center_y_btn);
 
 	// Set positions of sprites
-	upgrade_01_btn.setPosition(gap + width, center_y_menuBar);
-	upgrade_02_btn.setPosition(gap + width * 2 + 10, center_y_menuBar);
-	upgrade_03_btn.setPosition(gap + width * 3 + 20, center_y_menuBar);
-	upgrade_04_btn.setPosition(gap + width * 4 + 30, center_y_menuBar);
-	quit_btn.setPosition(gap + width * 5 + 40, center_y_menuBar);
-	mute_btn.setPosition(gap + width * 6 + 50, center_y_menuBar);
+	upgrade_01_btn.setPosition((float) gap + (float) width, center_y_menuBar);
+	upgrade_02_btn.setPosition((float)gap + (float)width * 2 + 10, center_y_menuBar);
+	upgrade_03_btn.setPosition((float)gap + (float)width * 3 + 20, center_y_menuBar);
+	upgrade_04_btn.setPosition((float)gap + (float)width * 4 + 30, center_y_menuBar);
+	quit_btn.setPosition((float)gap + (float)width * 5 + 40, center_y_menuBar);
+	mute_btn.setPosition((float)gap + (float)width * 6 + 50, center_y_menuBar);
 }
 bool GameScreen::buttonIsClicked(sf::Sprite* sprite, sf::RenderWindow* window)
 {
-	int x1 = sprite->getPosition().x - sprite->getGlobalBounds().width / 2;
-	int x2 = x1 + sprite->getGlobalBounds().width;
-	int y1 = sprite->getPosition().y - sprite->getGlobalBounds().height / 2;
-	int y2 = y1 + sprite->getGlobalBounds().height;
+	float x1 = sprite->getPosition().x - sprite->getGlobalBounds().width / 2;
+	float x2 = x1 + sprite->getGlobalBounds().width;
+	float y1 = sprite->getPosition().y - sprite->getGlobalBounds().height / 2;
+	float y2 = y1 + sprite->getGlobalBounds().height;
 	int mouse_x = sf::Mouse::getPosition(*window).x;
 	int mouse_y = sf::Mouse::getPosition(*window).y;
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)

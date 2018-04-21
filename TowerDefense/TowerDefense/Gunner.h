@@ -7,6 +7,11 @@ class Gunner : public Monster
 private:
 	Monster* findLancer();
 	std::vector<Monster*>* wave;
+	int randomPoint;
+	int targetedPoint;
+	int shootingPoint;
+	int newStoppingPoint;
+	int r;
 
 public:
 	Gunner();

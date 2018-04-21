@@ -32,25 +32,20 @@ class GameScreen : public cScreen {
 
 	// Spawner
 	std::vector<Monster*> wave;
-	int skellyMax = 8;
 	unsigned int skelly_DMG = 7;
 	unsigned int skelly_HP = 100;
 
-	int rhinoMax = 0;
 	unsigned int rhino_DMG = 15;
 	unsigned int rhino_HP = 75;
 
-	int lancerMax = 3;
-	unsigned int lancer_DMG = 30;
+	unsigned int lancer_DMG = 25;
 	unsigned int lancer_HP = 250;
 
-	int demonMax = 0;
-	unsigned int demon_DMG = 25;
+	unsigned int demon_DMG = 20;
 	unsigned int demon_HP = 175;
 
-	int gunnerMax = 6;
 	unsigned int gunner_DMG = 5;
-	unsigned int gunner_HP = 50;
+	unsigned int gunner_HP = 100;
 
 	unsigned int boundary = (int) dimensions.x;
 
@@ -143,7 +138,7 @@ class GameScreen : public cScreen {
 	// Rounds
 	std::vector<Wave*> waves;
 	const static int numLevels = 10;
-	int waveRound = 0;
+	int waveRound = 0; // add 1
 	int skellyAmount[numLevels] = { 3, 4, 5, 5, 7, 7, 0, 0, 9, 10 };
 	int rhinoAmount[numLevels] =  { 0, 2, 3, 5, 3, 3, 10, 9, 5, 4 };
 	int lancerAmount[numLevels] = { 0, 0, 1, 2, 2, 3, 4, 7, 3, 3 };
