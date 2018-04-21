@@ -373,14 +373,30 @@ int GameScreen::Run(sf::RenderWindow &window){
 			}
 
 			unsigned int enemyCounter = 0;
+			//unsigned int enemyCounter = wave.size();
+			int targetValue = 0;
 			// Shoot only when wave is not empty
 			if (tower.at(2).amIAlive() && !wave.empty())
 			{
 				// Keeps a counter of how many enemies are alive
-				while (enemyCounter < wave.size() && wave.at(enemyCounter)->isAliveFunc() == false)
+				//while (enemyCounter < wave.size() && wave.at(enemyCounter)->isAliveFunc() == false)
+				//{
+					//enemyCounter++;
+				//}
+
+				for (int m = 0; m < wave.size(); m++)
 				{
-					enemyCounter++;
+					Monster* targetTemp = wave.at(m);
+					int targetValueTemp = targetTemp->getCurrentLocation().x * TOWER_POS_WEIGHT + targetTemp->getHealth() * TOWER_HP_WEIGHT
+						+ targetTemp->getDamage() * TOWER_DMG_WEIGHT;
+
+					if (targetValueTemp > targetValue && targetTemp->isAliveFunc())
+					{
+						enemyCounter = m;
+						targetValue = targetValueTemp;
+					}
 				}
+
 				// Initializes aiming mechanics
 				if (enemyCounter < wave.size())
 				{

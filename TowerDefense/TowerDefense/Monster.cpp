@@ -153,6 +153,11 @@ void Monster::showHealthBar() {
 	this->bar.setPosition(this->x, this->y - 10);
 }
 
+int Monster::getHealth()
+{
+	return this->HP;
+}
+
 /////////////////////////////////////////// Hitbox ///////////////////////////////////////////
 
 // Draws hitbox

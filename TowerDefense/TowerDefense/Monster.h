@@ -84,6 +84,7 @@ class Monster
 	void addHealthBar();
 	void updateHealthBar();
 	void showHealthBar();
+	int getHealth();
 	// Hitbox
 	void drawHitbox();
 	void showHitbox();

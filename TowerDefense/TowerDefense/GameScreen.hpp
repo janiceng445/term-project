@@ -29,6 +29,9 @@ class GameScreen : public cScreen {
 	const float DEMON_SPWN_TIMER = 7.0f;
 	const float GUNNER_SPWN_TIMER = 5.0f;
 	const int fireTimer = 300;
+	const int TOWER_POS_WEIGHT = 1;
+	const int TOWER_HP_WEIGHT = -1;
+	const int TOWER_DMG_WEIGHT = 1;
 
 	// Spawner
 	std::vector<Monster*> wave;
