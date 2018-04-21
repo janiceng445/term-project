@@ -99,24 +99,25 @@ int GameScreen::Run(sf::RenderWindow &window){
 	menuBar.setFillColor(sf::Color(0, 0, 0, 255));
 
 	// Create buttons
-	// Create upgrade 1
-	// Create upgrade 2
-	// Create upgrade 3
-	// Create mute
-	// Create quit
+	createButtons();
 
+	// Create pause screen overlay
 	createPauseScreen();
 
 	///////////////////////////////// Mouse Cursor ////////////////////////////////////
 
-	window.setMouseCursorVisible(false);
 	sf::View fixed = window.getView();
-	sf::Texture mouseTexture;
-	if (!mouseTexture.loadFromFile("images/target.png"))
+	sf::Texture mouseTexture_target;
+	if (!mouseTexture_target.loadFromFile("images/target.png"))
 	{
-		std::cout << "Mouse cursor file not found. Check filepath" << std::endl;
+		std::cout << "Mouse cursor01 file not found. Check filepath" << std::endl;
 	}
-	sf::Sprite mouse(mouseTexture);
+	sf::Texture mouseTexture_wrench;
+	if (!mouseTexture_wrench.loadFromFile("images/wrench.png"))
+	{
+		std::cout << "Mouse cursor02 file not found. Check filepath" << std::endl;
+	}
+	sf::Sprite mouse;
 
 	///////////////////////////////// Projectiles ////////////////////////////////////
 
@@ -164,9 +165,6 @@ int GameScreen::Run(sf::RenderWindow &window){
 	setSpriteAnimations(&lancerAni, &lancer_texture, 'm', "Lancer");
 	setSpriteAnimations(&demonAni, &demon_texture, 'd', "Demon");
 
-	//************************ TOWER HITPOINTS ************************//
-	int targetHP = 100;
-
 	//////////////////////////////// Wave of enemies /////////////////////////////////
 	createRounds();
 
@@ -201,11 +199,24 @@ int GameScreen::Run(sf::RenderWindow &window){
 	///////////////////////MAIN GAME LOOP/////////////////////////
 	while (running)
 	{
+		// Mouse cursor change
+		if (sf::Mouse::getPosition(window).y > menuBar.getGlobalBounds().height)
+		{
+			mouse.setTexture(mouseTexture_target);
+			mouse.setOrigin(mouse.getGlobalBounds().width / 2, mouse.getGlobalBounds().height / 2);
+		}
+		else
+		{
+			mouse.setTexture(mouseTexture_wrench);
+			mouse.setOrigin(0, 0);
+		}
+
 		//////////////////// BACKGROUND : Draw background image beneath all other images ////////////////////
 		window.draw(background);
 
 		if (!paused)
 		{
+			window.setMouseCursorVisible(false);
 			//sets rotation of arm based on mouse location (gun points at mouse pointer)
 			armSprite.setRotation((float) ((180.0 / PI) * atan2(0.52 * dimensions.y - sf::Mouse::getPosition(window).y, 0.76f * dimensions.x - sf::Mouse::getPosition(window).x)));
 
@@ -213,7 +224,7 @@ int GameScreen::Run(sf::RenderWindow &window){
 			scoreTimer--;
 			if (scoreTimer == 0)
 			{
-				gameScore.add(10);
+				gameScore.add(incomeRate);
 				scoreTimer = 1000;
 			}
 
@@ -223,8 +234,10 @@ int GameScreen::Run(sf::RenderWindow &window){
 			mousePos = sf::Vector2f(sf::Mouse::getPosition(window));
 			mouseAimDir = mousePos - center;
 			mouseAimDirNorm = mouseAimDir / sqrt(pow(mouseAimDir.x, 2) + pow(mouseAimDir.y, 2));
-
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && projTimer == maxProjTimer && reloading == false && !ammo.empty())
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left) 
+				&& sf::Mouse::getPosition(window).y > menuBar.getGlobalBounds().height
+				&& projTimer == maxProjTimer && reloading == false 
+				&& !ammo.empty())
 			{
 				gunshotSound.play();
 				shot = true;
@@ -459,16 +472,80 @@ int GameScreen::Run(sf::RenderWindow &window){
 		}
 
 		//////////////////// FOREGROUND : Draw menu bar on top of all other images ////////////////////
+
+		//************// Bar //************//
 		window.draw(menuBar);
 		window.draw(scoreText);
-		// Drawing the bullets top left corner
+
+		//************// Buttons //************//
+		window.draw(upgrade_01_btn);
+		window.draw(upgrade_02_btn);
+		window.draw(upgrade_03_btn);
+		window.draw(upgrade_04_btn);
+		window.draw(quit_btn);
+		window.draw(mute_btn);
+
+		//************// Button clicking events //************//
+		if (!clicked)
+		{
+			if (buttonIsClicked(&upgrade_01_btn, &window) 
+				&& gameScore.getTotal() - moneyDeduction * barbedWire_lvl >= 0)			// Upgrades barbed wire
+			{
+				barbedWire_lvl++;
+				std::cout << "btn01 is pressed" << std::endl;
+				clicked = true;
+			}
+			if (buttonIsClicked(&upgrade_02_btn, &window)
+				&& gameScore.getTotal() - moneyDeduction * barricade_lvl >= 0)			// Upgrades barricade
+			{
+				barricade_lvl++;
+				std::cout << "btn02 is pressed" << std::endl;
+				clicked = true;
+			}
+			if (buttonIsClicked(&upgrade_03_btn, &window)
+				&& gameScore.getTotal() - moneyDeduction * shootingTower_lvl >= 0)			// Upgrades shooty tower
+			{
+				shootingTower_lvl++;
+				std::cout << "btn03 is pressed" << std::endl;
+				clicked = true;
+			}
+			if (buttonIsClicked(&upgrade_04_btn, &window)
+				&& gameScore.getTotal() - moneyDeduction * incomeRate_lvl >= 0)			// Upgrades income rate
+			{
+				incomeRate_lvl++;
+				incomeRate = incomeRateDefault * incomeRate_lvl;
+				std::cout << "income rate: " << incomeRate << std::endl;
+				gameScore.setTotal(gameScore.getTotal() - moneyDeduction * incomeRate_lvl);
+				clicked = true;
+			}
+			if (buttonIsClicked(&quit_btn, &window))				// Exits game
+			{
+				return 2;
+			}
+			if (buttonIsClicked(&mute_btn, &window))				// Mutes sound
+			{
+				std::swap(mute_texture_on, mute_texture_off);
+				clicked = true;
+			}
+		}
+		if (clicked)
+		{
+			btnTimer--;
+			if (btnTimer <= 0)
+			{
+				clicked = false;
+				btnTimer = maxBtnTimer;
+			}
+		}
+
+		//************// Bullet Reload Images //************//
 		for (unsigned int i = 0; i < ammo.size(); i++)
 		{
 			ammo[i].setPosition(sf::Vector2f((float)(i * 11) + 1 + 10, 15 + scoreText.getGlobalBounds().height));
 			window.draw(ammo[i]);
 		}
 
-		// Mouse cursor
+		//************// Mouse cursor //************//
 		mouse.setPosition(static_cast<sf::Vector2f>(sf::Mouse::getPosition(window)));
 		window.setView(fixed);
 		window.draw(mouse);
@@ -666,38 +743,82 @@ void GameScreen::createRounds()
 void GameScreen::createButtons()
 {
 	// Load textures
-	if (!upgrade_01_texture.loadFromFile("images/buttons/btn_01"))
+	if (!upgrade_01_texture.loadFromFile("images/buttons/btn_01.png"))
 	{
 		std::cout << "Unable to load upgrade_01_texture. Check file path." << std::endl;
 	}
-	if (!upgrade_02_texture.loadFromFile("images/buttons/btn_02"))
+	if (!upgrade_02_texture.loadFromFile("images/buttons/btn_02.png"))
 	{
 		std::cout << "Unable to load upgrade_02_texture. Check file path." << std::endl;
 	}
-	if (!upgrade_03_texture.loadFromFile("images/buttons/btn_03"))
+	if (!upgrade_03_texture.loadFromFile("images/buttons/btn_03.png"))
 	{
 		std::cout << "Unable to load upgrade_03_texture. Check file path." << std::endl;
 	}
-	if (!mute_texture.loadFromFile("images/buttons/btn_04"))
+	if (!upgrade_04_texture.loadFromFile("images/buttons/btn_04.png"))
 	{
-		std::cout << "Unable to load mute_texture. Check file path." << std::endl;
+		std::cout << "Unable to load upgrade_04_texture. Check file path." << std::endl;
 	}
-	if (!quit_texture.loadFromFile("images/buttons/btn_05"))
+	if (!quit_texture.loadFromFile("images/buttons/btn_05.png"))
 	{
 		std::cout << "Unable to load quit_texture. Check file path." << std::endl;
 	}
+	if (!mute_texture_on.loadFromFile("images/buttons/mute_01.png"))
+	{
+		std::cout << "Unable to load mute_texture_01. Check file path." << std::endl;
+	}
+	if (!mute_texture_off.loadFromFile("images/buttons/mute_02.png"))
+	{
+		std::cout << "Unable to load mute_texture_02. Check file path." << std::endl;
+	}
+
+	int center_y_menuBar = menuBar.getGlobalBounds().height / 2;
+	int width = 60;
+	int height = 60;
+	int center_x_btn = width / 2;
+	int center_y_btn = height / 2;
+	int offset_x = 100;
+	int gap = 100;
 
 	// Set textures for sprites
 	upgrade_01_btn.setTexture(upgrade_01_texture);
 	upgrade_02_btn.setTexture(upgrade_02_texture);
 	upgrade_03_btn.setTexture(upgrade_03_texture);
-	mute_btn.setTexture(mute_texture);
+	upgrade_04_btn.setTexture(upgrade_04_texture);
 	quit_btn.setTexture(quit_texture);
+	mute_btn.setTexture(mute_texture_on);
+
+	// Set origin for sprites
+	upgrade_01_btn.setOrigin(center_x_btn, center_y_btn);
+	upgrade_02_btn.setOrigin(center_x_btn, center_y_btn);
+	upgrade_03_btn.setOrigin(center_x_btn, center_y_btn);
+	upgrade_04_btn.setOrigin(center_x_btn, center_y_btn);
+	quit_btn.setOrigin(center_x_btn, center_y_btn);
+	mute_btn.setOrigin(center_x_btn, center_y_btn);
 
 	// Set positions of sprites
-	upgrade_01_btn.setPosition(0, 0);
-	upgrade_02_btn.setPosition(0, 0);
-	upgrade_03_btn.setPosition(0, 0);
-	mute_btn.setPosition(0, 0);
-	quit_btn.setPosition(0, 0);
+	upgrade_01_btn.setPosition(gap + width, center_y_menuBar);
+	upgrade_02_btn.setPosition(gap + width * 2 + 10, center_y_menuBar);
+	upgrade_03_btn.setPosition(gap + width * 3 + 20, center_y_menuBar);
+	upgrade_04_btn.setPosition(gap + width * 4 + 30, center_y_menuBar);
+	quit_btn.setPosition(gap + width * 5 + 40, center_y_menuBar);
+	mute_btn.setPosition(gap + width * 6 + 50, center_y_menuBar);
+}
+bool GameScreen::buttonIsClicked(sf::Sprite* sprite, sf::RenderWindow* window)
+{
+	int x1 = sprite->getPosition().x - sprite->getGlobalBounds().width / 2;
+	int x2 = x1 + sprite->getGlobalBounds().width;
+	int y1 = sprite->getPosition().y - sprite->getGlobalBounds().height / 2;
+	int y2 = y1 + sprite->getGlobalBounds().height;
+	int mouse_x = sf::Mouse::getPosition(*window).x;
+	int mouse_y = sf::Mouse::getPosition(*window).y;
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)
+		&& mouse_x > x1
+		&& mouse_x < x2
+		&& mouse_y > y1
+		&& mouse_y < y2)
+	{
+		return true;
+	}
+	return false;
 }

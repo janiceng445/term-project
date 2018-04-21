@@ -59,6 +59,11 @@ int WinScreen::Run(sf::RenderWindow &window) {
 	restartGameText.setPosition((dimensions.x / 2) - x_offset, (dimensions.y / 2) - y_offset);
 	exitGameText.setPosition((dimensions.x / 2) - x_offset, (dimensions.y / 2) + ft_height + eg_height / 2 - y_offset);
 
+	//preparing menu cursor
+	menuCursor.setRadius(6.0);
+	menuCursor.setFillColor(sf::Color::White);
+	menuCursor.setPosition(restartGameText.getPosition().x - 30, restartGameText.getPosition().y);
+
 	while (running)
 	{
 		while (window.pollEvent(event))
