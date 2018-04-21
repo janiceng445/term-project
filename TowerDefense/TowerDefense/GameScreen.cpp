@@ -132,9 +132,9 @@ int GameScreen::Run(sf::RenderWindow &window){
 	towersHP.push_back(barbedWire.getHP());
 	towersHP.push_back(basicTower.getHP());
 	towersHP.push_back(shootyTower.getHP());
-	towersLocation.push_back(barbedWire.getXPosition() - basicTower.getSpriteGlobalBounds().width / 2);
-	towersLocation.push_back(basicTower.getXPosition() - basicTower.getSpriteGlobalBounds().width / 2);
-	towersLocation.push_back(shootyTower.getXPosition() - shootyTower.getSpriteGlobalBounds().width / 2 + 10);
+	towersLocation.push_back( (int) (barbedWire.getXPosition() - basicTower.getSpriteGlobalBounds().width / 2));
+	towersLocation.push_back( (int) (basicTower.getXPosition() - basicTower.getSpriteGlobalBounds().width / 2));
+	towersLocation.push_back( (int) (shootyTower.getXPosition() - shootyTower.getSpriteGlobalBounds().width / 2 + 10));
 	tower.push_back(barbedWire);
 	tower.push_back(basicTower);
 	tower.push_back(shootyTower);
@@ -150,10 +150,6 @@ int GameScreen::Run(sf::RenderWindow &window){
 	int targetHP = 100;
 
 	//////////////////////////////// Wave of enemies /////////////////////////////////
-	test.push_back(skellyAmount);
-	test.push_back(rhinoAmount);
-	test.push_back(lancerAmount);
-	test.push_back(demonAmount);
 	createRounds();
 
 	//////////////////////////////// Scoreboard ////////////////////////////////
@@ -289,7 +285,10 @@ int GameScreen::Run(sf::RenderWindow &window){
 			}
 			// Targets of mobs and targeted health
 			if (!tower.at(currentTarget).amIAlive()) {
-				if(currentTarget < 2) currentTarget++;
+				if (currentTarget < 2)
+				{
+					currentTarget++;
+				}
 			}
 
 			// Controlling waves of mobs, updating animations, and moving
@@ -298,7 +297,7 @@ int GameScreen::Run(sf::RenderWindow &window){
 				wave[i]->setTarget(towersLocation.at(currentTarget), towersHP.at(currentTarget));
 				if (currentTarget == 2 && !tower.at(currentTarget).amIAlive())
 				{
-					wave[i]->setTarget(dimensions.x - 175, new int(1));
+					wave[i]->setTarget((int) (dimensions.x - 175), new int(1));
 				}
 				wave[i]->run();
 				wave[i]->attackMove();
@@ -335,9 +334,8 @@ int GameScreen::Run(sf::RenderWindow &window){
 			}
 
 			unsigned int enemyCounter = 0;
-
 			// Shoot only when wave is not empty
-			if (!wave.empty())
+			if (tower.at(2).amIAlive() && !wave.empty())
 			{
 				// Keeps a counter of how many enemies are alive
 				while (enemyCounter < wave.size() && wave.at(enemyCounter)->isAliveFunc() == false)
@@ -445,7 +443,7 @@ int GameScreen::Run(sf::RenderWindow &window){
 		//////////////////// FOREGROUND : Draw menu bar on top of all other images ////////////////////
 		window.draw(menuBar);
 		window.draw(scoreText);
-		// Drawing the bullets
+		// Drawing the bullets top left corner
 		for (unsigned int i = 0; i < ammo.size(); i++)
 		{
 			ammo[i].setPosition(sf::Vector2f((float)(i * 11) + 1 + 10, 15 + scoreText.getGlobalBounds().height));
@@ -486,6 +484,11 @@ int GameScreen::Run(sf::RenderWindow &window){
 				}
 				else if (event.key.code == sf::Keyboard::L) {
 					return 3;
+				}
+				else if (event.key.code == sf::Keyboard::C) // Increase monster AD
+				{
+					//skelly_DMG = 500;
+					skelly_HP = 1000;
 				}
 				////////////////////////////////////////////////////////////////////////////////////////////
 			}

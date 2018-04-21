@@ -48,7 +48,7 @@ class GameScreen : public cScreen {
 	unsigned int boundary = (int) dimensions.x;
 
 	// Tower Power
-	unsigned int barbedWire_HP = 100;
+	unsigned int barbedWire_HP = 10;
 	unsigned int basicTower_HP = 125;
 	unsigned int shootyTower_HP = 150;
 	unsigned int barbedWire_DMG = 0;
@@ -110,7 +110,6 @@ class GameScreen : public cScreen {
 
 	// Rounds
 	std::vector<Wave*> waves;
-	std::vector<int*> test;
 	const static int numLevels = 10;
 	int waveRound = 0;
 	int skellyAmount[numLevels] = { 3, 4, 5, 5, 7, 7, 0, 0, 9, 10 };

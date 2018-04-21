@@ -28,6 +28,13 @@ int LoseScreen::Run(sf::RenderWindow &window) {
 		return -1;
 	}
 
+	// setting up black transparent box
+	sf::RectangleShape box;
+	box.setFillColor(sf::Color(0, 0, 0, 175));
+	box.setSize(sf::Vector2f(350, 150));
+	box.setOrigin(box.getSize().x / 2, box.getSize().y / 2);
+	box.setPosition(dimensions.x / 2, dimensions.y / 2 - 35);
+
 	//setting up menu text
 	restartGameText.setFont(pixeled);
 	exitGameText.setFont(pixeled);
@@ -41,10 +48,16 @@ int LoseScreen::Run(sf::RenderWindow &window) {
 	restartGameText.setString("Restart Game");
 	exitGameText.setString("Exit Game");
 
-	restartGameText.setPosition((dimensions.x / 2) - 72, (dimensions.y / 2) - 35);
-	exitGameText.setPosition((dimensions.x / 2) - 72, (dimensions.y / 2) + 35);
-	//restartGameText.setPosition((1080 / 2) - 72, (720 / 2) - 35);
-	//exitGameText.setPosition((1080 / 2) - 72, (720 / 2) + 35);
+	int ft_width = restartGameText.getGlobalBounds().width;
+	int ft_height = restartGameText.getGlobalBounds().height;
+	int eg_width = exitGameText.getGlobalBounds().width;
+	int eg_height = exitGameText.getGlobalBounds().height;
+
+	int x_offset = ft_width / 2;
+	int y_offset = 60;
+
+	restartGameText.setPosition((dimensions.x / 2) - x_offset, (dimensions.y / 2) - y_offset);
+	exitGameText.setPosition((dimensions.x / 2) - x_offset, (dimensions.y / 2) + ft_height + eg_height / 2 - y_offset);
 
 	//preparing menu cursor
 	menuCursor.setRadius(6.0);
@@ -53,8 +66,6 @@ int LoseScreen::Run(sf::RenderWindow &window) {
 
 	while (running)
 	{
-		restartGameText.setPosition((dimensions.x / 2) - 72, (dimensions.y / 2) - 35);
-		exitGameText.setPosition((dimensions.x / 2) - 72, (dimensions.y / 2) + 35);
 		while (window.pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed)
@@ -107,6 +118,7 @@ int LoseScreen::Run(sf::RenderWindow &window) {
 		}
 		//drawing menu objects
 		window.draw(loseBackSprite);
+		window.draw(box);
 		window.draw(restartGameText);
 		window.draw(exitGameText);
 		window.draw(menuCursor);

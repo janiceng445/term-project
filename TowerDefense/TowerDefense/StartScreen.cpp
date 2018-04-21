@@ -38,6 +38,13 @@ int StartScreen::Run(sf::RenderWindow &window)
 	startscreenMusic.setVolume(40);
 	startscreenMusic.play();
 
+	// setting up black transparent box
+	sf::RectangleShape box;
+	box.setFillColor(sf::Color(0, 0, 0, 175));
+	box.setSize(sf::Vector2f(325, 190));
+	box.setOrigin(box.getSize().x / 2, box.getSize().y /2);
+	box.setPosition(dimensions.x / 2, dimensions.y / 2 - 35);
+
 	//setting up menu text
 	startGameText.setFont(pixeled);
 	fillerText.setFont(pixeled);
@@ -55,9 +62,28 @@ int StartScreen::Run(sf::RenderWindow &window)
 	fillerText.setString("Credits");
 	exitGameText.setString("Exit Game");
 
-	startGameText.setPosition((dimensions.x / 2) - 72, (dimensions.y / 2) - 35);
-	fillerText.setPosition((dimensions.x / 2) - 72, (dimensions.y / 2));
-	exitGameText.setPosition((dimensions.x / 2) - 72, (dimensions.y / 2) + 35);
+	int sg_width = startGameText.getGlobalBounds().width;
+	int sg_height = startGameText.getGlobalBounds().height;
+	int ft_width = fillerText.getGlobalBounds().width;
+	int ft_height = fillerText.getGlobalBounds().height;
+	int eg_width = exitGameText.getGlobalBounds().width;
+	int eg_height = exitGameText.getGlobalBounds().height;
+
+	int x_offset = sg_width / 2;
+	int y_offset = 50;
+
+	startGameText.setPosition((dimensions.x / 2) - x_offset, (dimensions.y / 2) - sg_height - 10 - y_offset);
+	fillerText.setPosition((dimensions.x / 2) - x_offset, (dimensions.y / 2) - y_offset);
+	exitGameText.setPosition((dimensions.x / 2) - x_offset, (dimensions.y / 2) + ft_height + eg_height / 2 - y_offset);
+
+	// Copyright
+	sf::Text copyright;
+	copyright.setCharacterSize(7);
+	copyright.setFont(pixeled);
+	copyright.setString("© 2018 Spring Team 50 COP3503 University of Florida All Rights Reserved");
+	copyright.setPosition(dimensions.x - copyright.getGlobalBounds().width - 5, dimensions.y - copyright.getGlobalBounds().height - 6);
+	copyright.setFillColor(sf::Color::White);
+
 
 	//preparing menu cursor
 	menuCursor.setRadius(6.0);
@@ -129,10 +155,12 @@ int StartScreen::Run(sf::RenderWindow &window)
 		}
 		//drawing menu objects
 		window.draw(menuSprite);
+		window.draw(box);
 		window.draw(startGameText);
 		window.draw(fillerText);
 		window.draw(exitGameText);
 		window.draw(menuCursor);
+		window.draw(copyright);
 		window.display();
 		window.clear();
 	}
