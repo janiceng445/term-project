@@ -45,7 +45,7 @@ class GameScreen : public cScreen {
 	unsigned int demon_HP = 175;
 
 	unsigned int gunner_DMG = 5;
-	unsigned int gunner_HP = 100;
+	unsigned int gunner_HP = 50;
 
 	unsigned int boundary = (int) dimensions.x;
 

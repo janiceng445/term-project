@@ -43,8 +43,8 @@ int GameScreen::Run(sf::RenderWindow &window){
 		std::cerr << "demon_spriteSheet failed" << std::endl;
 		return -1;
 	}
-	if (!gunner_texture.loadFromFile("images/enemies/skelly.png"))
-	{ // needs art, using skelly
+	if (!gunner_texture.loadFromFile("images/enemies/gunner.png"))
+	{
 		std::cerr << "gunner_spriteSheet failed" << std::endl;
 		return -1;
 	}
