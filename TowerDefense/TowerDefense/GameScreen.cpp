@@ -548,6 +548,21 @@ int GameScreen::Run(sf::RenderWindow &window){
 			}
 			if (buttonIsClicked(&mute_btn, &window))				// Mutes sound
 			{
+				if (gameMusic.getStatus() == sf::SoundSource::Playing)
+				{
+					gameMusic.pause();
+					gunshotSound.setVolume(0);
+					reloadSound.setVolume(0);
+					towershotSound.setVolume(0);
+				}
+				else
+				{
+					gameMusic.play();
+					gunshotSound.setVolume(30);
+					reloadSound.setVolume(50);
+					towershotSound.setVolume(20);
+				}
+
 				std::swap(mute_texture_on, mute_texture_off);
 				clicked = true;
 			}
