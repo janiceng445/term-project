@@ -5,14 +5,14 @@ const int BREATHING_TIME = 2; // how long "active" is enabled
 
 class Timer
 {
-private:
+	private:
 	int startTime;
 	int currentTime;
 	int delay;
 	bool active;
 	bool ready;
 
-public:
+	public:
 	Timer(int d);
 	void stopTimer();
 	void startTimer();
@@ -22,4 +22,3 @@ public:
 	bool isReady();
 	~Timer();
 };
-

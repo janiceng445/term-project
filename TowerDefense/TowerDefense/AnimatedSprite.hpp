@@ -37,7 +37,7 @@
 
 class AnimatedSprite : public sf::Drawable, public sf::Transformable
 {
-public:
+	public:
 	explicit AnimatedSprite(sf::Time frameTime = sf::seconds(0.2f), bool paused = false, bool looped = true);
 
 	void update(sf::Time deltaTime);
@@ -58,7 +58,7 @@ public:
 	sf::Time getFrameTime() const;
 	void setFrame(std::size_t newFrame, bool resetTime = true);
 
-private:
+	private:
 	const Animation* m_animation;
 	sf::Time m_frameTime;
 	sf::Time m_currentTime;
@@ -73,4 +73,3 @@ private:
 };
 
 #endif // ANIMATEDSPRITE_INCLUDE
-

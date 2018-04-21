@@ -76,10 +76,10 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\ngj\Documents\Visual Studio 2017\SFML-2.4.2\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\TowerDefense\SFML\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>C:\Users\ngj\Documents\Visual Studio 2017\SFML-2.4.2\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\TowerDefense\SFML\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib; sfml-graphics-d.lib; sfml-system-d.lib; sfml-window-d.lib; sfml-network-d.lib; sfml-audio-d.lib; %(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
@@ -90,7 +90,13 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)\TowerDefense\SFML\include</AdditionalIncludeDirectories>
     </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(SolutionDir)\TowerDefense\SFML\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;sfml-audio-d.lib;sfml-graphics-d.lib;sfml-main-d.lib;sfml-system-d.lib;sfml-network-d.lib;sfml-window-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -100,12 +106,12 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\ngj\Documents\Visual Studio 2017\SFML-2.4.2\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\TowerDefense\SFML\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>C:\Users\ngj\Documents\Visual Studio 2017\SFML-2.4.2\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\TowerDefense\SFML\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib; sfml-graphics-d.lib; sfml-system-d.lib; sfml-window-d.lib; sfml-network-d.lib; sfml-audio-d.lib; %(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
@@ -127,25 +133,36 @@
   <ItemGroup>
     <ClCompile Include="AnimatedSprite.cpp" />
     <ClCompile Include="Animation.cpp" />
-    <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="GameScreen.cpp" />
+    <ClCompile Include="Gunner.cpp" />
     <ClCompile Include="Lancer.cpp" />
+    <ClCompile Include="LoseScreen.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="Score.cpp" />
-    <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="StartScreen.cpp" />
+    <ClCompile Include="Tower.cpp" />
+    <ClCompile Include="Wave.cpp" />
+    <ClCompile Include="WinScreen.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.hpp" />
     <ClInclude Include="AnimatedSprite.hpp" />
-    <ClInclude Include="Enemy.h" />
+    <ClInclude Include="cScreen.hpp" />
+    <ClInclude Include="GameScreen.hpp" />
+    <ClInclude Include="Gunner.h" />
     <ClInclude Include="Lancer.h" />
-    <ClInclude Include="main.h" />
+    <ClInclude Include="LoseScreen.hpp" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Score.h" />
-    <ClInclude Include="Timer.h" />
+    <ClInclude Include="Screens.hpp" />
+    <ClInclude Include="StartScreen.hpp" />
+    <ClInclude Include="Tower.h" />
+    <ClInclude Include="Wave.h" />
+    <ClInclude Include="WinScreen.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="TowerDefense.rc" />

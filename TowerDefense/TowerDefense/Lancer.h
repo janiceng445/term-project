@@ -3,7 +3,7 @@
 
 class Lancer : public Monster
 {
-private:
+	private:
 	bool canSpecial;
 	bool usingSpecial;
 	int barrierHP;
@@ -19,12 +19,12 @@ private:
 	int barrierDurationMax;
 	int barrierRecharge;
 
-public:
+	public:
 	Lancer();
-	Lancer(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP, Score* score);
-
+	Lancer(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP, Score* score, MonsterType monsterType);
 	void run() override;
 	void useSpecialAbility();
+	bool isUsingSpecial() override;
 
 	// Barrier
 	void drawBarrier();
@@ -39,4 +39,3 @@ public:
 	bool checkIfSpecial();
 	~Lancer();
 };
-

@@ -32,7 +32,7 @@
 
 class Animation
 {
-public:
+	public:
 	Animation();
 
 	void addFrame(sf::IntRect rect);
@@ -41,7 +41,7 @@ public:
 	std::size_t getSize() const;
 	const sf::IntRect& getFrame(std::size_t n) const;
 
-private:
+	private:
 	std::vector<sf::IntRect> m_frames;
 	const sf::Texture* m_texture;
 };

@@ -4,7 +4,7 @@ Lancer::Lancer()
 {
 }
 
-Lancer::Lancer(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP, Score* score) : Monster(win, aniPack, AD, HP, score) {
+Lancer::Lancer(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP, Score* score, MonsterType monsterType) : Monster(win, aniPack, AD, HP, score, monsterType) {
 	special = true;
 	canSpecial = true;
 	usingSpecial = false;
@@ -17,11 +17,12 @@ Lancer::Lancer(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, in
 
 	// Barrier animation
 	radiusMax = barrierHPMax;
-	radius = barrierHP;
-	barrier.setRadius(radius);
+	barrier.setRadius(radiusMax / 10);
+	barrier.setOrigin(barrier.getGlobalBounds().width / 2, barrier.getGlobalBounds().height / 2);
 	barrierDurationMax = 500;
 	barrierDuration = barrierDurationMax;
 	barrierRecharge = 0;
+	distance_y = 0;
 }
 
 // Override Monster run
@@ -72,6 +73,7 @@ void Lancer::run() {
 			}
 		}
 		else {
+			isAttacking = false;
 			movementSpeed = DEFAULT_MVMT_SPEED;
 			animationSpeed = DEFAULT_ANI_SPEED;
 			changeCurrentAnimation(0);
@@ -112,18 +114,30 @@ void Lancer::drawBarrier() {
 	position.y = y + spriteHeight / 2;
 	barrier.setPosition(position);
 	// Color
-	barrier.setFillColor(sf::Color(105, 190, 255, 75));
-	// Changing size
-	radius = barrierHP / 10;
-	barrier.setRadius(radius);
-	barrier.setOrigin(barrier.getGlobalBounds().width / 2, barrier.getGlobalBounds().height / 2);
-
+	if (barrierHP > barrierHPMax * 0.75) {
+		barrier.setFillColor(sf::Color(105, 190, 255, 75));
+	}
+	else if (barrierHP > barrierHPMax * 0.5 && barrierHP <= barrierHPMax * 0.75) {
+		barrier.setFillColor(sf::Color(255, 255, 175, 60));
+	}
+	else if (barrierHP > barrierHPMax * 0.25 && barrierHP <= barrierHPMax * 0.5) {
+		barrier.setFillColor(sf::Color(255, 155, 0, 45));
+	}
+	else {
+		barrier.setFillColor(sf::Color(255, 0, 0, 30));
+	}
 	window->draw(barrier);
 }
+
+bool Lancer::isUsingSpecial()
+{
+	return usingSpecial;
+}
+
 /////////////////////////////////// Radar ///////////////////////////////////
 
 void Lancer::detect() {
-	radar = aniSprite.getPosition().x + 150;
+	radar = aniSprite.getPosition().x + 500;
 }
 
 
@@ -131,7 +145,7 @@ void Lancer::detect() {
 sf::FloatRect Lancer::getSpriteGlobalBounds() {
 	if (usingSpecial)
 		return barrier.getGlobalBounds();
-	else 
+	else
 		return aniSprite.getGlobalBounds();
 }
 float Lancer::getDetectionDistance() {
@@ -140,7 +154,7 @@ float Lancer::getDetectionDistance() {
 /////////////////////////////////// Behavior ///////////////////////////////////
 void Lancer::takeDamage(int dmg) {
 	if (usingSpecial && canSpecial) {
-		this->barrierHP -= 0.25 * barrierHPMax;
+		this->barrierHP -= 0.1 * barrierHPMax;
 	}
 	else {
 		this->HP -= dmg;

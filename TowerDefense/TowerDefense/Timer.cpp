@@ -21,7 +21,7 @@ void Timer::runTimer() {
 		if (currentTime > delay && currentTime < delay + BREATHING_TIME) {
 			ready = true;
 		}
-		else if (currentTime > delay + BREATHING_TIME){
+		else if (currentTime > delay + BREATHING_TIME) {
 			ready = false;
 			restartTimer();
 		}
