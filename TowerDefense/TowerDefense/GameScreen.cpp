@@ -60,11 +60,21 @@ int GameScreen::Run(sf::RenderWindow &window)
 
 	//////////////////////////////// Load tower textures ////////////////////////////////
 
-	if (!basicTowerTx.loadFromFile("images/Towers/NewBasicTower.png"))
+	if (!basicTowerTx.loadFromFile("images/Towers/BoxesLvl1.png"))
 	{
 		std::cout << "Basic tower could not be loaded. Check filepath" << std::endl;
 		return -1;
 	}
+	if (!basicTowerlv2Tx.loadFromFile("images/Towers/BoxesLvl2.png"))
+	{
+		std::cout << "Basic tower could not be loaded. Check filepath" << std::endl;
+		return -1;
+	}
+	/*if (!basicTowerlv3Tx.loadFromFile("images/Towers/BoxesLvl3.png"))
+	{
+		std::cout << "Basic tower could not be loaded. Check filepath" << std::endl;
+		return -1;
+	}*/
 	if (!shootyTowerTx.loadFromFile("images/Towers/ShootyTowerLvl1.png"))
 	{
 		std::cout << "Shooty tower could not be loaded. Check filepath" << std::endl;
@@ -186,9 +196,9 @@ int GameScreen::Run(sf::RenderWindow &window)
 	shootyTowerSpr.setTexture(shootyTowerTx);
 	barbedWireSpr.setTexture(barbedWireTx);
 
-	Tower barbedWire(&window, barbedWire_HP, barbedWire_DMG, barbedWireSpr, dimensions.x * 0.5f, dimensions.y * 0.73f);				//deals damage to enemies who are walking through it
-	Tower basicTower(&window, basicTower_HP, basicTower_DMG, basicTowerSpr, dimensions.x * 0.6f, dimensions.y * 0.85f);				//a simple barricade
-	Tower shootyTower(&window, shootyTower_HP, shootyTower_DMG, shootyTowerSpr, dimensions.x * 0.7f, dimensions.y * 0.7f);			//shoots the enemies
+	Tower barbedWire(&window, barbedWire_HP, barbedWire_DMG, barbedWireSpr, dimensions.x * 0.5f, dimensions.y * 0.8f);				//deals damage to enemies who are walking through it
+	Tower basicTower(&window, basicTower_HP, basicTower_DMG, basicTowerSpr, dimensions.x * 0.6f, dimensions.y * 0.8f);				//a simple barricade
+	Tower shootyTower(&window, shootyTower_HP, shootyTower_DMG, shootyTowerSpr, dimensions.x * 0.7f, dimensions.y * 0.72f);			//shoots the enemies
 
 	towersHP.push_back(barbedWire.getHP());
 	towersHP.push_back(basicTower.getHP());
@@ -396,11 +406,10 @@ int GameScreen::Run(sf::RenderWindow &window)
 				{
 					tower.at(currentTarget).updateHealthBar();
 				}
-
-				if (wave.at(i)->isAliveFunc())
+				//checks to see if any enemies should take damage from the barbed wire
+				if (tower.at(0).amIAlive() && wave.at(i)->getSpriteGlobalBounds().intersects(tower.at(0).getSpriteGlobalBounds()))
 				{
-					//checks to see if any enemies should take damage from the barbed wire
-					if (wave.at(i)->getSpriteGlobalBounds().intersects(barbedWire.getSpriteGlobalBounds()))
+					if (wave.at(i)->isAliveFunc())
 					{
 						if (barbedTimer.getElapsedTime().asSeconds() > 0.5f)
 						{
@@ -613,8 +622,6 @@ int GameScreen::Run(sf::RenderWindow &window)
 				}
 				else if (event.key.code == sf::Keyboard::C) // Increase monster AD
 				{
-					//skelly_DMG = 500;
-					//skelly_HP = 1000;
 					gameScore.setTotal(10000);
 				}
 				////////////////////////////////////////////////////////////////////////////////////////////

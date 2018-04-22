@@ -57,7 +57,7 @@ private:
 	unsigned int barbedWire_HP = 70;
 	unsigned int basicTower_HP = 125;
 	unsigned int shootyTower_HP = 150;
-	unsigned int barbedWire_DMG = 0;
+	unsigned int barbedWire_DMG = 5;
 	unsigned int basicTower_DMG = 0;
 	unsigned int shootyTower_DMG = 25;
 
@@ -166,7 +166,7 @@ private:
 	// Rounds
 	std::vector<Wave*> waves;
 	const static int numLevels = 10;
-	int waveRound = 0; // add 1
+	int waveRound = 9; // add 1
 	int skellyAmount[numLevels] = { 3, 4, 5, 5, 7, 7, 0, 0, 9, 10 };
 	int rhinoAmount[numLevels] = { 0, 2, 3, 5, 3, 3, 10, 9, 5, 4 };
 	int lancerAmount[numLevels] = { 0, 0, 1, 2, 2, 3, 4, 7, 3, 3 };
