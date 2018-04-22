@@ -7,6 +7,7 @@ LoseScreen::LoseScreen() {}
 int LoseScreen::Run(sf::RenderWindow &window) {
 	sf::Event event;
 	bool running = true;
+	hasClicked = false;
 
 	int selected = 0;
 
@@ -130,7 +131,7 @@ int LoseScreen::Run(sf::RenderWindow &window) {
 					menuCursor.setPosition(exitGameText.getPosition().x - 30, exitGameText.getPosition().y);
 				}
 			}
-			else if (event.type == sf::Event::MouseButtonReleased)
+			else if (event.type == sf::Event::MouseButtonReleased && hasClicked)
 			{
 				if (selected == 0)
 				{
@@ -138,6 +139,10 @@ int LoseScreen::Run(sf::RenderWindow &window) {
 					return 1;
 				}
 				else if (selected == 1) return -1;
+			}
+			else if (event.type == sf::Event::MouseButtonPressed)
+			{
+				hasClicked = true;
 			}
 		}
 		//drawing menu objects

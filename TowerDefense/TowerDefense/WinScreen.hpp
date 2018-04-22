@@ -10,6 +10,7 @@ class WinScreen : public cScreen {
 	sf::Text exitGameText;
 	sf::Font pixeled;
 	sf::CircleShape menuCursor;
+	bool hasClicked;
 
 	public:
 	WinScreen(void);

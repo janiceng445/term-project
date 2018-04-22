@@ -10,6 +10,7 @@ class LoseScreen : public cScreen {
 	sf::Text exitGameText;
 	sf::Font pixeled;
 	sf::CircleShape menuCursor;
+	bool hasClicked;
 
 	public:
 	LoseScreen(void);
