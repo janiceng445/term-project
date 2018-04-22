@@ -13,6 +13,7 @@ Tower::Tower(sf::RenderWindow* renderWin, int hitpoints, int attack, sf::Sprite 
 	this->posX = xPos;
 	this->posY = yPos;
 	this->sprite = towerSprite;
+	this->upgradeLv = 1;
 	spriteWidth = sprite.getGlobalBounds().width;
 	spriteHeight = sprite.getGlobalBounds().height;
 
@@ -40,10 +41,11 @@ int* Tower::getHP()
 	return HP;
 }
 
-void Tower::assignTexture()
+int Tower::getmaxHP()
 {
-	this->towerTexture.loadFromFile("images/Towers/BasicBarrier.png");
+	return this->maxHealth;
 }
+
 
 void Tower::draw()
 {
@@ -84,6 +86,27 @@ void Tower::takeDamage()
 		this->health = 0;
 		die();
 	}
+}
+
+int Tower::getDmg()
+{
+	return this->atk;
+}
+
+void Tower::upgradeDmg() 
+{
+	this->atk += 10;
+}
+
+void Tower::upgradeHealth(int value) 
+{
+	this->maxHealth = value;
+	*HP = maxHealth + 10;
+}
+
+void Tower::updateSprite(sf::Texture newTex) 
+{
+	this->sprite.setTexture(newTex);
 }
 
 /////////////////////////////////////////// Health Bar ///////////////////////////////////////////

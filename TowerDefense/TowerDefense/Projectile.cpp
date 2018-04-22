@@ -26,14 +26,14 @@ sf::FloatRect Projectile::getSpriteGlobalBounds() {
 	return bullet.getGlobalBounds();
 }
 
-bool Projectile::checkCollision(std::vector<Monster*>* m) {
+bool Projectile::checkCollision(std::vector<Monster*>* m, int dmg) {
 	for (unsigned int i = 0; i < m->size(); i++) {
 		if (m->at(i)->isAliveFunc()) {
 			if (bullet.getPosition().x < m->at(i)->getDetectionDistance()) {
 				m->at(i)->useSpecialAbility();
 			}
 			if (bullet.getGlobalBounds().intersects(m->at(i)->getSpriteGlobalBounds())) {
-				m->at(i)->takeDamage(25);
+				m->at(i)->takeDamage(dmg);
 				return true;
 			}
 			//if (m->at(i).isDead()) m->erase(m->begin() + i);

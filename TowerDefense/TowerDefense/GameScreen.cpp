@@ -56,14 +56,34 @@ int GameScreen::Run(sf::RenderWindow &window){
 		std::cout << "Basic tower could not be loaded. Check filepath" << std::endl;
 		return -1;
 	}
-	if (!shootyTowerTx.loadFromFile("images/Towers/ShootyTower.png"))
+	if (!shootyTowerTx.loadFromFile("images/Towers/ShootyTowerLvl1.png"))
 	{
 		std::cout << "Shooty tower could not be loaded. Check filepath" << std::endl;
 		return -1;
 	}
-	if (!barbedWireTx.loadFromFile("images/Towers/NewBarbedWire.png"))
+	if (!shootyTowerlv2Tx.loadFromFile("images/Towers/ShootyTowerLvl2.png"))
+	{
+		std::cout << "Shooty tower lvl 2 could not be loaded. Check filepath" << std::endl;
+		return -1;
+	}
+	if (!shootyTowerlv3Tx.loadFromFile("images/Towers/ShootyTowerLvl3.png"))
+	{
+		std::cout << "Shooty tower lvl 3 could not be loaded. Check filepath" << std::endl;
+		return -1;
+	}
+	if (!barbedWireTx.loadFromFile("images/Towers/ZapperLvl1.png"))
 	{
 		std::cout << "Barbed Wire could not be loaded. Check filepath" << std::endl;
+		return -1;
+	}
+	if (!barbedWirelv2Tx.loadFromFile("images/Towers/ZapperLvl2.png"))
+	{
+		std::cout << "Barbed Wire  lvl 2 could not be loaded. Check filepath" << std::endl;
+		return -1;
+	}
+	if (!barbedWirelv3Tx.loadFromFile("images/Towers/ZapperLvl3.png"))
+	{
+		std::cout << "Barbed Wire  lvl 3 could not be loaded. Check filepath" << std::endl;
 		return -1;
 	}
 	//////////////////////////////// Load audio files ////////////////////////////////
@@ -149,7 +169,7 @@ int GameScreen::Run(sf::RenderWindow &window){
 	shootyTowerSpr.setTexture(shootyTowerTx);
 	barbedWireSpr.setTexture(barbedWireTx);
 
-	Tower barbedWire(&window, barbedWire_HP, barbedWire_DMG, barbedWireSpr, dimensions.x * 0.5f, dimensions.y * 0.82f);				//deals damage to enemies who are walking through it
+	Tower barbedWire(&window, barbedWire_HP, barbedWire_DMG, barbedWireSpr, dimensions.x * 0.5f, dimensions.y * 0.72f);				//deals damage to enemies who are walking through it
 	Tower basicTower(&window, basicTower_HP, basicTower_DMG, basicTowerSpr, dimensions.x * 0.6f, dimensions.y * 0.85f);				//a simple barricade
 	Tower shootyTower(&window, shootyTower_HP, shootyTower_DMG, shootyTowerSpr, dimensions.x * 0.7f, dimensions.y * 0.7f);			//shoots the enemies
 	
@@ -279,7 +299,7 @@ int GameScreen::Run(sf::RenderWindow &window){
 					currentProj[i].bullet.move(currentProj[i].vel);
 
 					// Checks collision with enemies from the bullet scope
-					if (currentProj[i].checkCollision(&wave)) currentProj.erase(currentProj.begin() + i);
+					if (currentProj[i].checkCollision(&wave, 25)) currentProj.erase(currentProj.begin() + i);
 
 					// Ends the loop if the bullet vector is empty and reading attempt is made to see next element in empty vector
 					if (currentProj.empty())
@@ -371,6 +391,7 @@ int GameScreen::Run(sf::RenderWindow &window){
 					}
 				}
 			}
+			
 
 			unsigned int enemyCounter = 0;
 			int targetValue = 0;
@@ -431,7 +452,7 @@ int GameScreen::Run(sf::RenderWindow &window){
 						window.draw(towerProjectiles[i].bullet);
 
 						// Checks collision with enemies from the bullet scope
-						if (towerProjectiles[i].checkCollision(&wave))
+						if (towerProjectiles[i].checkCollision(&wave, shootyTower.getDmg()))
 						{
 							towerProjectiles.erase(towerProjectiles.begin() + i);
 						}
@@ -516,6 +537,16 @@ int GameScreen::Run(sf::RenderWindow &window){
 			{
 				barbedWire_lvl++;
 				std::cout << "btn01 is pressed" << std::endl;
+				barbedWire.upgradeHealth(barbedWire.getmaxHP() + 10);
+				if (barbedWire_lvl > 3)
+				{
+					barbedWire.updateSprite(barbedWirelv2Tx);
+				}
+				if (barbedWire_lvl > 6)
+				{
+					barbedWire.updateSprite(barbedWirelv3Tx);
+				}
+				barbedWire.updateHealthBar();
 				clicked = true;
 			}
 			if (buttonIsClicked(&upgrade_02_btn, &window)
@@ -524,6 +555,18 @@ int GameScreen::Run(sf::RenderWindow &window){
 			{
 				barricade_lvl++;
 				std::cout << "btn02 is pressed" << std::endl;
+				basicTower.upgradeHealth(basicTower.getmaxHP() + 10);
+				if (barricade_lvl > 3)
+				{
+					basicTower.updateSprite(basicTowerlv2Tx);
+				
+				}
+				if (barricade_lvl > 6)
+				{
+					basicTower.updateSprite(basicTowerlv3Tx);
+	
+				}
+				basicTower.updateHealthBar();
 				clicked = true;
 			}
 			if (buttonIsClicked(&upgrade_03_btn, &window)
@@ -532,6 +575,20 @@ int GameScreen::Run(sf::RenderWindow &window){
 			{
 				shootingTower_lvl++;
 				std::cout << "btn03 is pressed" << std::endl;
+				shootyTower.upgradeHealth(shootyTower.getmaxHP() + 10);
+				if (shootingTower_lvl > 3)
+				{
+					shootyTower.updateSprite(shootyTowerlv2Tx);
+	
+				}
+				if (shootingTower_lvl > 6)
+				{
+					shootyTower.updateSprite(shootyTowerlv3Tx);
+
+				}
+				shootyTower.updateHealthBar();
+				shootyTower.upgradeDmg();
+
 				clicked = true;
 			}
 			if (buttonIsClicked(&upgrade_04_btn, &window)

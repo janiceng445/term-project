@@ -10,6 +10,7 @@ private:
 	int* HP;
 	int atk;
 	int defense;
+	int upgradeLv; 
 	float posX;
 	float posY;
 	bool alive;
@@ -36,7 +37,6 @@ public:
 
 	Tower(sf::RenderWindow* renWin, int hitpoints, int atk, sf::Sprite sprite, float xPos, float yPos);
 
-	void assignTexture();
 
 	int getXPosition();
 
@@ -44,13 +44,23 @@ public:
 
 	int* getHP(); // returns pointer to health
 
+	int getmaxHP();
+
 	void draw();
+
+	int getDmg();
+	
+	void upgradeDmg();
 
 	void takeDamage();
 
 	void die();
 
 	bool amIAlive();
+
+	void upgradeHealth(int value);
+
+	void updateSprite(sf::Texture newTex);
 
 	sf::Sprite getSprite();
 

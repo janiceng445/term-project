@@ -58,7 +58,7 @@ class GameScreen : public cScreen {
 	unsigned int shootyTower_HP = 150;
 	unsigned int barbedWire_DMG = 0;
 	unsigned int basicTower_DMG = 0;
-	unsigned int shootyTower_DMG = 0;
+	unsigned int shootyTower_DMG = 25;
 
 	// Declarations
 	bool paused = false;
@@ -126,8 +126,14 @@ class GameScreen : public cScreen {
 	sf::Texture demon_texture;
 	sf::Texture gunner_texture;
 	sf::Texture basicTowerTx;
+	sf::Texture basicTowerlv2Tx;
+	sf::Texture basicTowerlv3Tx;
 	sf::Texture shootyTowerTx;
+	sf::Texture shootyTowerlv2Tx;
+	sf::Texture shootyTowerlv3Tx;
 	sf::Texture barbedWireTx;
+	sf::Texture barbedWirelv2Tx;
+	sf::Texture barbedWirelv3Tx;
 
 	sf::Vector2f dimensions;
 
@@ -188,8 +194,14 @@ class GameScreen : public cScreen {
 
 	// Tower Sprites
 	sf::Sprite basicTowerSpr;
+	sf::Sprite basicTowerlvl2Spr;
+	sf::Sprite basicTowerlvl3Spr;
 	sf::Sprite shootyTowerSpr;
+	sf::Sprite shootyTowerlvl2Spr;
+	sf::Sprite shootyTowerlvl3Spr;
 	sf::Sprite barbedWireSpr;
+	sf::Sprite barbedWirelvl2Spr;
+	sf::Sprite barbedWirelvl3Spr;
 
 	// Joe Projectiles
 	std::vector<sf::Sprite> ammo;
