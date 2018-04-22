@@ -57,7 +57,7 @@ private:
 	unsigned int barbedWire_HP = 70;
 	unsigned int basicTower_HP = 125;
 	unsigned int shootyTower_HP = 150;
-	unsigned int barbedWire_DMG = 0;
+	unsigned int barbedWire_DMG = 5;
 	unsigned int basicTower_DMG = 0;
 	unsigned int shootyTower_DMG = 25;
 

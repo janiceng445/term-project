@@ -20,7 +20,6 @@ Monster::Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, 
 	this->max_HP = HP;
 	float s = rand() / (float)RAND_MAX * 0.15;
 	this->movementSpeed = DEFAULT_MVMT_SPEED + s;
-	//this->movementSpeed = 1.0f;							// Dev cheat
 	this->animationSpeed = DEFAULT_ANI_SPEED;
 	this->isAlive = true;
 	this->isAttacking = false;
@@ -288,6 +287,10 @@ void Monster::attack()
 		if (clock.getElapsedTime().asSeconds() > 0.17f)
 		{
 			*this->targetedHealth -= this->AD;
+			if (recoil)
+			{
+				recoilDmg();
+			}
 			clock.restart();
 		}
 	}
@@ -345,6 +348,20 @@ bool Monster::isDead()
 bool Monster::isUsingSpecial()
 {
 	return false;
+}
+
+// Recoil dmg if recoil is activated
+void Monster::recoilDmg()
+{
+	HP -= recoilDMG;
+}
+void Monster::setRecoilDmg(int dmg)
+{
+	recoilDMG = dmg;
+}
+void Monster::enableRecoil(bool t)
+{
+	recoil = t;
 }
 
 /////////////////////////////////////////// Other ///////////////////////////////////////////

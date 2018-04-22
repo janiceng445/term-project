@@ -71,6 +71,9 @@ protected:
 	Score* score;
 	int c;
 
+	int recoilDMG;
+	bool recoil;
+
 public:
 	Monster();
 	Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP, Score* score, MonsterType monsterType);
@@ -113,6 +116,10 @@ public:
 	bool isAliveFunc();
 	bool isDead();
 	bool virtual isUsingSpecial(); // should only be true for Lancer
+
+	void recoilDmg();
+	void setRecoilDmg(int dmg);
+	void enableRecoil(bool t);
 
 	// Other
 

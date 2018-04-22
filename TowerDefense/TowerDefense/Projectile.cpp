@@ -1,9 +1,17 @@
 #include <SFML\Graphics.hpp>
 #include "Projectile.h"
 
-Projectile::Projectile(float radius) {
+Projectile::Projectile(float radius, bool joe) {
 	bullet.setRadius(radius);
-	bullet.setFillColor(sf::Color(250, 255, 165, 255));
+	
+	if (joe)
+	{
+		bullet.setFillColor(sf::Color(250, 255, 165, 255));
+	}
+	else
+	{
+		bullet.setFillColor(sf::Color(255, 165, 250, 255));
+	}
 }
 
 void Projectile::setVel(sf::Vector2f input) {

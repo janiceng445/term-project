@@ -47,7 +47,7 @@ int WinScreen::Run(sf::RenderWindow &window)
 	restartGameText.setFillColor(sf::Color::White);
 	exitGameText.setFillColor(sf::Color::White);
 
-	restartGameText.setString("Restart Game");
+	restartGameText.setString("Replay Game");
 	exitGameText.setString("Exit Game");
 
 	int rg_width = restartGameText.getGlobalBounds().width;
