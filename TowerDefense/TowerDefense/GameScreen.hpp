@@ -59,7 +59,7 @@ private:
 	unsigned int shootyTower_HP = 150;
 	unsigned int barbedWire_DMG = 5;
 	unsigned int basicTower_DMG = 0;
-	unsigned int shootyTower_DMG = 0;
+	unsigned int shootyTower_DMG = 25;
 
 	// Declarations
 	bool paused = false;
