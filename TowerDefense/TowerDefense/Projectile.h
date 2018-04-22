@@ -21,7 +21,7 @@ public:
 	// Get sprite
 	sf::Vector2f getLocation();
 	sf::FloatRect getSpriteGlobalBounds();
-	bool checkCollision(std::vector<Monster*>* m);
+	bool checkCollision(std::vector<Monster*>* m, int dmg);
 };
 
 #endif
