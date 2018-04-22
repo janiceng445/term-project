@@ -71,7 +71,7 @@ void Gunner::attackMove()
 		{
 			stoppingPoint = stoppingPoint - randomPoint;
 		}
-		
+
 		// Attack if at place
 		if (this->aniSprite.getCurrentFrame() == 3 && x > shootingPoint - 10)
 		{

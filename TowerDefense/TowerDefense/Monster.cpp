@@ -5,7 +5,7 @@ Monster::Monster()
 }
 Monster::Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP, Score* score, MonsterType monsterType)
 {
-	if (type == 1) 
+	if (type == 1)
 	{
 		size = 98;
 	}
@@ -76,42 +76,53 @@ Monster::Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, 
 /////////////////////////////////////////// Animation ///////////////////////////////////////////
 
 // Sets current animation
-void Monster::setCurrentAnimation() {
+void Monster::setCurrentAnimation()
+{
 	this->currentAnimation = &this->aniPack.at(0);
 }
 // Plays animation of currently selected status
-void Monster::playAnimation() {
+void Monster::playAnimation()
+{
 	this->aniSprite.play(*currentAnimation);
 }
 // Updates frame time
-void Monster::update(sf::Time frameTime) {
+void Monster::update(sf::Time frameTime)
+{
 	this->aniSprite.update(frameTime);
 }
 // Changes current animation status
-void Monster::changeCurrentAnimation(int n) {
+void Monster::changeCurrentAnimation(int n)
+{
 	this->currentAnimation = &this->aniPack.at(n);
 }
 // Runs the timers
-void Monster::run() {
-	if (!stopRunning) {
+void Monster::run()
+{
+	if (!stopRunning)
+	{
 		sf::Time frameTime = this->frameClock.restart();
-		if (isAttacking && isAlive) {
+		if (isAttacking && isAlive)
+		{
 			isMoving = false;
 			changeCurrentAnimation(1);
 		}
-		else if (!isAlive) {
+		else if (!isAlive)
+		{
 			isMoving = false;
-			if (aniSprite.getCurrentFrame() == 4) {
+			if (aniSprite.getCurrentFrame() == 4)
+			{
 				currentFrame = 0;
 			}
 			aniSprite.setFrameTime(sf::seconds(animationSpeed));
 			changeCurrentAnimation(2);
-			if (aniSprite.getCurrentFrame() == 4 && aniSprite.getAnimation()->getFrame(aniSprite.getCurrentFrame()).top == spriteHeight * 2) {
+			if (aniSprite.getCurrentFrame() == 4 && aniSprite.getAnimation()->getFrame(aniSprite.getCurrentFrame()).top == spriteHeight * 2)
+			{
 				stopRunning = true;
 				isPermaDead = true;
 			}
 		}
-		else {
+		else
+		{
 			isMoving = true;
 			isAttacking = false;
 			changeCurrentAnimation(0);
@@ -119,17 +130,21 @@ void Monster::run() {
 		playAnimation();
 		update(frameTime);
 	}
-	if (isPermaDead) {
+	if (isPermaDead)
+	{
 		decay_timer--;
-		if (decay_timer == 0) {
+		if (decay_timer == 0)
+		{
 			decay_timer = 0;
 			stopDrawing = true;
 		}
 	}
 }
 // Draws the sprite on the window
-void Monster::draw() {
-	if (!stopDrawing) {
+void Monster::draw()
+{
+	if (!stopDrawing)
+	{
 		this->window->draw(aniSprite);
 		this->window->draw(hitbox);
 		this->window->draw(this->bar);
@@ -138,10 +153,12 @@ void Monster::draw() {
 
 /////////////////////////////////////////// Health Bar ///////////////////////////////////////////
 
-void Monster::addHealthBar() {
+void Monster::addHealthBar()
+{
 	bar.setSize(sf::Vector2f((float)this->spriteWidth, 5));
 }
-void Monster::updateHealthBar() {
+void Monster::updateHealthBar()
+{
 	float hp = (float)this->HP / this->max_HP * this->spriteWidth;
 	// Changing color of bar if < 50%
 	hp > 0.50 * this->spriteWidth ? bar.setFillColor(sf::Color::Green) :
@@ -149,7 +166,8 @@ void Monster::updateHealthBar() {
 	bar.setSize(sf::Vector2f(hp, 5));
 	showHealthBar();
 }
-void Monster::showHealthBar() {
+void Monster::showHealthBar()
+{
 	this->bar.setPosition(this->x, this->y - 10);
 }
 
@@ -161,7 +179,8 @@ int Monster::getHealth()
 /////////////////////////////////////////// Hitbox ///////////////////////////////////////////
 
 // Draws hitbox
-void Monster::drawHitbox() {
+void Monster::drawHitbox()
+{
 	this->hitbox.setFillColor(sf::Color::Transparent);
 	this->hitbox.setOutlineColor(sf::Color::Red);
 	this->hitbox.setOutlineThickness(1);
@@ -171,10 +190,12 @@ void Monster::drawHitbox() {
 	this->window->draw(this->hitbox);
 }
 // Show hitbox
-void Monster::showHitbox() {
+void Monster::showHitbox()
+{
 	this->hitboxVisibility = true;
 }
-sf::Vector2f Monster::getHitbox_Dim() {
+sf::Vector2f Monster::getHitbox_Dim()
+{
 	sf::Vector2f dim(this->hitbox_X + this->hitbox_Width, this->hitbox_Y - this->hitbox_Height);
 	return dim;
 }
@@ -182,38 +203,44 @@ sf::Vector2f Monster::getHitbox_Dim() {
 /////////////////////////////////////////// Location ///////////////////////////////////////////
 
 // Set spawn location
-void Monster::changeY() {
+void Monster::changeY()
+{
 	// Random number generator
 	int r = (rand() % 41 - 20) * 3; // For random spawning y coordinate
 	this->y += r;
 }
 // Set spawn's starting position
-void Monster::setStartingPosition(float x, float y) {
+void Monster::setStartingPosition(float x, float y)
+{
 	this->x = x;
 	this->y = y;
 	this->aniSprite.setPosition(this->x, this->y);
 }
 // Moves the sprite
-void Monster::attackMove() {
+void Monster::attackMove()
+{
 	sprite_yCounter++;
 	// Moving monster along y axis
-	if (y <= window->getSize().y * 0.8 || 
+	if (y <= window->getSize().y * 0.8 ||
 		sprite_yCounter == sprite_yTimer)
 	{
-		distance_y  = distance_y * -1;
+		distance_y = distance_y * -1;
 		sprite_yCounter = 0;
 	}
 	// Updates x and y with current location
 	this->x = aniSprite.getPosition().x;
 	this->y = aniSprite.getPosition().y;
 	// Move
-	if (this->isAlive) {
-		if (this->x < this->stoppingPoint) {
+	if (this->isAlive)
+	{
+		if (this->x < this->stoppingPoint)
+		{
 			isMoving = true;
 			isAttacking = false;
 			this->aniSprite.move(movementSpeed, distance_y);
 		}
-		if (this->x > this->stoppingPoint - 10 && this->aniSprite.getCurrentFrame() == 3) {
+		if (this->x > this->stoppingPoint - 10 && this->aniSprite.getCurrentFrame() == 3)
+		{
 			isMoving = false;
 			attack();
 		}
@@ -222,7 +249,8 @@ void Monster::attackMove() {
 	if (hitboxVisibility) drawHitbox();
 }
 // Gets spawn's current location
-sf::Vector2f Monster::getCurrentLocation() {
+sf::Vector2f Monster::getCurrentLocation()
+{
 	sf::Vector2f location;
 	location.x = aniSprite.getPosition().x + (spriteWidth / 2);
 	location.y = aniSprite.getPosition().y + (spriteHeight / 2);
@@ -230,66 +258,82 @@ sf::Vector2f Monster::getCurrentLocation() {
 }
 
 // Gets hitboxes for projectiles to give results
-sf::FloatRect Monster::getSpriteGlobalBounds() {
+sf::FloatRect Monster::getSpriteGlobalBounds()
+{
 	return aniSprite.getGlobalBounds();
 }
-float Monster::getDetectionDistance() {
+float Monster::getDetectionDistance()
+{
 	return aniSprite.getPosition().x;
 }
 
 /////////////////////////////////////////// Behavior ///////////////////////////////////////////
 
 // Sets target via x-location and health
-void Monster::setTarget(int x, int* targetedHealth) {
+void Monster::setTarget(int x, int* targetedHealth)
+{
 	this->stoppingPoint = x;
 	this->targetedHealth = targetedHealth;
 }
 
 // Attacks a targeted health
-void Monster::attack() {
-	if (isAlive) {
+void Monster::attack()
+{
+	if (isAlive)
+	{
 		isAttacking = true;
-		if (clock.getElapsedTime().asSeconds() > 0.17f) {
+		if (clock.getElapsedTime().asSeconds() > 0.17f)
+		{
 			*this->targetedHealth -= this->AD;
 			clock.restart();
 		}
 	}
 }
-void Monster::useSpecialAbility() {
+void Monster::useSpecialAbility()
+{
 	// Do nothing as base monster
 }
 
 // Take damage
-void Monster::takeDamage(int dmg) {
+void Monster::takeDamage(int dmg)
+{
 	this->HP -= dmg;
-	if (this->HP <= 0) {
+	if (this->HP <= 0)
+	{
 		this->HP = 0;
 		die();
 	}
 }
 // Gets damage
-int Monster::getDamage() {
+int Monster::getDamage()
+{
 	return this->AD;
 }
 // Checks if Monster is attacking
-bool Monster::isCurrAttacking() {
+bool Monster::isCurrAttacking()
+{
 	return this->isAttacking;
 }
 // Dies
-void Monster::die() {
+void Monster::die()
+{
 	this->isAlive = false;
 	score->add(100);
 }
 // Gets isAlive value
-bool Monster::isAliveFunc() {
-	if (this->isAlive) {
+bool Monster::isAliveFunc()
+{
+	if (this->isAlive)
+	{
 		return true;
 	}
 	return false;
 }
 // Checks if dead
-bool Monster::isDead() {
-	if (this->isPermaDead) {
+bool Monster::isDead()
+{
+	if (this->isPermaDead)
+	{
 		return true;
 	}
 	return false;

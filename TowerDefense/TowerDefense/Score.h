@@ -2,7 +2,8 @@
 #ifndef SCORE_H
 #define SCORE_H
 
-class Score {
+class Score
+{
 private:
 	int total = 0;
 	int highScore = 0;

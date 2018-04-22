@@ -19,8 +19,9 @@
 #include "Wave.h"
 #include "Gunner.h"
 
-class GameScreen : public cScreen {
-	private:
+class GameScreen : public cScreen
+{
+private:
 	// Global constants
 	const double PI = 3.141592653589793238463;
 	const float SKELLY_SPWN_TIMER = 5.0f;
@@ -50,7 +51,7 @@ class GameScreen : public cScreen {
 	unsigned int gunner_DMG = 5;
 	unsigned int gunner_HP = 50;
 
-	unsigned int boundary = (int) dimensions.x;
+	unsigned int boundary = (int)dimensions.x;
 
 	// Tower Power
 	unsigned int barbedWire_HP = 70;
@@ -94,7 +95,7 @@ class GameScreen : public cScreen {
 	int shootingTower_lvl = 1;
 	int incomeRate_lvl = 1;
 	int moneyDeduction = 100;
-	
+
 	// Buttons
 	sf::Texture upgrade_01_texture;
 	sf::Texture upgrade_02_texture;
@@ -157,9 +158,9 @@ class GameScreen : public cScreen {
 	const static int numLevels = 10;
 	int waveRound = 0; // add 1
 	int skellyAmount[numLevels] = { 3, 4, 5, 5, 7, 7, 0, 0, 9, 10 };
-	int rhinoAmount[numLevels] =  { 0, 2, 3, 5, 3, 3, 10, 9, 5, 4 };
+	int rhinoAmount[numLevels] = { 0, 2, 3, 5, 3, 3, 10, 9, 5, 4 };
 	int lancerAmount[numLevels] = { 0, 0, 1, 2, 2, 3, 4, 7, 3, 3 };
-	int demonAmount[numLevels] =  { 0, 0, 0, 3, 4, 3, 7, 5, 5, 5 };
+	int demonAmount[numLevels] = { 0, 0, 0, 3, 4, 3, 7, 5, 5, 5 };
 	int gunnerAmount[numLevels] = { 0, 0, 2, 3, 4, 5, 6, 7, 3, 5 };
 	int breakCounter = 0;
 	int breakTimer = 500;
@@ -219,7 +220,7 @@ class GameScreen : public cScreen {
 	sf::Music gameMusic;
 	bool sound;
 
-	public:
+public:
 	// Declaring functions
 	GameScreen(void);
 	virtual int Run(sf::RenderWindow &window);

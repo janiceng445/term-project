@@ -1,8 +1,9 @@
 #pragma once
 #include "cScreen.hpp"
 
-class WinScreen : public cScreen {
-	private:
+class WinScreen : public cScreen
+{
+private:
 	sf::Vector2f dimensions;
 	sf::Texture winBack;
 	sf::Sprite winBackSprite;
@@ -12,7 +13,7 @@ class WinScreen : public cScreen {
 	sf::CircleShape menuCursor;
 	bool hasClicked;
 
-	public:
+public:
 	WinScreen(void);
 	int Run(sf::RenderWindow &window);
 };

@@ -3,43 +3,52 @@
 
 GameScreen::GameScreen(void) {}
 
-int GameScreen::Run(sf::RenderWindow &window){
+int GameScreen::Run(sf::RenderWindow &window)
+{
 	sf::Event event;
 	bool running = true;
 
 	// Loading files
-	if (!backgroundTexture.loadFromFile("images/background.png")) {
+	if (!backgroundTexture.loadFromFile("images/background.png"))
+	{
 		std::cerr << "background failed" << std::endl;
 		return -1;
 	}
-	if (!joeTexture.loadFromFile("images/revolverJoe.png")) {
+	if (!joeTexture.loadFromFile("images/revolverJoe.png"))
+	{
 		std::cerr << "revolverJoe failed" << std::endl;
 		return -1;
 	}
-	if (!armTexture.loadFromFile("images/arm.png")) {
+	if (!armTexture.loadFromFile("images/arm.png"))
+	{
 		std::cerr << "arm failed" << std::endl;
 		return -1;
 	}
-	if (!bulletTexture.loadFromFile("images/bullet.png")) {
+	if (!bulletTexture.loadFromFile("images/bullet.png"))
+	{
 		std::cerr << "bullet failed" << std::endl;
 		return -1;
 	}
 
 	//////////////////////////////// Load enemy textures ////////////////////////////////
 
-	if (!skelly_texture.loadFromFile("images/enemies/skelly.png")) {
+	if (!skelly_texture.loadFromFile("images/enemies/skelly.png"))
+	{
 		std::cerr << "skelly_spriteSheet failed" << std::endl;
 		return -1;
 	}
-	if (!rhino_texture.loadFromFile("images/enemies/rhino.png")) {
+	if (!rhino_texture.loadFromFile("images/enemies/rhino.png"))
+	{
 		std::cerr << "rhino_spriteSheet failed" << std::endl;
 		return -1;
 	}
-	if (!lancer_texture.loadFromFile("images/enemies/lancer.png")) {
+	if (!lancer_texture.loadFromFile("images/enemies/lancer.png"))
+	{
 		std::cerr << "lancer_spriteSheet failed" << std::endl;
 		return -1;
 	}
-	if (!demon_texture.loadFromFile("images/enemies/demon.png")) {
+	if (!demon_texture.loadFromFile("images/enemies/demon.png"))
+	{
 		std::cerr << "demon_spriteSheet failed" << std::endl;
 		return -1;
 	}
@@ -75,15 +84,15 @@ int GameScreen::Run(sf::RenderWindow &window){
 	gameMusic.setLoop(true);
 	gameMusic.setVolume(50);
 	gameMusic.play();
-	
-	if (!gunshot_buffer.loadFromFile("Audio/gunshotSound.wav")) 
+
+	if (!gunshot_buffer.loadFromFile("Audio/gunshotSound.wav"))
 	{
 		std::cout << "Gunshot sound could not be loaded. Check filepath" << std::endl;
 	}
 	gunshotSound.setBuffer(gunshot_buffer);
 	gunshotSound.setVolume(30);
 
-	if (!reload_buffer.loadFromFile("Audio/reloadSound.wav")) 
+	if (!reload_buffer.loadFromFile("Audio/reloadSound.wav"))
 	{
 		std::cout << "Reload sound could not be loaded. Check filepath" << std::endl;
 	}
@@ -139,7 +148,8 @@ int GameScreen::Run(sf::RenderWindow &window){
 
 	sf::Sprite bulletSprite(bulletTexture);
 
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < 6; i++)
+	{
 		ammo.push_back(bulletSprite);
 	}
 
@@ -159,17 +169,17 @@ int GameScreen::Run(sf::RenderWindow &window){
 	Tower barbedWire(&window, barbedWire_HP, barbedWire_DMG, barbedWireSpr, dimensions.x * 0.5f, dimensions.y * 0.82f);				//deals damage to enemies who are walking through it
 	Tower basicTower(&window, basicTower_HP, basicTower_DMG, basicTowerSpr, dimensions.x * 0.6f, dimensions.y * 0.85f);				//a simple barricade
 	Tower shootyTower(&window, shootyTower_HP, shootyTower_DMG, shootyTowerSpr, dimensions.x * 0.7f, dimensions.y * 0.7f);			//shoots the enemies
-	
+
 	towersHP.push_back(barbedWire.getHP());
 	towersHP.push_back(basicTower.getHP());
 	towersHP.push_back(shootyTower.getHP());
-	towersLocation.push_back( (int) (barbedWire.getXPosition() - basicTower.getSpriteGlobalBounds().width / 2));
-	towersLocation.push_back( (int) (basicTower.getXPosition() - basicTower.getSpriteGlobalBounds().width / 2));
-	towersLocation.push_back( (int) (shootyTower.getXPosition() - shootyTower.getSpriteGlobalBounds().width / 2 + 10));
+	towersLocation.push_back((int)(barbedWire.getXPosition() - basicTower.getSpriteGlobalBounds().width / 2));
+	towersLocation.push_back((int)(basicTower.getXPosition() - basicTower.getSpriteGlobalBounds().width / 2));
+	towersLocation.push_back((int)(shootyTower.getXPosition() - shootyTower.getSpriteGlobalBounds().width / 2 + 10));
 	tower.push_back(barbedWire);
 	tower.push_back(basicTower);
 	tower.push_back(shootyTower);
-																																	
+
 	////////////////////////////// Add animations //////////////////////////////
 
 	setSpriteAnimations(&skellyAni, &skelly_texture, 's', "Skelly");
@@ -185,7 +195,8 @@ int GameScreen::Run(sf::RenderWindow &window){
 
 	int scoreTimer = 1000;
 
-	if (!pixeled.loadFromFile("fonts/Pixeled.ttf")) {
+	if (!pixeled.loadFromFile("fonts/Pixeled.ttf"))
+	{
 		std::cerr << "Font failed to load." << std::endl;
 		return -1;
 	}
@@ -231,7 +242,7 @@ int GameScreen::Run(sf::RenderWindow &window){
 		{
 			window.setMouseCursorVisible(false);
 			//sets rotation of arm based on mouse location (gun points at mouse pointer)
-			armSprite.setRotation((float) ((180.0 / PI) * atan2(0.52 * dimensions.y - sf::Mouse::getPosition(window).y, 0.76f * dimensions.x - sf::Mouse::getPosition(window).x)));
+			armSprite.setRotation((float)((180.0 / PI) * atan2(0.52 * dimensions.y - sf::Mouse::getPosition(window).y, 0.76f * dimensions.x - sf::Mouse::getPosition(window).x)));
 
 			// Score
 			scoreTimer--;
@@ -247,9 +258,9 @@ int GameScreen::Run(sf::RenderWindow &window){
 			mousePos = sf::Vector2f(sf::Mouse::getPosition(window));
 			mouseAimDir = mousePos - center;
 			mouseAimDirNorm = mouseAimDir / sqrt(pow(mouseAimDir.x, 2) + pow(mouseAimDir.y, 2));
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Left) 
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)
 				&& sf::Mouse::getPosition(window).y > menuBar.getGlobalBounds().height
-				&& projTimer == maxProjTimer && reloading == false 
+				&& projTimer == maxProjTimer && reloading == false
 				&& !ammo.empty())
 			{
 				gunshotSound.play();
@@ -331,7 +342,8 @@ int GameScreen::Run(sf::RenderWindow &window){
 				}
 			}
 			// Targets of mobs and targeted health
-			if (!tower.at(currentTarget).amIAlive()) {
+			if (!tower.at(currentTarget).amIAlive())
+			{
 				if (currentTarget < 2)
 				{
 					currentTarget++;
@@ -344,13 +356,13 @@ int GameScreen::Run(sf::RenderWindow &window){
 				wave[i]->setTarget(towersLocation.at(currentTarget), towersHP.at(currentTarget));
 				if (currentTarget == 2 && !tower.at(currentTarget).amIAlive())
 				{
-					wave[i]->setTarget((int) (dimensions.x - 175), new int(1));
+					wave[i]->setTarget((int)(dimensions.x - 175), new int(1));
 				}
 				wave[i]->run();
 				wave[i]->attackMove();
 				if (wave[i]->isDead())
 				{
-					if(waves.at(waveRound)->getNumMobs() > 0) waves.at(waveRound)->deductMob();
+					if (waves.at(waveRound)->getNumMobs() > 0) waves.at(waveRound)->deductMob();
 					wave.erase(wave.begin() + i);
 				}
 			}
@@ -384,11 +396,11 @@ int GameScreen::Run(sf::RenderWindow &window){
 			// Shoot only when wave is not empty
 			if (tower.at(2).amIAlive() && !wave.empty())
 			{
-				for (int m = 0; m < wave.size(); m++)
+				for (unsigned int m = 0; m < wave.size(); m++)
 				{
 					Monster* targetTemp = wave.at(m);
-					int targetValueTemp = targetTemp->getCurrentLocation().x * TOWER_POS_WEIGHT + targetTemp->getHealth() * TOWER_HP_WEIGHT
-						+ targetTemp->getDamage() * TOWER_DMG_WEIGHT;
+					int targetValueTemp = (int) (targetTemp->getCurrentLocation().x * TOWER_POS_WEIGHT + targetTemp->getHealth() * TOWER_HP_WEIGHT
+						+ targetTemp->getDamage() * TOWER_DMG_WEIGHT);
 
 					if (targetValueTemp > targetValue && targetTemp->isAliveFunc())
 					{
@@ -517,7 +529,7 @@ int GameScreen::Run(sf::RenderWindow &window){
 		//************// Button clicking events //************//
 		/*if (!clicked)
 		{
-			if (buttonIsClicked(&upgrade_01_btn, &window) 
+			if (buttonIsClicked(&upgrade_01_btn, &window)
 				&& gameScore.getTotal() - moneyDeduction * barbedWire_lvl >= 0
 				&& barbedWire_lvl < 10)			// Upgrades barbed wire
 			{
@@ -588,8 +600,9 @@ int GameScreen::Run(sf::RenderWindow &window){
 		updateCostButtons();
 
 		// Draws the pause screen
-		if (paused) { 
-			drawPauseScreen(&window); 
+		if (paused)
+		{
+			drawPauseScreen(&window);
 		}
 
 		// Draws exit box
@@ -634,8 +647,10 @@ int GameScreen::Run(sf::RenderWindow &window){
 				window.close();
 				return -1;
 			}
-			else if (event.type == sf::Event::MouseWheelMoved) {
-				if (reloaded != 6 && reloading == true) {
+			else if (event.type == sf::Event::MouseWheelMoved)
+			{
+				if (reloaded != 6 && reloading == true)
+				{
 					reloadSound.play();
 					reloaded++;
 					ammo.push_back(bulletSprite);
@@ -650,10 +665,12 @@ int GameScreen::Run(sf::RenderWindow &window){
 					exitBoxVisible = false;
 				}
 				/////////test commands for win and lose screens delete after win/lose conditions implemented
-				else if (event.key.code == sf::Keyboard::W) {
+				else if (event.key.code == sf::Keyboard::W)
+				{
 					return 2;
 				}
-				else if (event.key.code == sf::Keyboard::L) {
+				else if (event.key.code == sf::Keyboard::L)
+				{
 					return 3;
 				}
 				else if (event.key.code == sf::Keyboard::C) // Increase monster AD
@@ -747,24 +764,26 @@ int GameScreen::Run(sf::RenderWindow &window){
 	return -1;
 }
 
-void GameScreen::setSpriteAnimations(std::vector<Animation>* ani, sf::Texture* texture, char size, std::string name) {
+void GameScreen::setSpriteAnimations(std::vector<Animation>* ani, sf::Texture* texture, char size, std::string name)
+{
 	int size_x;
 	int size_y;
-	switch (size) {
-		case 's':
-			size_x = 40;
-			size_y = 49;
-			break;
-		case 'm':
-			size_x = 60;
-			size_y = 74;
-			break;
-		case 'l':
-			break;
-		case 'd':
-			size_x = 68;
-			size_y = 60;
-			break;
+	switch (size)
+	{
+	case 's':
+		size_x = 40;
+		size_y = 49;
+		break;
+	case 'm':
+		size_x = 60;
+		size_y = 74;
+		break;
+	case 'l':
+		break;
+	case 'd':
+		size_x = 68;
+		size_y = 60;
+		break;
 	}
 	Animation idle;
 	idle.setSpriteSheet(*texture);
@@ -777,14 +796,16 @@ void GameScreen::setSpriteAnimations(std::vector<Animation>* ani, sf::Texture* t
 
 	Animation attack;
 	attack.setSpriteSheet(*texture);
-	if (name == "Lancer") {
+	if (name == "Lancer")
+	{
 		attack.addFrame(sf::IntRect(0, size_y, size_x, size_y));
 		attack.addFrame(sf::IntRect(size_x, size_y, size_x, size_y));
 		attack.addFrame(sf::IntRect(size_x * 2, size_y, size_x * 2, size_y));
 		attack.addFrame(sf::IntRect(size_x * 2, size_y, size_x * 2, size_y));
 		attack.addFrame(sf::IntRect(size_x * 4, size_y, size_x, size_y));
 	}
-	else {
+	else
+	{
 		attack.addFrame(sf::IntRect(0, size_y, size_x, size_y));
 		attack.addFrame(sf::IntRect(size_x, size_y, size_x, size_y));
 		attack.addFrame(sf::IntRect(size_x * 2, size_y, size_x, size_y));
@@ -802,7 +823,8 @@ void GameScreen::setSpriteAnimations(std::vector<Animation>* ani, sf::Texture* t
 	death.addFrame(sf::IntRect(size_x * 4, size_y * 2, size_x, size_y));
 	ani->push_back(death);
 
-	if (size == 'm' || size == 'l') {
+	if (size == 'm' || size == 'l')
+	{
 		Animation special;
 		special.setSpriteSheet(*texture);
 		special.addFrame(sf::IntRect(0, size_y * 3, size_x, size_y));
@@ -813,9 +835,11 @@ void GameScreen::setSpriteAnimations(std::vector<Animation>* ani, sf::Texture* t
 		ani->push_back(special);
 	}
 }
-void GameScreen::runSpawners(int* maxSpawn, sf::Clock* clock, float spwn_timer, std::vector<Monster*>* wave, sf::RenderWindow* win, std::vector<Animation>* ani, int dmg, int hp, int boundary, int* targetHP, MonsterType name, Score* score) {
+void GameScreen::runSpawners(int* maxSpawn, sf::Clock* clock, float spwn_timer, std::vector<Monster*>* wave, sf::RenderWindow* win, std::vector<Animation>* ani, int dmg, int hp, int boundary, int* targetHP, MonsterType name, Score* score)
+{
 	int r = (rand() % 6) - 3;
-	if (clock->getElapsedTime().asSeconds() > spwn_timer + r && *maxSpawn != 0) {
+	if (clock->getElapsedTime().asSeconds() > spwn_timer + r && *maxSpawn != 0)
+	{
 		if (name == LANCER)
 		{
 			Lancer* spawn = new Lancer(win, *ani, dmg, hp, score, name);
@@ -860,7 +884,7 @@ void GameScreen::createPauseScreen()
 	pauseText.setFillColor(sf::Color::White);
 	pauseText.setString("PAUSED");
 	pauseText.setPosition(dimensions.x / 2 - width / 2, dimensions.y / 2 + height / 2);
-	
+
 }
 void GameScreen::drawPauseScreen(sf::RenderWindow* win)
 {
@@ -970,11 +994,11 @@ void GameScreen::createButtons()
 		std::cout << "Unable to load mute_texture_02. Check file path." << std::endl;
 	}
 
-	float center_y_menuBar = (float) (menuBar.getGlobalBounds().height / 2);
+	float center_y_menuBar = (float)(menuBar.getGlobalBounds().height / 2);
 	int width = 60;
 	int height = 60;
-	float center_x_btn = (float) width / 2;
-	float center_y_btn = (float) height / 2;
+	float center_x_btn = (float)width / 2;
+	float center_y_btn = (float)height / 2;
 	int offset_x = 100;
 	int gap = 100;
 
@@ -995,7 +1019,7 @@ void GameScreen::createButtons()
 	mute_btn.setOrigin(center_x_btn, center_y_btn);
 
 	// Set positions of sprites
-	upgrade_01_btn.setPosition((float) gap + (float) width, center_y_menuBar);
+	upgrade_01_btn.setPosition((float)gap + (float)width, center_y_menuBar);
 	upgrade_02_btn.setPosition((float)gap + (float)width * 2 + 10, center_y_menuBar);
 	upgrade_03_btn.setPosition((float)gap + (float)width * 3 + 20, center_y_menuBar);
 	upgrade_04_btn.setPosition((float)gap + (float)width * 4 + 30, center_y_menuBar);
@@ -1044,14 +1068,15 @@ void GameScreen::updateCostButtons()
 	else upgrade_03_cost.setFillColor(sf::Color::Green);
 	if (gameScore.getTotal() < moneyDeduction * incomeRate_lvl) upgrade_04_cost.setFillColor(sf::Color(81, 39, 22, 255));
 	else upgrade_04_cost.setFillColor(sf::Color::Green);
-	
+
 	// Set to "Max" if lvl 9
 	if (barbedWire_lvl == 10)
 	{
 		upgrade_01_cost.setString("MAX");
 		upgrade_01_cost.setFillColor(sf::Color::White);
 	}
-	if (barricade_lvl == 10) { 
+	if (barricade_lvl == 10)
+	{
 		upgrade_02_cost.setString("MAX");
 		upgrade_02_cost.setFillColor(sf::Color::White);
 	}

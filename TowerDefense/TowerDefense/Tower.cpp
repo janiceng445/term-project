@@ -105,7 +105,7 @@ void Tower::addHealthBar()
 }
 void Tower::updateHealthBar()
 {
-	float hp = ((float) *HP / (float) maxHealth) * barMaxWidth;
+	float hp = ((float)*HP / (float)maxHealth) * barMaxWidth;
 	// Changing color of bar if < 50%
 	hp > 0.50 * this->spriteWidth ? bar.setFillColor(sf::Color::Green) :
 		bar.setFillColor(sf::Color::Red);

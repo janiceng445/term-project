@@ -4,7 +4,8 @@
 
 LoseScreen::LoseScreen() {}
 
-int LoseScreen::Run(sf::RenderWindow &window) {
+int LoseScreen::Run(sf::RenderWindow &window)
+{
 	sf::Event event;
 	bool running = true;
 	hasClicked = false;
@@ -78,46 +79,46 @@ int LoseScreen::Run(sf::RenderWindow &window) {
 			{
 				switch (event.key.code)
 				{
-					case sf::Keyboard::Up:
-						if (selected == 0)
-						{
-							selected = 1;
-							menuCursor.setPosition(restartGameText.getPosition().x - 30, exitGameText.getPosition().y);
-						}
-						else if (selected == 1)
-						{
-							selected = 0;
-							menuCursor.setPosition(restartGameText.getPosition().x - 30, restartGameText.getPosition().y);
-						}
-						break;
+				case sf::Keyboard::Up:
+					if (selected == 0)
+					{
+						selected = 1;
+						menuCursor.setPosition(restartGameText.getPosition().x - 30, exitGameText.getPosition().y);
+					}
+					else if (selected == 1)
+					{
+						selected = 0;
+						menuCursor.setPosition(restartGameText.getPosition().x - 30, restartGameText.getPosition().y);
+					}
+					break;
 
-					case sf::Keyboard::Down:
-						if (selected == 0)
-						{
-							selected = 1;
-							menuCursor.setPosition(restartGameText.getPosition().x - 30, exitGameText.getPosition().y);
-						}
-						else if (selected == 1)
-						{
-							selected = 0;
-							menuCursor.setPosition(restartGameText.getPosition().x - 30, restartGameText.getPosition().y);
-						}
-						break;
+				case sf::Keyboard::Down:
+					if (selected == 0)
+					{
+						selected = 1;
+						menuCursor.setPosition(restartGameText.getPosition().x - 30, exitGameText.getPosition().y);
+					}
+					else if (selected == 1)
+					{
+						selected = 0;
+						menuCursor.setPosition(restartGameText.getPosition().x - 30, restartGameText.getPosition().y);
+					}
+					break;
 
-					case sf::Keyboard::Return:
-						if (selected == 0)
-						{
-							window.clear();
-							return 1;
-						}
-						else if (selected == 1) return -1;
-						break;
+				case sf::Keyboard::Return:
+					if (selected == 0)
+					{
+						window.clear();
+						return 1;
+					}
+					else if (selected == 1) return -1;
+					break;
 
-					default:
-						break;
+				default:
+					break;
 				}
 			}
-		
+
 			else if (event.type == sf::Event::MouseMoved)
 			{
 				if (sf::Mouse::getPosition(window).y < restartGameText.getPosition().y + rg_height)
@@ -125,7 +126,7 @@ int LoseScreen::Run(sf::RenderWindow &window) {
 					selected = 0;
 					menuCursor.setPosition(restartGameText.getPosition().x - 30, restartGameText.getPosition().y);
 				}
-				else 
+				else
 				{
 					selected = 1;
 					menuCursor.setPosition(exitGameText.getPosition().x - 30, exitGameText.getPosition().y);

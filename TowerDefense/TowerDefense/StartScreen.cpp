@@ -42,7 +42,7 @@ int StartScreen::Run(sf::RenderWindow &window)
 	sf::RectangleShape box;
 	box.setFillColor(sf::Color(0, 0, 0, 175));
 	box.setSize(sf::Vector2f(325, 190));
-	box.setOrigin(box.getSize().x / 2, box.getSize().y /2);
+	box.setOrigin(box.getSize().x / 2, box.getSize().y / 2);
 	box.setPosition(dimensions.x / 2, dimensions.y / 2 - 35);
 
 	sf::RectangleShape boxCredits;
@@ -210,7 +210,7 @@ int StartScreen::Run(sf::RenderWindow &window)
 		window.clear();
 	}
 
-	
+
 
 	return -1;
 }

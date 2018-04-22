@@ -2,8 +2,9 @@
 #include "cScreen.hpp"
 
 
-class StartScreen : public cScreen {
-	private:
+class StartScreen : public cScreen
+{
+private:
 	sf::Vector2f dimensions;
 	sf::Texture menuBack;
 	sf::Sprite menuSprite;
@@ -14,8 +15,8 @@ class StartScreen : public cScreen {
 	sf::Font pixeled;
 	sf::CircleShape menuCursor;
 
-	
-	public:
+
+public:
 	StartScreen(void);
 	virtual int Run(sf::RenderWindow &window);
 

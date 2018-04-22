@@ -7,5 +7,5 @@ class cScreen
 public:
 	virtual int Run(sf::RenderWindow &app) = 0;
 	//Audio
-	
+
 };

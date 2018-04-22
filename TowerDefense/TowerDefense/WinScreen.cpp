@@ -4,7 +4,8 @@
 
 WinScreen::WinScreen() {}
 
-int WinScreen::Run(sf::RenderWindow &window) {
+int WinScreen::Run(sf::RenderWindow &window)
+{
 	sf::Event event;
 	bool running = true;
 	hasClicked = false;

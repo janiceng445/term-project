@@ -1,8 +1,9 @@
 #pragma once
 #include "cScreen.hpp"
 
-class LoseScreen : public cScreen {
-	private:
+class LoseScreen : public cScreen
+{
+private:
 	sf::Vector2f dimensions;
 	sf::Texture loseBack;
 	sf::Sprite loseBackSprite;
@@ -12,7 +13,7 @@ class LoseScreen : public cScreen {
 	sf::CircleShape menuCursor;
 	bool hasClicked;
 
-	public:
+public:
 	LoseScreen(void);
 	int Run(sf::RenderWindow &window);
 };

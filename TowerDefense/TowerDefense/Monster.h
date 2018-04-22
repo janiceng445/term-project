@@ -12,11 +12,11 @@ const float DEFAULT_MVMT_SPEED = 0.05f;
 const float DEFAULT_ANI_SPEED = 0.1f;
 const int sprite_yTimer = 325;
 
-enum MonsterType {SKELLY, RHINO, LANCER, DEMON, GUNNER};
+enum MonsterType { SKELLY, RHINO, LANCER, DEMON, GUNNER };
 
 class Monster
 {
-	protected:
+protected:
 	// Attributes
 	int AD;
 	int HP;
@@ -68,7 +68,7 @@ class Monster
 	Score* score;
 	int c;
 
-	public:
+public:
 	Monster();
 	Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP, Score* score, MonsterType monsterType);
 

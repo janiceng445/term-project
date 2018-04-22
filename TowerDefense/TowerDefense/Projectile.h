@@ -5,7 +5,8 @@
 #include <SFML\Graphics.hpp>
 #include <vector>
 
-class Projectile {
+class Projectile
+{
 private:
 	float maxVel = 3.0f;
 
