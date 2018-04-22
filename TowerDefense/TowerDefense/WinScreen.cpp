@@ -30,6 +30,14 @@ int WinScreen::Run(sf::RenderWindow &window)
 		return -1;
 	}
 
+	//loading audio
+	if (!menuSelect_buffer.loadFromFile("Audio/menuSelect.wav"))
+	{
+		std::cerr << "menuSelect sound failed to load" << std::endl;
+		return -1;
+	}
+	menuSelect.setBuffer(menuSelect_buffer);
+
 	// setting up black transparent box
 	sf::RectangleShape box;
 	box.setFillColor(sf::Color(0, 0, 0, 175));
@@ -82,11 +90,13 @@ int WinScreen::Run(sf::RenderWindow &window)
 				case sf::Keyboard::Up:
 					if (selected == 0)
 					{
+						menuSelect.play();
 						selected = 1;
 						menuCursor.setPosition(restartGameText.getPosition().x - 30, exitGameText.getPosition().y);
 					}
 					else if (selected == 1)
 					{
+						menuSelect.play();
 						selected = 0;
 						menuCursor.setPosition(restartGameText.getPosition().x - 30, restartGameText.getPosition().y);
 					}
@@ -95,11 +105,13 @@ int WinScreen::Run(sf::RenderWindow &window)
 				case sf::Keyboard::Down:
 					if (selected == 0)
 					{
+						menuSelect.play();
 						selected = 1;
 						menuCursor.setPosition(restartGameText.getPosition().x - 30, exitGameText.getPosition().y);
 					}
 					else if (selected == 1)
 					{
+						menuSelect.play();
 						selected = 0;
 						menuCursor.setPosition(restartGameText.getPosition().x - 30, restartGameText.getPosition().y);
 					}
@@ -108,6 +120,7 @@ int WinScreen::Run(sf::RenderWindow &window)
 				case sf::Keyboard::Return:
 					if (selected == 0)
 					{
+						menuSelect.play();
 						window.clear();
 						return 1;
 					}
@@ -123,11 +136,13 @@ int WinScreen::Run(sf::RenderWindow &window)
 			{
 				if (sf::Mouse::getPosition(window).y < restartGameText.getPosition().y + rg_height)
 				{
+					menuSelect.play();
 					selected = 0;
 					menuCursor.setPosition(restartGameText.getPosition().x - 30, restartGameText.getPosition().y);
 				}
 				else
 				{
+					menuSelect.play();
 					selected = 1;
 					menuCursor.setPosition(exitGameText.getPosition().x - 30, exitGameText.getPosition().y);
 				}
@@ -136,6 +151,7 @@ int WinScreen::Run(sf::RenderWindow &window)
 			{
 				if (selected == 0)
 				{
+					menuSelect.play();
 					window.clear();
 					return 1;
 				}
@@ -143,6 +159,7 @@ int WinScreen::Run(sf::RenderWindow &window)
 			}
 			else if (event.type == sf::Event::MouseButtonPressed)
 			{
+				menuSelect.play();
 				hasClicked = true;
 			}
 		}
