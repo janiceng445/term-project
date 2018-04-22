@@ -163,8 +163,8 @@ int GameScreen::Run(sf::RenderWindow &window)
 	///////////////////////////////// Projectiles ////////////////////////////////////
 
 	//projectile initialization
-	Projectile p1(3.0);
-	Projectile p2(3.0);
+	Projectile p1(3.0, true);
+	Projectile p2(3.0, false);
 
 	sf::Sprite bulletSprite(bulletTexture);
 
@@ -1040,13 +1040,13 @@ void GameScreen::updateCostButtons()
 	upgrade_04_cost.setString("$" + std::to_string(upgrade_04_cost_amount));
 
 	// Set color
-	if (gameScore.getTotal() < moneyDeduction * barbedWire_lvl) upgrade_01_cost.setFillColor(sf::Color(81, 39, 22, 255));
+	if (gameScore.getTotal() < upgrade_01_cost_amount) upgrade_01_cost.setFillColor(sf::Color(81, 39, 22, 255));
 	else upgrade_01_cost.setFillColor(sf::Color::Green);
-	if (gameScore.getTotal() < moneyDeduction * barricade_lvl) upgrade_02_cost.setFillColor(sf::Color(81, 39, 22, 255));
+	if (gameScore.getTotal() < upgrade_02_cost_amount) upgrade_02_cost.setFillColor(sf::Color(81, 39, 22, 255));
 	else upgrade_02_cost.setFillColor(sf::Color::Green);
-	if (gameScore.getTotal() < moneyDeduction * shootingTower_lvl) upgrade_03_cost.setFillColor(sf::Color(81, 39, 22, 255));
+	if (gameScore.getTotal() < upgrade_03_cost_amount) upgrade_03_cost.setFillColor(sf::Color(81, 39, 22, 255));
 	else upgrade_03_cost.setFillColor(sf::Color::Green);
-	if (gameScore.getTotal() < moneyDeduction * incomeRate_lvl) upgrade_04_cost.setFillColor(sf::Color(81, 39, 22, 255));
+	if (gameScore.getTotal() < upgrade_04_cost_amount) upgrade_04_cost.setFillColor(sf::Color(81, 39, 22, 255));
 	else upgrade_04_cost.setFillColor(sf::Color::Green);
 
 	// Set to "Max" if lvl 9
