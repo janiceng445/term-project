@@ -11,7 +11,7 @@ private:
 	float maxVel = 3.0f;
 
 public:
-	Projectile(float radius);
+	Projectile(float radius, bool joe);
 	sf::Vector2f vel;
 	sf::CircleShape bullet;
 	void setVel(sf::Vector2f input);
