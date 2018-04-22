@@ -715,6 +715,7 @@ int GameScreen::Run(sf::RenderWindow &window){
 						gunshotSound.setVolume(0);
 						reloadSound.setVolume(0);
 						towershotSound.setVolume(0);
+						upgradeSound.setVolume(0);
 					}
 					else
 					{
@@ -722,6 +723,7 @@ int GameScreen::Run(sf::RenderWindow &window){
 						gunshotSound.setVolume(30);
 						reloadSound.setVolume(50);
 						towershotSound.setVolume(20);
+						upgradeSound.setVolume(50);
 					}
 
 					std::swap(mute_texture_on, mute_texture_off);
