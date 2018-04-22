@@ -24,6 +24,16 @@ Tower::Tower(sf::RenderWindow* renderWin, int hitpoints, int attack, sf::Sprite 
 	originSprite.y = sprite.getPosition().y + sprite.getGlobalBounds().height;
 	addHealthBar();
 	HP = &health;
+
+	// Sound
+
+	if (!damageBuffer.loadFromFile("Audio/gunshotSound.wav"))
+	{
+		std::cout << "Damage sound could not be loaded. Check filepath" << std::endl;
+	}
+
+	damageSound.setBuffer(damageBuffer);
+	damageSound.setVolume(30);
 }
 
 int Tower::getXPosition()
@@ -80,11 +90,16 @@ sf::FloatRect Tower::getSpriteGlobalBounds()
 void Tower::takeDamage()
 {
 	health = *HP;
+
 	if (this->health <= 0)
 	{
 		*HP = 0;
 		this->health = 0;
 		die();
+	}
+	else if (damageSound.getStatus() != sf::SoundSource::Playing)
+	{
+		damageSound.play();
 	}
 }
 

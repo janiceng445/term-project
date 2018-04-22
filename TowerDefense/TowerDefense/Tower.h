@@ -1,6 +1,8 @@
 #pragma once
 #include <SFML\Graphics.hpp>
 #include <iostream>
+#include <SFML\Audio.hpp>
+
 class Tower
 {
 
@@ -21,6 +23,9 @@ private:
 
 	sf::RenderWindow* renWin;
 	int windowWidth;
+
+	sf::SoundBuffer damageBuffer;
+	sf::Sound damageSound;
 
 	// Health bar
 	sf::RectangleShape bar;
