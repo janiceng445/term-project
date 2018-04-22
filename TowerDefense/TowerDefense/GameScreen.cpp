@@ -65,14 +65,34 @@ int GameScreen::Run(sf::RenderWindow &window)
 		std::cout << "Basic tower could not be loaded. Check filepath" << std::endl;
 		return -1;
 	}
-	if (!shootyTowerTx.loadFromFile("images/Towers/ShootyTower.png"))
+	if (!shootyTowerTx.loadFromFile("images/Towers/ShootyTowerLvl1.png"))
 	{
 		std::cout << "Shooty tower could not be loaded. Check filepath" << std::endl;
 		return -1;
 	}
-	if (!barbedWireTx.loadFromFile("images/Towers/NewBarbedWire.png"))
+	if (!shootyTowerlv2Tx.loadFromFile("images/Towers/ShootyTowerLvl2.png"))
+	{
+		std::cout << "Shooty tower lvl 2 could not be loaded. Check filepath" << std::endl;
+		return -1;
+	}
+	if (!shootyTowerlv3Tx.loadFromFile("images/Towers/ShootyTowerLvl3.png"))
+	{
+		std::cout << "Shooty tower lvl 3 could not be loaded. Check filepath" << std::endl;
+		return -1;
+	}
+	if (!barbedWireTx.loadFromFile("images/Towers/ZapperLvl1.png"))
 	{
 		std::cout << "Barbed Wire could not be loaded. Check filepath" << std::endl;
+		return -1;
+	}
+	if (!barbedWirelv2Tx.loadFromFile("images/Towers/ZapperLvl2.png"))
+	{
+		std::cout << "Barbed Wire  lvl 2 could not be loaded. Check filepath" << std::endl;
+		return -1;
+	}
+	if (!barbedWirelv3Tx.loadFromFile("images/Towers/ZapperLvl3.png"))
+	{
+		std::cout << "Barbed Wire  lvl 3 could not be loaded. Check filepath" << std::endl;
 		return -1;
 	}
 	//////////////////////////////// Load audio files ////////////////////////////////
@@ -166,7 +186,7 @@ int GameScreen::Run(sf::RenderWindow &window)
 	shootyTowerSpr.setTexture(shootyTowerTx);
 	barbedWireSpr.setTexture(barbedWireTx);
 
-	Tower barbedWire(&window, barbedWire_HP, barbedWire_DMG, barbedWireSpr, dimensions.x * 0.5f, dimensions.y * 0.82f);				//deals damage to enemies who are walking through it
+	Tower barbedWire(&window, barbedWire_HP, barbedWire_DMG, barbedWireSpr, dimensions.x * 0.5f, dimensions.y * 0.73f);				//deals damage to enemies who are walking through it
 	Tower basicTower(&window, basicTower_HP, basicTower_DMG, basicTowerSpr, dimensions.x * 0.6f, dimensions.y * 0.85f);				//a simple barricade
 	Tower shootyTower(&window, shootyTower_HP, shootyTower_DMG, shootyTowerSpr, dimensions.x * 0.7f, dimensions.y * 0.7f);			//shoots the enemies
 
@@ -297,7 +317,7 @@ int GameScreen::Run(sf::RenderWindow &window)
 					currentProj[i].bullet.move(currentProj[i].vel);
 
 					// Checks collision with enemies from the bullet scope
-					if (currentProj[i].checkCollision(&wave)) currentProj.erase(currentProj.begin() + i);
+					if (currentProj[i].checkCollision(&wave, 25)) currentProj.erase(currentProj.begin() + i);
 
 					// Ends the loop if the bullet vector is empty and reading attempt is made to see next element in empty vector
 					if (currentProj.empty())
@@ -450,7 +470,7 @@ int GameScreen::Run(sf::RenderWindow &window)
 						window.draw(towerProjectiles[i].bullet);
 
 						// Checks collision with enemies from the bullet scope
-						if (towerProjectiles[i].checkCollision(&wave))
+						if (towerProjectiles[i].checkCollision(&wave, shootyTower.getDmg()))
 						{
 							towerProjectiles.erase(towerProjectiles.begin() + i);
 						}
@@ -526,76 +546,6 @@ int GameScreen::Run(sf::RenderWindow &window)
 		window.draw(upgrade_03_cost);
 		window.draw(upgrade_04_cost);
 
-		//************// Button clicking events //************//
-		/*if (!clicked)
-		{
-			if (buttonIsClicked(&upgrade_01_btn, &window)
-				&& gameScore.getTotal() - moneyDeduction * barbedWire_lvl >= 0
-				&& barbedWire_lvl < 10)			// Upgrades barbed wire
-			{
-				gameScore.setTotal(gameScore.getTotal() - moneyDeduction * barbedWire_lvl);
-				barbedWire_lvl++;
-				clicked = true;
-			}
-			if (buttonIsClicked(&upgrade_02_btn, &window)
-				&& gameScore.getTotal() - moneyDeduction * barricade_lvl >= 0
-				&& barricade_lvl < 10)			// Upgrades barricade
-			{
-				gameScore.setTotal(gameScore.getTotal() - moneyDeduction * barricade_lvl);
-				barricade_lvl++;
-				clicked = true;
-			}
-			if (buttonIsClicked(&upgrade_03_btn, &window)
-				&& gameScore.getTotal() - moneyDeduction * shootingTower_lvl >= 0
-				&& shootingTower_lvl < 10)			// Upgrades shooty tower
-			{
-				gameScore.setTotal(gameScore.getTotal() - moneyDeduction * shootingTower_lvl);
-				shootingTower_lvl++;
-				clicked = true;
-			}
-			if (buttonIsClicked(&upgrade_04_btn, &window)
-				&& gameScore.getTotal() - moneyDeduction * incomeRate_lvl >= 0
-				&& incomeRate_lvl < 10)			// Upgrades income rate
-			{
-				incomeRate = incomeRateDefault * incomeRate_lvl;
-				gameScore.setTotal(gameScore.getTotal() - moneyDeduction * incomeRate_lvl);
-				incomeRate_lvl++;
-				clicked = true;
-			}
-			if (buttonIsClicked(&quit_btn, &window))				// Exits game
-			{
-				exitBoxVisible = true;
-			}
-			if (buttonIsClicked(&mute_btn, &window))				// Mutes sound
-			{
-				if (gameMusic.getStatus() == sf::SoundSource::Playing)
-				{
-					gameMusic.pause();
-					gunshotSound.setVolume(0);
-					reloadSound.setVolume(0);
-					towershotSound.setVolume(0);
-				}
-				else
-				{
-					gameMusic.play();
-					gunshotSound.setVolume(30);
-					reloadSound.setVolume(50);
-					towershotSound.setVolume(20);
-				}
-
-				std::swap(mute_texture_on, mute_texture_off);
-				clicked = true;
-			}
-		}
-		if (clicked)
-		{
-			btnTimer--;
-			if (btnTimer <= 0)
-			{
-				clicked = false;
-				btnTimer = maxBtnTimer;
-			}
-		}*/
 		// Update cost display on buttons
 		updateCostButtons();
 
@@ -610,18 +560,6 @@ int GameScreen::Run(sf::RenderWindow &window)
 		{
 			paused = true;
 			drawExitScreen(&window);
-
-			// Yes
-			//if (buttonIsClicked(&yes_btn, &window))
-			//{
-				//return -1;
-			//}
-			// No
-			//if (buttonIsClicked(&no_btn, &window))
-			//{
-				//paused = false;
-				//exitBoxVisible = false;
-			//}
 		}
 
 		//************// Bullet Reload Images //************//
@@ -689,6 +627,16 @@ int GameScreen::Run(sf::RenderWindow &window)
 				{
 					gameScore.setTotal(gameScore.getTotal() - moneyDeduction * barbedWire_lvl);
 					barbedWire_lvl++;
+					tower.at(0).upgradeHealth(tower.at(0).getmaxHP() + 10);
+					if (barbedWire_lvl > 3)
+					{
+						tower.at(0).updateSprite(&barbedWirelv2Tx);
+					}
+					if (barbedWire_lvl > 6)
+					{
+						tower.at(0).updateSprite(&barbedWirelv3Tx);
+					}
+					tower.at(0).updateHealthBar();
 					clicked = true;
 					upgradeSound.play();
 				}
@@ -698,6 +646,18 @@ int GameScreen::Run(sf::RenderWindow &window)
 				{
 					gameScore.setTotal(gameScore.getTotal() - moneyDeduction * barricade_lvl);
 					barricade_lvl++;
+					tower.at(1).upgradeHealth(tower.at(1).getmaxHP() + 10);
+					if (barricade_lvl > 3)
+					{
+						tower.at(1).updateSprite(&basicTowerlv2Tx);
+
+					}
+					if (barricade_lvl > 6)
+					{
+						tower.at(1).updateSprite(&basicTowerlv3Tx);
+
+					}
+					tower.at(1).updateHealthBar();
 					clicked = true;
 					upgradeSound.play();
 				}
@@ -707,6 +667,19 @@ int GameScreen::Run(sf::RenderWindow &window)
 				{
 					gameScore.setTotal(gameScore.getTotal() - moneyDeduction * shootingTower_lvl);
 					shootingTower_lvl++;
+					tower.at(2).upgradeHealth(tower.at(2).getmaxHP() + 10);
+					if (shootingTower_lvl > 3)
+					{
+						tower.at(2).updateSprite(&shootyTowerlv2Tx);
+
+					}
+					if (shootingTower_lvl > 6)
+					{
+						tower.at(2).updateSprite(&shootyTowerlv3Tx);
+
+					}
+					tower.at(2).updateHealthBar();
+					tower.at(2).upgradeDmg();
 					clicked = true;
 					upgradeSound.play();
 				}

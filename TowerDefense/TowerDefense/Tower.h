@@ -60,7 +60,7 @@ public:
 
 	void upgradeHealth(int value);
 
-	void updateSprite(sf::Texture newTex);
+	void updateSprite(sf::Texture* newTex);
 
 	sf::Sprite getSprite();
 

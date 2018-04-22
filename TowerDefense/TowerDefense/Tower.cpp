@@ -104,9 +104,9 @@ void Tower::upgradeHealth(int value)
 	*HP = maxHealth + 10;
 }
 
-void Tower::updateSprite(sf::Texture newTex) 
+void Tower::updateSprite(sf::Texture* newTex) 
 {
-	this->sprite.setTexture(newTex);
+	this->sprite.setTexture(*newTex);
 }
 
 /////////////////////////////////////////// Health Bar ///////////////////////////////////////////
