@@ -48,6 +48,11 @@ int GameScreen::Run(sf::RenderWindow &window){
 		std::cerr << "gunner_spriteSheet failed" << std::endl;
 		return -1;
 	}
+	if (!boss_texture.loadFromFile("images/enemies/boss.png")) 
+	{
+		std::cerr << "boss_spriteSheet failed" << std::endl;
+		return -1;
+	}
 
 	//////////////////////////////// Load tower textures ////////////////////////////////
 
@@ -170,6 +175,7 @@ int GameScreen::Run(sf::RenderWindow &window){
 	setSpriteAnimations(&lancerAni, &lancer_texture, 'm', "Lancer");
 	setSpriteAnimations(&demonAni, &demon_texture, 'd', "Demon");
 	setSpriteAnimations(&gunnerAni, &gunner_texture, 's', "Gunner");
+	setSpriteAnimations(&bossAni, &boss_texture, 'b', "Boss");
 
 	//////////////////////////////// Wave of enemies /////////////////////////////////
 	createRounds();
@@ -303,12 +309,14 @@ int GameScreen::Run(sf::RenderWindow &window){
 			name.push_back(LANCER);
 			name.push_back(DEMON);
 			name.push_back(GUNNER);
+			name.push_back(BOSS);
 			// Parameters: maximum spawns, clock, spawn timer, wave vector, window, animation vector, dmg, hp, boundary, target's hp, name, score
 			runSpawners(&skellyAmount[waveRound], &clock_Skelly, SKELLY_SPWN_TIMER, &wave, &window, &skellyAni, skelly_DMG, skelly_HP, boundary, &targetHP, name.at(0), &gameScore);
 			runSpawners(&rhinoAmount[waveRound], &clock_Rhino, RHINO_SPWN_TIMER, &wave, &window, &rhinoAni, rhino_DMG, rhino_HP, boundary, &targetHP, name.at(1), &gameScore);
 			runSpawners(&lancerAmount[waveRound], &clock_Lancer, LANCER_SPWN_TIMER, &wave, &window, &lancerAni, lancer_DMG, lancer_HP, boundary, &targetHP, name.at(2), &gameScore);
 			runSpawners(&demonAmount[waveRound], &clock_Demon, DEMON_SPWN_TIMER, &wave, &window, &demonAni, demon_DMG, demon_HP, boundary, &targetHP, name.at(3), &gameScore);
 			runSpawners(&gunnerAmount[waveRound], &clock_Gunner, GUNNER_SPWN_TIMER, &wave, &window, &gunnerAni, gunner_DMG, gunner_HP, boundary, &targetHP, name.at(4), &gameScore);
+			runSpawners(&bossAmount[waveRound], &clock_Boss, BOSS_SPWN_TIMER, &wave, &window, &bossAni, boss_DMG, boss_HP, boundary, &targetHP, name.at(5), &gameScore);
 
 			if (!waves.empty() && waves.at(waveRound)->getNumMobs() == 0)
 			{
@@ -627,6 +635,10 @@ void GameScreen::setSpriteAnimations(std::vector<Animation>* ani, sf::Texture* t
 			size_x = 68;
 			size_y = 60;
 			break;
+		case 'b':
+			size_x = 204;
+			size_y = 195;
+			break;
 	}
 	Animation idle;
 	idle.setSpriteSheet(*texture);
@@ -698,6 +710,13 @@ void GameScreen::runSpawners(int* maxSpawn, sf::Clock* clock, float spwn_timer, 
 			spawn->setTarget(boundary, *&targetHP);
 			wave->push_back(spawn);
 		}
+		else if (name == BOSS)
+		{
+			boss* spawn = new boss(win, *ani, dmg, hp, score, name);
+			spawn->setStartingPosition((float)-25, float(300));
+			spawn->setTarget(boundary, *&targetHP);
+			wave->push_back(spawn);
+		}
 		else
 		{
 			Monster* spawn = new Monster(win, *ani, dmg, hp, score, name);
@@ -743,16 +762,16 @@ void GameScreen::drawRound(sf::RenderWindow* win)
 void GameScreen::createRounds()
 {
 	// Format Order: Round #, # of skelly, # of rhino, # of lancer, # of demon, # of gunner
-	waves.push_back(new Wave(1, skellyAmount[0], rhinoAmount[0], lancerAmount[0], demonAmount[0], gunnerAmount[0])); // Round 1
-	waves.push_back(new Wave(2, skellyAmount[1], rhinoAmount[1], lancerAmount[1], demonAmount[1], gunnerAmount[1])); // Round 2
-	waves.push_back(new Wave(3, skellyAmount[2], rhinoAmount[2], lancerAmount[2], demonAmount[2], gunnerAmount[2])); // Round 3
-	waves.push_back(new Wave(4, skellyAmount[3], rhinoAmount[3], lancerAmount[3], demonAmount[3], gunnerAmount[3])); // Round 4
-	waves.push_back(new Wave(5, skellyAmount[4], rhinoAmount[4], lancerAmount[4], demonAmount[4], gunnerAmount[4])); // Round 5
-	waves.push_back(new Wave(6, skellyAmount[5], rhinoAmount[5], lancerAmount[5], demonAmount[5], gunnerAmount[5])); // Round 6
-	waves.push_back(new Wave(7, skellyAmount[6], rhinoAmount[6], lancerAmount[6], demonAmount[6], gunnerAmount[6])); // Round 7
-	waves.push_back(new Wave(8, skellyAmount[7], rhinoAmount[7], lancerAmount[7], demonAmount[7], gunnerAmount[7])); // Round 8
-	waves.push_back(new Wave(9, skellyAmount[8], rhinoAmount[8], lancerAmount[8], demonAmount[8], gunnerAmount[8])); // Round 9
-	waves.push_back(new Wave(10, skellyAmount[9], rhinoAmount[9], lancerAmount[9], demonAmount[9], gunnerAmount[9])); // Round 10
+	waves.push_back(new Wave(1, skellyAmount[0], rhinoAmount[0], lancerAmount[0], demonAmount[0], gunnerAmount[0], bossAmount[0])); // Round 1
+	waves.push_back(new Wave(2, skellyAmount[1], rhinoAmount[1], lancerAmount[1], demonAmount[1], gunnerAmount[1], bossAmount[1])); // Round 2
+	waves.push_back(new Wave(3, skellyAmount[2], rhinoAmount[2], lancerAmount[2], demonAmount[2], gunnerAmount[2], bossAmount[2])); // Round 3
+	waves.push_back(new Wave(4, skellyAmount[3], rhinoAmount[3], lancerAmount[3], demonAmount[3], gunnerAmount[3], bossAmount[3])); // Round 4
+	waves.push_back(new Wave(5, skellyAmount[4], rhinoAmount[4], lancerAmount[4], demonAmount[4], gunnerAmount[4], bossAmount[4])); // Round 5
+	waves.push_back(new Wave(6, skellyAmount[5], rhinoAmount[5], lancerAmount[5], demonAmount[5], gunnerAmount[5], bossAmount[5])); // Round 6
+	waves.push_back(new Wave(7, skellyAmount[6], rhinoAmount[6], lancerAmount[6], demonAmount[6], gunnerAmount[6], bossAmount[6])); // Round 7
+	waves.push_back(new Wave(8, skellyAmount[7], rhinoAmount[7], lancerAmount[7], demonAmount[7], gunnerAmount[7], bossAmount[7])); // Round 8
+	waves.push_back(new Wave(9, skellyAmount[8], rhinoAmount[8], lancerAmount[8], demonAmount[8], gunnerAmount[8], bossAmount[8])); // Round 9
+	waves.push_back(new Wave(10, skellyAmount[9], rhinoAmount[9], lancerAmount[9], demonAmount[9], gunnerAmount[9], bossAmount[9])); // Round 10
 }
 
 // Create buttons

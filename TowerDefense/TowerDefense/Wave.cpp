@@ -8,8 +8,9 @@ Wave::Wave()
 	num_Lancer = 0;
 	num_Demon = 0;
 	num_Gunner = 0;
+	num_Boss = 0;
 }
-Wave::Wave(int roundNumber, int s, int r, int l, int d, int g)
+Wave::Wave(int roundNumber, int s, int r, int l, int d, int g, int b)
 {
 	round = roundNumber;
 	num_Skelly = s;
@@ -17,7 +18,8 @@ Wave::Wave(int roundNumber, int s, int r, int l, int d, int g)
 	num_Lancer = l;
 	num_Demon = d;
 	num_Gunner = g;
-	totalMobs = s + r + l + d + g;
+	num_Boss = b;
+	totalMobs = s + r + l + d + g + b;
 }
 // Get round number
 int Wave::getRoundNumber()

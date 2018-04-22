@@ -12,7 +12,7 @@ class WinScreen : public cScreen {
 	sf::CircleShape menuCursor;
 
 	public:
-	WinScreen(void);
+	WinScreen();
 	int Run(sf::RenderWindow &window);
 };
 #pragma once

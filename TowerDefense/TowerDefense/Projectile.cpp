@@ -34,6 +34,9 @@ bool Projectile::checkCollision(std::vector<Monster*>* m) {
 			}
 			if (bullet.getGlobalBounds().intersects(m->at(i)->getSpriteGlobalBounds())) {
 				m->at(i)->takeDamage(25);
+				if (m->at(i)->monsterType == BOSS) {
+					m->at(i)->bossPushBack();
+				}
 				return true;
 			}
 			//if (m->at(i).isDead()) m->erase(m->begin() + i);

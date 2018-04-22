@@ -133,6 +133,7 @@
   <ItemGroup>
     <ClCompile Include="AnimatedSprite.cpp" />
     <ClCompile Include="Animation.cpp" />
+    <ClCompile Include="boss.cpp" />
     <ClCompile Include="GameScreen.cpp" />
     <ClCompile Include="Gunner.cpp" />
     <ClCompile Include="Lancer.cpp" />
@@ -149,6 +150,7 @@
   <ItemGroup>
     <ClInclude Include="Animation.hpp" />
     <ClInclude Include="AnimatedSprite.hpp" />
+    <ClInclude Include="boss.h" />
     <ClInclude Include="cScreen.hpp" />
     <ClInclude Include="GameScreen.hpp" />
     <ClInclude Include="Gunner.h" />

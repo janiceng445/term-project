@@ -12,7 +12,7 @@ const float DEFAULT_MVMT_SPEED = 0.05f;
 const float DEFAULT_ANI_SPEED = 0.1f;
 const int sprite_yTimer = 325;
 
-enum MonsterType {SKELLY, RHINO, LANCER, DEMON, GUNNER};
+enum MonsterType {SKELLY, RHINO, LANCER, DEMON, GUNNER, BOSS};
 
 class Monster
 {
@@ -110,7 +110,7 @@ class Monster
 	bool virtual isUsingSpecial(); // should only be true for Lancer
 
 	// Other
-
+	virtual void bossPushBack();
 	MonsterType monsterType;
 	~Monster();
 };

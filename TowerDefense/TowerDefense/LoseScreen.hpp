@@ -12,6 +12,6 @@ class LoseScreen : public cScreen {
 	sf::CircleShape menuCursor;
 
 	public:
-	LoseScreen(void);
+	LoseScreen();
 	int Run(sf::RenderWindow &window);
 };

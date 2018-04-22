@@ -9,11 +9,12 @@ private:
 	int num_Lancer;
 	int num_Demon;
 	int num_Gunner;
+	int num_Boss;
 	int totalMobs;
 
 public:
 	Wave();
-	Wave(int roundNumber, int s, int r, int l, int d, int g);
+	Wave(int roundNumber, int s, int r, int l, int d, int g, int b);
 
 	// Get round number
 	int getRoundNumber();

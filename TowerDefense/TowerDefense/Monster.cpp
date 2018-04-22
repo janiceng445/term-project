@@ -189,7 +189,7 @@ void Monster::setStartingPosition(float x, float y) {
 	this->aniSprite.setPosition(this->x, this->y);
 }
 // Moves the sprite
-void Monster::attackMove() {
+void Monster::attackMove() {	
 	sprite_yCounter++;
 	// Moving monster along y axis
 	if (y <= window->getSize().y * 0.8 || 
@@ -295,7 +295,14 @@ bool Monster::isUsingSpecial()
 	return false;
 }
 
+void Monster::bossPushBack() 
+{
+	return; //does nothing if not boss, otherwise overriden by boss subclass
+}
+
 /////////////////////////////////////////// Other ///////////////////////////////////////////
+
+
 
 
 Monster::~Monster()

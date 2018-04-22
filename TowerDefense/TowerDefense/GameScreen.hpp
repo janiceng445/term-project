@@ -18,6 +18,7 @@
 #include "Tower.h"
 #include "Wave.h"
 #include "Gunner.h"
+#include "boss.h"
 
 class GameScreen : public cScreen {
 	private:
@@ -28,6 +29,7 @@ class GameScreen : public cScreen {
 	const float LANCER_SPWN_TIMER = 10.0f;
 	const float DEMON_SPWN_TIMER = 7.0f;
 	const float GUNNER_SPWN_TIMER = 5.0f;
+	const float BOSS_SPWN_TIMER = 5.0f;
 	const int fireTimer = 300;
 
 	// Spawner
@@ -46,6 +48,9 @@ class GameScreen : public cScreen {
 
 	unsigned int gunner_DMG = 5;
 	unsigned int gunner_HP = 50;
+
+	unsigned int boss_DMG = 50;
+	unsigned int boss_HP = 500;
 
 	unsigned int boundary = (int) dimensions.x;
 
@@ -108,6 +113,7 @@ class GameScreen : public cScreen {
 	sf::Texture lancer_texture;
 	sf::Texture demon_texture;
 	sf::Texture gunner_texture;
+	sf::Texture boss_texture;
 	sf::Texture basicTowerTx;
 	sf::Texture shootyTowerTx;
 	sf::Texture barbedWireTx;
@@ -126,6 +132,7 @@ class GameScreen : public cScreen {
 	std::vector<Animation> lancerAni;
 	std::vector<Animation> demonAni;
 	std::vector<Animation> gunnerAni;
+	std::vector<Animation> bossAni;
 
 	// Towers
 	float targetHealth;
@@ -144,6 +151,7 @@ class GameScreen : public cScreen {
 	int lancerAmount[numLevels] = { 0, 0, 1, 2, 2, 3, 4, 7, 3, 3 };
 	int demonAmount[numLevels] =  { 0, 0, 0, 3, 4, 3, 7, 5, 5, 5 };
 	int gunnerAmount[numLevels] = { 0, 0, 2, 3, 4, 5, 6, 7, 3, 5 };
+	int bossAmount[numLevels] =   { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 };
 	int breakCounter = 0;
 	int breakTimer = 500;
 	sf::Text roundText;
@@ -164,6 +172,7 @@ class GameScreen : public cScreen {
 	sf::Clock clock_Lancer;
 	sf::Clock clock_Demon;
 	sf::Clock clock_Gunner;
+	sf::Clock clock_Boss;
 	sf::Clock game_clock;
 	sf::Clock barbedTimer;
 	sf::Clock shootyTimer;
