@@ -78,6 +78,16 @@ class GameScreen : public cScreen {
 	int incomeRateDefault = 5;
 	int incomeRate = 10;
 
+	// Exit Pop up
+	bool exitBoxVisible = false;
+	sf::Text exit_question;
+	sf::Texture exit_texture;
+	sf::Texture yes_texture;
+	sf::Texture no_texture;
+	sf::Sprite exit_box;
+	sf::Sprite yes_btn;
+	sf::Sprite no_btn;
+
 	// Upgrades
 	int barbedWire_lvl = 1;
 	int barricade_lvl = 1;
@@ -99,6 +109,10 @@ class GameScreen : public cScreen {
 	sf::Sprite upgrade_04_btn;
 	sf::Sprite quit_btn;
 	sf::Sprite mute_btn;
+	sf::Text upgrade_01_cost;
+	sf::Text upgrade_02_cost;
+	sf::Text upgrade_03_cost;
+	sf::Text upgrade_04_cost;
 	bool clicked = false;
 
 	// Textures
@@ -213,6 +227,7 @@ class GameScreen : public cScreen {
 		std::vector<Animation>* ani, int dmg, int hp, int boundary, int* targetHP, MonsterType name, Score* score);
 	void createPauseScreen();
 	void drawPauseScreen(sf::RenderWindow* win);
+	void drawExitScreen(sf::RenderWindow* win);
 	void drawRound(sf::RenderWindow* win);
 
 	// Set up rounds and waves configuration
@@ -220,5 +235,6 @@ class GameScreen : public cScreen {
 
 	// Create buttons
 	void createButtons();
+	void updateCostButtons();
 	bool buttonIsClicked(sf::Sprite* sprite, sf::RenderWindow* win);
 };

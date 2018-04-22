@@ -48,16 +48,16 @@ int LoseScreen::Run(sf::RenderWindow &window) {
 	restartGameText.setString("Restart Game");
 	exitGameText.setString("Exit Game");
 
-	int ft_width = restartGameText.getGlobalBounds().width;
-	int ft_height = restartGameText.getGlobalBounds().height;
+	int rg_width = restartGameText.getGlobalBounds().width;
+	int rg_height = restartGameText.getGlobalBounds().height;
 	int eg_width = exitGameText.getGlobalBounds().width;
 	int eg_height = exitGameText.getGlobalBounds().height;
 
-	int x_offset = ft_width / 2;
+	int x_offset = rg_width / 2;
 	int y_offset = 60;
 
 	restartGameText.setPosition((dimensions.x / 2) - x_offset, (dimensions.y / 2) - y_offset);
-	exitGameText.setPosition((dimensions.x / 2) - x_offset, (dimensions.y / 2) + ft_height + eg_height / 2 - y_offset);
+	exitGameText.setPosition((dimensions.x / 2) - x_offset, (dimensions.y / 2) + rg_height + eg_height / 2 - y_offset);
 
 	//preparing menu cursor
 	menuCursor.setRadius(6.0);
@@ -66,6 +66,7 @@ int LoseScreen::Run(sf::RenderWindow &window) {
 
 	while (running)
 	{
+		window.setMouseCursorVisible(true);
 		while (window.pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed)
@@ -114,6 +115,29 @@ int LoseScreen::Run(sf::RenderWindow &window) {
 					default:
 						break;
 				}
+			}
+		
+			else if (event.type == sf::Event::MouseMoved)
+			{
+				if (sf::Mouse::getPosition(window).y < restartGameText.getPosition().y + rg_height)
+				{
+					selected = 0;
+					menuCursor.setPosition(restartGameText.getPosition().x - 30, restartGameText.getPosition().y);
+				}
+				else 
+				{
+					selected = 1;
+					menuCursor.setPosition(exitGameText.getPosition().x - 30, exitGameText.getPosition().y);
+				}
+			}
+			else if (event.type == sf::Event::MouseButtonReleased)
+			{
+				if (selected == 0)
+				{
+					window.clear();
+					return 1;
+				}
+				else if (selected == 1) return -1;
 			}
 		}
 		//drawing menu objects

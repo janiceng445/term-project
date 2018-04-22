@@ -501,33 +501,42 @@ int GameScreen::Run(sf::RenderWindow &window){
 		window.draw(upgrade_04_btn);
 		window.draw(quit_btn);
 		window.draw(mute_btn);
+		//************// Buttons' Text //************//
+		window.draw(upgrade_01_cost);
+		window.draw(upgrade_02_cost);
+		window.draw(upgrade_03_cost);
+		window.draw(upgrade_04_cost);
 
 		//************// Button clicking events //************//
 		if (!clicked)
 		{
 			if (buttonIsClicked(&upgrade_01_btn, &window) 
-				&& gameScore.getTotal() - moneyDeduction * barbedWire_lvl >= 0)			// Upgrades barbed wire
+				&& gameScore.getTotal() - moneyDeduction * barbedWire_lvl >= 0
+				&& barbedWire_lvl < 10)			// Upgrades barbed wire
 			{
 				barbedWire_lvl++;
 				std::cout << "btn01 is pressed" << std::endl;
 				clicked = true;
 			}
 			if (buttonIsClicked(&upgrade_02_btn, &window)
-				&& gameScore.getTotal() - moneyDeduction * barricade_lvl >= 0)			// Upgrades barricade
+				&& gameScore.getTotal() - moneyDeduction * barricade_lvl >= 0
+				&& barricade_lvl < 10)			// Upgrades barricade
 			{
 				barricade_lvl++;
 				std::cout << "btn02 is pressed" << std::endl;
 				clicked = true;
 			}
 			if (buttonIsClicked(&upgrade_03_btn, &window)
-				&& gameScore.getTotal() - moneyDeduction * shootingTower_lvl >= 0)			// Upgrades shooty tower
+				&& gameScore.getTotal() - moneyDeduction * shootingTower_lvl >= 0
+				&& shootingTower_lvl < 10)			// Upgrades shooty tower
 			{
 				shootingTower_lvl++;
 				std::cout << "btn03 is pressed" << std::endl;
 				clicked = true;
 			}
 			if (buttonIsClicked(&upgrade_04_btn, &window)
-				&& gameScore.getTotal() - moneyDeduction * incomeRate_lvl >= 0)			// Upgrades income rate
+				&& gameScore.getTotal() - moneyDeduction * incomeRate_lvl >= 0
+				&& incomeRate_lvl < 10)			// Upgrades income rate
 			{
 				incomeRate_lvl++;
 				incomeRate = incomeRateDefault * incomeRate_lvl;
@@ -536,7 +545,7 @@ int GameScreen::Run(sf::RenderWindow &window){
 			}
 			if (buttonIsClicked(&quit_btn, &window))				// Exits game
 			{
-				return -1;
+				exitBoxVisible = true;
 			}
 			if (buttonIsClicked(&mute_btn, &window))				// Mutes sound
 			{
@@ -568,6 +577,32 @@ int GameScreen::Run(sf::RenderWindow &window){
 				btnTimer = maxBtnTimer;
 			}
 		}
+		// Update cost display on buttons
+		updateCostButtons();
+
+		// Draws the pause screen
+		if (paused) { 
+			drawPauseScreen(&window); 
+		}
+
+		// Draws exit box
+		if (exitBoxVisible)
+		{
+			paused = true;
+			drawExitScreen(&window);
+
+			// Yes
+			if (buttonIsClicked(&yes_btn, &window))
+			{
+				return -1;
+			}
+			// No
+			if (buttonIsClicked(&no_btn, &window))
+			{
+				paused = false;
+				exitBoxVisible = false;
+			}
+		}
 
 		//************// Bullet Reload Images //************//
 		for (unsigned int i = 0; i < ammo.size(); i++)
@@ -580,9 +615,6 @@ int GameScreen::Run(sf::RenderWindow &window){
 		mouse.setPosition(static_cast<sf::Vector2f>(sf::Mouse::getPosition(window)));
 		window.setView(fixed);
 		window.draw(mouse);
-
-		// Draws the pause screen
-		if (paused)	{ drawPauseScreen(&window); }
 
 		//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
 
@@ -608,6 +640,7 @@ int GameScreen::Run(sf::RenderWindow &window){
 				if (event.key.code == sf::Keyboard::Escape)
 				{
 					paused = !paused;
+					exitBoxVisible = false;
 				}
 				/////////test commands for win and lose screens delete after win/lose conditions implemented
 				else if (event.key.code == sf::Keyboard::W) {
@@ -619,7 +652,8 @@ int GameScreen::Run(sf::RenderWindow &window){
 				else if (event.key.code == sf::Keyboard::C) // Increase monster AD
 				{
 					//skelly_DMG = 500;
-					skelly_HP = 1000;
+					//skelly_HP = 1000;
+					gameScore.setTotal(10000);
 				}
 				////////////////////////////////////////////////////////////////////////////////////////////
 			}
@@ -752,6 +786,50 @@ void GameScreen::drawPauseScreen(sf::RenderWindow* win)
 	win->draw(pauseScreen);
 	win->draw(pauseText);
 }
+void GameScreen::drawExitScreen(sf::RenderWindow* win)
+{
+	// Load textures
+	if (!exit_texture.loadFromFile("images/menu/exit.png"))
+	{
+		std::cout << "Unable to load exit_texture. Check file path." << std::endl;
+	}
+	if (!yes_texture.loadFromFile("images/menu/yes.png"))
+	{
+		std::cout << "Unable to load yes_texture. Check file path." << std::endl;
+	}
+	if (!no_texture.loadFromFile("images/menu/no.png"))
+	{
+		std::cout << "Unable to load no_texture. Check file path." << std::endl;
+	}
+
+	// Setting texture for sprite
+	exit_box.setTexture(exit_texture);
+	yes_btn.setTexture(yes_texture);
+	no_btn.setTexture(no_texture);
+
+	// Setting text
+	exit_question.setString("Are you want to quit?");
+	exit_question.setCharacterSize(20);
+	exit_question.setFont(pixeled);
+	exit_question.setOrigin(exit_question.getGlobalBounds().width / 2, exit_question.getGlobalBounds().height / 2);
+
+	// Setting Origins
+	exit_box.setOrigin(exit_box.getGlobalBounds().width / 2, exit_box.getGlobalBounds().height / 2);
+	yes_btn.setOrigin(yes_btn.getGlobalBounds().width / 2, yes_btn.getGlobalBounds().height / 2);
+	no_btn.setOrigin(no_btn.getGlobalBounds().width / 2, no_btn.getGlobalBounds().height / 2);
+
+	// Setting positions
+	int distance = 40;
+	exit_box.setPosition(dimensions.x / 2, dimensions.y / 2);
+	yes_btn.setPosition(exit_box.getPosition().x - distance * 2, exit_box.getPosition().y + distance);
+	no_btn.setPosition(exit_box.getPosition().x + distance * 2, exit_box.getPosition().y + distance);
+	exit_question.setPosition(exit_box.getPosition().x, exit_box.getPosition().y - distance);
+
+	win->draw(exit_box);
+	win->draw(yes_btn);
+	win->draw(no_btn);
+	win->draw(exit_question);
+}
 void GameScreen::drawRound(sf::RenderWindow* win)
 {
 	//win->draw(pauseText);
@@ -842,7 +920,72 @@ void GameScreen::createButtons()
 	upgrade_04_btn.setPosition((float)gap + (float)width * 4 + 30, center_y_menuBar);
 	quit_btn.setPosition((float)gap + (float)width * 5 + 40, center_y_menuBar);
 	mute_btn.setPosition((float)gap + (float)width * 6 + 50, center_y_menuBar);
+
+	// Set font
+	upgrade_01_cost.setFont(pixeled);
+	upgrade_02_cost.setFont(pixeled);
+	upgrade_03_cost.setFont(pixeled);
+	upgrade_04_cost.setFont(pixeled);
+	upgrade_01_cost.setCharacterSize(10);
+	upgrade_02_cost.setCharacterSize(10);
+	upgrade_03_cost.setCharacterSize(10);
+	upgrade_04_cost.setCharacterSize(10);
+	upgrade_01_cost.setFillColor(sf::Color(196, 39, 39, 255));
+	upgrade_02_cost.setFillColor(sf::Color(196, 39, 39, 255));
+	upgrade_03_cost.setFillColor(sf::Color(196, 39, 39, 255));
+	upgrade_04_cost.setFillColor(sf::Color(196, 39, 39, 255));
+
+	// Set costs
+	upgrade_01_cost.setString("$" + std::to_string(moneyDeduction * barbedWire_lvl));
+	upgrade_02_cost.setString("$" + std::to_string(moneyDeduction * barricade_lvl));
+	upgrade_03_cost.setString("$" + std::to_string(moneyDeduction * shootingTower_lvl));
+	upgrade_04_cost.setString("$" + std::to_string(moneyDeduction * incomeRate_lvl));
+	// Set position
+	upgrade_01_cost.setPosition(upgrade_01_btn.getPosition().x - upgrade_01_btn.getGlobalBounds().width / 2 + 13, upgrade_01_btn.getPosition().y + 15);
+	upgrade_02_cost.setPosition(upgrade_02_btn.getPosition().x - upgrade_02_btn.getGlobalBounds().width / 2 + 13, upgrade_02_btn.getPosition().y + 15);
+	upgrade_03_cost.setPosition(upgrade_03_btn.getPosition().x - upgrade_03_btn.getGlobalBounds().width / 2 + 13, upgrade_03_btn.getPosition().y + 15);
+	upgrade_04_cost.setPosition(upgrade_04_btn.getPosition().x - upgrade_04_btn.getGlobalBounds().width / 2 + 13, upgrade_04_btn.getPosition().y + 15);
 }
+
+void GameScreen::updateCostButtons()
+{
+	upgrade_01_cost.setString("$" + std::to_string(moneyDeduction * barbedWire_lvl));
+	upgrade_02_cost.setString("$" + std::to_string(moneyDeduction * barricade_lvl));
+	upgrade_03_cost.setString("$" + std::to_string(moneyDeduction * shootingTower_lvl));
+	upgrade_04_cost.setString("$" + std::to_string(moneyDeduction * incomeRate_lvl));
+
+	// Set color
+	if (gameScore.getTotal() < moneyDeduction * barbedWire_lvl) upgrade_01_cost.setFillColor(sf::Color(81, 39, 22, 255));
+	else upgrade_01_cost.setFillColor(sf::Color::Green);
+	if (gameScore.getTotal() < moneyDeduction * barricade_lvl) upgrade_02_cost.setFillColor(sf::Color(81, 39, 22, 255));
+	else upgrade_02_cost.setFillColor(sf::Color::Green);
+	if (gameScore.getTotal() < moneyDeduction * shootingTower_lvl) upgrade_03_cost.setFillColor(sf::Color(81, 39, 22, 255));
+	else upgrade_03_cost.setFillColor(sf::Color::Green);
+	if (gameScore.getTotal() < moneyDeduction * incomeRate_lvl) upgrade_04_cost.setFillColor(sf::Color(81, 39, 22, 255));
+	else upgrade_04_cost.setFillColor(sf::Color::Green);
+	
+	// Set to "Max" if lvl 9
+	if (barbedWire_lvl == 10)
+	{
+		upgrade_01_cost.setString("MAX");
+		upgrade_01_cost.setFillColor(sf::Color::White);
+	}
+	if (barricade_lvl == 10) { 
+		upgrade_02_cost.setString("MAX");
+		upgrade_02_cost.setFillColor(sf::Color::White);
+	}
+	if (shootingTower_lvl == 10)
+	{
+		upgrade_03_cost.setString("MAX");
+		upgrade_03_cost.setFillColor(sf::Color::White);
+	}
+	if (incomeRate_lvl == 10)
+	{
+		upgrade_04_cost.setString("MAX");
+		upgrade_04_cost.setFillColor(sf::Color::White);
+	}
+}
+
 bool GameScreen::buttonIsClicked(sf::Sprite* sprite, sf::RenderWindow* window)
 {
 	float x1 = sprite->getPosition().x - sprite->getGlobalBounds().width / 2;
