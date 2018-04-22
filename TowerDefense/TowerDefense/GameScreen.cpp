@@ -508,39 +508,39 @@ int GameScreen::Run(sf::RenderWindow &window){
 		window.draw(upgrade_04_cost);
 
 		//************// Button clicking events //************//
-		if (!clicked)
+		/*if (!clicked)
 		{
 			if (buttonIsClicked(&upgrade_01_btn, &window) 
 				&& gameScore.getTotal() - moneyDeduction * barbedWire_lvl >= 0
 				&& barbedWire_lvl < 10)			// Upgrades barbed wire
 			{
+				gameScore.setTotal(gameScore.getTotal() - moneyDeduction * barbedWire_lvl);
 				barbedWire_lvl++;
-				std::cout << "btn01 is pressed" << std::endl;
 				clicked = true;
 			}
 			if (buttonIsClicked(&upgrade_02_btn, &window)
 				&& gameScore.getTotal() - moneyDeduction * barricade_lvl >= 0
 				&& barricade_lvl < 10)			// Upgrades barricade
 			{
+				gameScore.setTotal(gameScore.getTotal() - moneyDeduction * barricade_lvl);
 				barricade_lvl++;
-				std::cout << "btn02 is pressed" << std::endl;
 				clicked = true;
 			}
 			if (buttonIsClicked(&upgrade_03_btn, &window)
 				&& gameScore.getTotal() - moneyDeduction * shootingTower_lvl >= 0
 				&& shootingTower_lvl < 10)			// Upgrades shooty tower
 			{
+				gameScore.setTotal(gameScore.getTotal() - moneyDeduction * shootingTower_lvl);
 				shootingTower_lvl++;
-				std::cout << "btn03 is pressed" << std::endl;
 				clicked = true;
 			}
 			if (buttonIsClicked(&upgrade_04_btn, &window)
 				&& gameScore.getTotal() - moneyDeduction * incomeRate_lvl >= 0
 				&& incomeRate_lvl < 10)			// Upgrades income rate
 			{
-				incomeRate_lvl++;
 				incomeRate = incomeRateDefault * incomeRate_lvl;
 				gameScore.setTotal(gameScore.getTotal() - moneyDeduction * incomeRate_lvl);
+				incomeRate_lvl++;
 				clicked = true;
 			}
 			if (buttonIsClicked(&quit_btn, &window))				// Exits game
@@ -576,7 +576,7 @@ int GameScreen::Run(sf::RenderWindow &window){
 				clicked = false;
 				btnTimer = maxBtnTimer;
 			}
-		}
+		}*/
 		// Update cost display on buttons
 		updateCostButtons();
 
@@ -592,16 +592,16 @@ int GameScreen::Run(sf::RenderWindow &window){
 			drawExitScreen(&window);
 
 			// Yes
-			if (buttonIsClicked(&yes_btn, &window))
-			{
-				return -1;
-			}
+			//if (buttonIsClicked(&yes_btn, &window))
+			//{
+				//return -1;
+			//}
 			// No
-			if (buttonIsClicked(&no_btn, &window))
-			{
-				paused = false;
-				exitBoxVisible = false;
-			}
+			//if (buttonIsClicked(&no_btn, &window))
+			//{
+				//paused = false;
+				//exitBoxVisible = false;
+			//}
 		}
 
 		//************// Bullet Reload Images //************//
@@ -657,7 +657,75 @@ int GameScreen::Run(sf::RenderWindow &window){
 				}
 				////////////////////////////////////////////////////////////////////////////////////////////
 			}
+			else if (event.type == sf::Event::MouseButtonReleased)
+			{
+				if (buttonIsClicked(&upgrade_01_btn, &window)
+					&& gameScore.getTotal() - moneyDeduction * barbedWire_lvl >= 0
+					&& barbedWire_lvl < 10)			// Upgrades barbed wire
+				{
+					gameScore.setTotal(gameScore.getTotal() - moneyDeduction * barbedWire_lvl);
+					barbedWire_lvl++;
+					clicked = true;
+				}
+				else if (buttonIsClicked(&upgrade_02_btn, &window)
+					&& gameScore.getTotal() - moneyDeduction * barricade_lvl >= 0
+					&& barricade_lvl < 10)			// Upgrades barricade
+				{
+					gameScore.setTotal(gameScore.getTotal() - moneyDeduction * barricade_lvl);
+					barricade_lvl++;
+					clicked = true;
+				}
+				else if (buttonIsClicked(&upgrade_03_btn, &window)
+					&& gameScore.getTotal() - moneyDeduction * shootingTower_lvl >= 0
+					&& shootingTower_lvl < 10)			// Upgrades shooty tower
+				{
+					gameScore.setTotal(gameScore.getTotal() - moneyDeduction * shootingTower_lvl);
+					shootingTower_lvl++;
+					clicked = true;
+				}
+				else if (buttonIsClicked(&upgrade_04_btn, &window)
+					&& gameScore.getTotal() - moneyDeduction * incomeRate_lvl >= 0
+					&& incomeRate_lvl < 10)			// Upgrades income rate
+				{
+					incomeRate = incomeRateDefault * incomeRate_lvl;
+					gameScore.setTotal(gameScore.getTotal() - moneyDeduction * incomeRate_lvl);
+					incomeRate_lvl++;
+					clicked = true;
+				}
+				else if (buttonIsClicked(&quit_btn, &window))				// Exits game
+				{
+					exitBoxVisible = true;
+				}
+				else if (buttonIsClicked(&mute_btn, &window))				// Mutes sound
+				{
+					if (gameMusic.getStatus() == sf::SoundSource::Playing)
+					{
+						gameMusic.pause();
+						gunshotSound.setVolume(0);
+						reloadSound.setVolume(0);
+						towershotSound.setVolume(0);
+					}
+					else
+					{
+						gameMusic.play();
+						gunshotSound.setVolume(30);
+						reloadSound.setVolume(50);
+						towershotSound.setVolume(20);
+					}
 
+					std::swap(mute_texture_on, mute_texture_off);
+					clicked = true;
+				}
+				else if (buttonIsClicked(&yes_btn, &window) && exitBoxVisible) // Yes
+				{
+					return -1;
+				}
+				else if (buttonIsClicked(&no_btn, &window) && exitBoxVisible) // No
+				{
+					paused = false;
+					exitBoxVisible = false;
+				}
+			}
 		}
 
 		window.clear();
@@ -808,8 +876,8 @@ void GameScreen::drawExitScreen(sf::RenderWindow* win)
 	no_btn.setTexture(no_texture);
 
 	// Setting text
-	exit_question.setString("Are you want to quit?");
-	exit_question.setCharacterSize(20);
+	exit_question.setString("Are you sure you want to quit?");
+	exit_question.setCharacterSize(14);
 	exit_question.setFont(pixeled);
 	exit_question.setOrigin(exit_question.getGlobalBounds().width / 2, exit_question.getGlobalBounds().height / 2);
 
@@ -994,11 +1062,8 @@ bool GameScreen::buttonIsClicked(sf::Sprite* sprite, sf::RenderWindow* window)
 	float y2 = y1 + sprite->getGlobalBounds().height;
 	int mouse_x = sf::Mouse::getPosition(*window).x;
 	int mouse_y = sf::Mouse::getPosition(*window).y;
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)
-		&& mouse_x > x1
-		&& mouse_x < x2
-		&& mouse_y > y1
-		&& mouse_y < y2)
+	if (//sf::Mouse::isButtonPressed(sf::Mouse::Left) &&
+		mouse_x > x1 && mouse_x < x2 && mouse_y > y1 && mouse_y < y2)
 	{
 		return true;
 	}
