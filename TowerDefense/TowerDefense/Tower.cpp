@@ -98,10 +98,10 @@ void Tower::upgradeDmg()
 	this->atk += 10;
 }
 
-void Tower::upgradeHealth(int value) 
+void Tower::upgradeHealth() 
 {
-	this->maxHealth = value;
-	*HP = maxHealth + 10;
+	this->maxHealth += 10;
+	*HP += 10;
 }
 
 void Tower::updateSprite(sf::Texture* newTex) 

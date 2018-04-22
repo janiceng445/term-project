@@ -470,7 +470,7 @@ int GameScreen::Run(sf::RenderWindow &window)
 						window.draw(towerProjectiles[i].bullet);
 
 						// Checks collision with enemies from the bullet scope
-						if (towerProjectiles[i].checkCollision(&wave, shootyTower.getDmg()))
+						if (towerProjectiles[i].checkCollision(&wave, tower.at(2).getDmg()))
 						{
 							towerProjectiles.erase(towerProjectiles.begin() + i);
 						}
@@ -627,7 +627,7 @@ int GameScreen::Run(sf::RenderWindow &window)
 				{
 					gameScore.setTotal(gameScore.getTotal() - moneyDeduction * barbedWire_lvl);
 					barbedWire_lvl++;
-					tower.at(0).upgradeHealth(tower.at(0).getmaxHP() + 10);
+					tower.at(0).upgradeHealth();
 					if (barbedWire_lvl > 3)
 					{
 						tower.at(0).updateSprite(&barbedWirelv2Tx);
@@ -646,7 +646,7 @@ int GameScreen::Run(sf::RenderWindow &window)
 				{
 					gameScore.setTotal(gameScore.getTotal() - moneyDeduction * barricade_lvl);
 					barricade_lvl++;
-					tower.at(1).upgradeHealth(tower.at(1).getmaxHP() + 10);
+					tower.at(1).upgradeHealth();
 					if (barricade_lvl > 3)
 					{
 						tower.at(1).updateSprite(&basicTowerlv2Tx);
@@ -667,7 +667,7 @@ int GameScreen::Run(sf::RenderWindow &window)
 				{
 					gameScore.setTotal(gameScore.getTotal() - moneyDeduction * shootingTower_lvl);
 					shootingTower_lvl++;
-					tower.at(2).upgradeHealth(tower.at(2).getmaxHP() + 10);
+					tower.at(2).upgradeHealth();
 					if (shootingTower_lvl > 3)
 					{
 						tower.at(2).updateSprite(&shootyTowerlv2Tx);

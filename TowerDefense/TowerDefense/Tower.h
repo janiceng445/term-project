@@ -58,7 +58,7 @@ public:
 
 	bool amIAlive();
 
-	void upgradeHealth(int value);
+	void upgradeHealth();
 
 	void updateSprite(sf::Texture* newTex);
 
@@ -69,7 +69,6 @@ public:
 	/////////////////////////////////////////// Health Bar ///////////////////////////////////////////
 	void addHealthBar();
 	void updateHealthBar();
-
 
 	~Tower();
 
