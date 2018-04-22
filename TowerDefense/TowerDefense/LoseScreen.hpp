@@ -13,6 +13,10 @@ private:
 	sf::CircleShape menuCursor;
 	bool hasClicked;
 
+	//Audio
+	sf::SoundBuffer menuSelect_buffer;
+	sf::Sound menuSelect;
+
 public:
 	LoseScreen(void);
 	int Run(sf::RenderWindow &window);
