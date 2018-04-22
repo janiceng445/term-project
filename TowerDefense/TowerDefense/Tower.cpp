@@ -2,6 +2,7 @@
 
 Tower::Tower(sf::RenderWindow* renderWin, int hitpoints, int attack, sf::Sprite towerSprite, float xPos, float yPos)
 {
+
 	//changeable attributes
 	this->maxHealth = hitpoints;
 	this->health = maxHealth;

@@ -15,6 +15,9 @@ private:
 	sf::Font pixeled;
 	sf::CircleShape menuCursor;
 
+	//Audio
+	sf::SoundBuffer menuSelect_buffer;
+	sf::Sound menuSelect;
 
 public:
 	StartScreen(void);

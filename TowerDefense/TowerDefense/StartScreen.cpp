@@ -27,11 +27,19 @@ int StartScreen::Run(sf::RenderWindow &window)
 		return -1;
 	}
 
+	//loading audio
+	if (!menuSelect_buffer.loadFromFile("Audio/menuSelect.wav"))
+	{
+		std::cerr << "menuSelect sound failed to load" << std::endl;
+		return -1;
+	}
+	menuSelect.setBuffer(menuSelect_buffer);
+
 	//start screen music
 	sf::Music startscreenMusic;
 	if (!startscreenMusic.openFromFile("Audio/startscreenMusic.wav"))
 	{
-		std::cerr << "music failed to load" << std::endl;
+		std::cerr << "start screen music failed to load" << std::endl;
 		return -1;
 	}
 	startscreenMusic.setLoop(true);
@@ -115,6 +123,7 @@ int StartScreen::Run(sf::RenderWindow &window)
 				switch (event.key.code)
 				{
 				case sf::Keyboard::Up:
+					menuSelect.play();
 					if (selected == 0)
 					{
 						selected = 2;
@@ -133,6 +142,7 @@ int StartScreen::Run(sf::RenderWindow &window)
 					break;
 
 				case sf::Keyboard::Down:
+					menuSelect.play();
 					if (selected == 0)
 					{
 						selected = 1;
@@ -151,6 +161,7 @@ int StartScreen::Run(sf::RenderWindow &window)
 					break;
 
 				case sf::Keyboard::Return:
+					menuSelect.play();
 					if (selected == 0)
 					{
 						window.clear();
@@ -167,22 +178,26 @@ int StartScreen::Run(sf::RenderWindow &window)
 			{
 				if (sf::Mouse::getPosition(window).y < startGameText.getPosition().y + sg_height)
 				{
+					menuSelect.play();
 					selected = 0;
 					menuCursor.setPosition(startGameText.getPosition().x - 30, startGameText.getPosition().y);
 				}
 				else if (sf::Mouse::getPosition(window).y < fillerText.getPosition().y + ft_height)
 				{
+					menuSelect.play();
 					selected = 1;
 					menuCursor.setPosition(startGameText.getPosition().x - 30, fillerText.getPosition().y);
 				}
 				else
 				{
+					menuSelect.play();
 					selected = 2;
 					menuCursor.setPosition(startGameText.getPosition().x - 30, exitGameText.getPosition().y);
 				}
 			}
 			else if (event.type == sf::Event::MouseButtonReleased)
 			{
+				menuSelect.play();
 				if (selected == 0)
 				{
 					window.clear();

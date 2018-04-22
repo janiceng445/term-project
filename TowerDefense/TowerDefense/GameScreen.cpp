@@ -126,6 +126,7 @@ int GameScreen::Run(sf::RenderWindow &window)
 	towershotSound.setBuffer(towershot_buffer);
 	towershotSound.setVolume(20);
 
+	
 	if (!upgrade_buffer.loadFromFile("Audio/upgradeSound.wav"))
 	{
 		std::cout << "Upgrade sound could not be loaded. Check filepath" << std::endl;
@@ -600,6 +601,13 @@ int GameScreen::Run(sf::RenderWindow &window)
 				if (event.key.code == sf::Keyboard::Escape)
 				{
 					paused = !paused;
+					if (gameMusic.getStatus() == sf::SoundSource::Playing)
+					{
+						gameMusic.pause();
+					}
+					else
+						gameMusic.play();
+
 					exitBoxVisible = false;
 				}
 				/////////test commands for win and lose screens delete after win/lose conditions implemented

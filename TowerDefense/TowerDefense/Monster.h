@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <ctime>
 #include <iostream>
 #include <vector>
@@ -30,6 +31,8 @@ protected:
 	bool special;
 	int stoppingPoint; // Tower locations
 	int decay_timer; // Time it takes for sprite to disappear
+
+	
 
 	// Graphics/Animations
 	int type; // small | medium | large enemies
@@ -71,6 +74,7 @@ protected:
 public:
 	Monster();
 	Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP, Score* score, MonsterType monsterType);
+
 
 	// Animation
 	void playAnimation();

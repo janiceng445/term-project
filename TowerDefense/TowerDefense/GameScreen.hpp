@@ -229,11 +229,14 @@ private:
 	sf::SoundBuffer reload_buffer;
 	sf::SoundBuffer towershot_buffer;
 	sf::SoundBuffer upgrade_buffer;
+	
 	sf::Sound towershotSound;
 	sf::Sound gunshotSound;
 	sf::Sound reloadSound;
 	sf::Sound upgradeSound;
+	
 	sf::Music gameMusic;
+
 	bool sound;
 
 public:
