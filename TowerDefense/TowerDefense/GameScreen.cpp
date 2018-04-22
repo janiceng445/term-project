@@ -96,6 +96,13 @@ int GameScreen::Run(sf::RenderWindow &window){
 	}
 	towershotSound.setBuffer(towershot_buffer);
 	towershotSound.setVolume(20);
+
+	if (!upgrade_buffer.loadFromFile("Audio/upgradeSound.wav"))
+	{
+		std::cout << "Upgrade sound could not be loaded. Check filepath" << std::endl;
+	}
+	upgradeSound.setBuffer(upgrade_buffer);
+	upgradeSound.setVolume(50);
 	////////////////////////////// Create window //////////////////////////////
 
 	dimensions.x = 1080;
@@ -666,6 +673,7 @@ int GameScreen::Run(sf::RenderWindow &window){
 					gameScore.setTotal(gameScore.getTotal() - moneyDeduction * barbedWire_lvl);
 					barbedWire_lvl++;
 					clicked = true;
+					upgradeSound.play();
 				}
 				else if (buttonIsClicked(&upgrade_02_btn, &window)
 					&& gameScore.getTotal() - moneyDeduction * barricade_lvl >= 0
@@ -674,6 +682,7 @@ int GameScreen::Run(sf::RenderWindow &window){
 					gameScore.setTotal(gameScore.getTotal() - moneyDeduction * barricade_lvl);
 					barricade_lvl++;
 					clicked = true;
+					upgradeSound.play();
 				}
 				else if (buttonIsClicked(&upgrade_03_btn, &window)
 					&& gameScore.getTotal() - moneyDeduction * shootingTower_lvl >= 0
@@ -682,6 +691,7 @@ int GameScreen::Run(sf::RenderWindow &window){
 					gameScore.setTotal(gameScore.getTotal() - moneyDeduction * shootingTower_lvl);
 					shootingTower_lvl++;
 					clicked = true;
+					upgradeSound.play();
 				}
 				else if (buttonIsClicked(&upgrade_04_btn, &window)
 					&& gameScore.getTotal() - moneyDeduction * incomeRate_lvl >= 0
@@ -691,6 +701,7 @@ int GameScreen::Run(sf::RenderWindow &window){
 					gameScore.setTotal(gameScore.getTotal() - moneyDeduction * incomeRate_lvl);
 					incomeRate_lvl++;
 					clicked = true;
+					upgradeSound.play();
 				}
 				else if (buttonIsClicked(&quit_btn, &window))				// Exits game
 				{
