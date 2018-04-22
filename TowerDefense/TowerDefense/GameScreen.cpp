@@ -406,17 +406,28 @@ int GameScreen::Run(sf::RenderWindow &window)
 				{
 					tower.at(currentTarget).updateHealthBar();
 				}
-				//checks to see if any enemies should take damage from the barbed wire
-				if (tower.at(0).amIAlive() && wave.at(i)->getSpriteGlobalBounds().intersects(tower.at(0).getSpriteGlobalBounds()))
+			}
+			//checks to see if any enemies should take damage from the barbed wire
+			if (tower.at(0).amIAlive())
+			{
+				for (unsigned int i = 0; i < wave.size(); i++)
 				{
-					if (wave.at(i)->isAliveFunc())
+					if (wave.at(i)->isAliveFunc() && wave.at(i)->getSpriteGlobalBounds().intersects(tower.at(0).getSpriteGlobalBounds()))
 					{
-						if (barbedTimer.getElapsedTime().asSeconds() > 0.5f)
-						{
-							wave.at(i)->takeDamage(barbedWire_DMG);
-							barbedTimer.restart();
-						}
+						wave.at(i)->setRecoilDmg(tower.at(0).getDmg());
+						wave.at(i)->enableRecoil(true);
 					}
+					else if (!wave.at(i)->getSpriteGlobalBounds().intersects(tower.at(0).getSpriteGlobalBounds()))
+					{
+						wave.at(i)->enableRecoil(false);
+					}
+				}
+			}
+			else
+			{
+				for (unsigned int i = 0; i < wave.size(); i++)
+				{
+					wave.at(i)->enableRecoil(false);
 				}
 			}
 
