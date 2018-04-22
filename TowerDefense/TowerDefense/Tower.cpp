@@ -14,8 +14,8 @@ Tower::Tower(sf::RenderWindow* renderWin, int hitpoints, int attack, sf::Sprite 
 	this->posY = yPos;
 	this->sprite = towerSprite;
 	this->upgradeLv = 1;
-	spriteWidth = sprite.getGlobalBounds().width;
-	spriteHeight = sprite.getGlobalBounds().height;
+	spriteWidth = (int) (sprite.getGlobalBounds().width);
+	spriteHeight = (int) (sprite.getGlobalBounds().height);
 
 	this->sprite.setPosition(this->posX, this->posY);
 
@@ -28,7 +28,7 @@ Tower::Tower(sf::RenderWindow* renderWin, int hitpoints, int attack, sf::Sprite 
 
 int Tower::getXPosition()
 {
-	return this->posX;
+	return (int) (this->posX);
 }
 
 int Tower::getHealth()
@@ -93,18 +93,18 @@ int Tower::getDmg()
 	return this->atk;
 }
 
-void Tower::upgradeDmg() 
+void Tower::upgradeDmg()
 {
 	this->atk += 10;
 }
 
-void Tower::upgradeHealth() 
+void Tower::upgradeHealth()
 {
 	this->maxHealth += 10;
 	*HP += 10;
 }
 
-void Tower::updateSprite(sf::Texture* newTex) 
+void Tower::updateSprite(sf::Texture* newTex)
 {
 	this->sprite.setTexture(*newTex);
 }
@@ -113,7 +113,7 @@ void Tower::updateSprite(sf::Texture* newTex)
 
 void Tower::addHealthBar()
 {
-	barMaxWidth = spriteWidth * 1.2;
+	barMaxWidth = spriteWidth * 1.2f;
 	barOutline.setSize(sf::Vector2f(barMaxWidth, 15));
 	barOutline.setOrigin(barOutline.getSize().x / 2, barOutline.getSize().y / 2);
 	barOutline.setPosition(originSprite.x, originSprite.y - spriteHeight - 20);

@@ -10,7 +10,7 @@ private:
 	int* HP;
 	int atk;
 	int defense;
-	int upgradeLv; 
+	int upgradeLv;
 	float posX;
 	float posY;
 	bool alive;
@@ -24,7 +24,7 @@ private:
 
 	// Health bar
 	sf::RectangleShape bar;
-	int barMaxWidth;
+	float barMaxWidth;
 	sf::RectangleShape barOutline;
 	int spriteWidth;
 	int spriteHeight;
@@ -49,7 +49,7 @@ public:
 	void draw();
 
 	int getDmg();
-	
+
 	void upgradeDmg();
 
 	void takeDamage();

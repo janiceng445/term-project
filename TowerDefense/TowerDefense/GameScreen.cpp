@@ -419,7 +419,7 @@ int GameScreen::Run(sf::RenderWindow &window)
 				for (unsigned int m = 0; m < wave.size(); m++)
 				{
 					Monster* targetTemp = wave.at(m);
-					int targetValueTemp = (int) (targetTemp->getCurrentLocation().x * TOWER_POS_WEIGHT + targetTemp->getHealth() * TOWER_HP_WEIGHT
+					int targetValueTemp = (int)(targetTemp->getCurrentLocation().x * TOWER_POS_WEIGHT + targetTemp->getHealth() * TOWER_HP_WEIGHT
 						+ targetTemp->getDamage() * TOWER_DMG_WEIGHT);
 
 					if (targetValueTemp > targetValue && targetTemp->isAliveFunc())
@@ -622,10 +622,10 @@ int GameScreen::Run(sf::RenderWindow &window)
 			else if (event.type == sf::Event::MouseButtonReleased)
 			{
 				if (buttonIsClicked(&upgrade_01_btn, &window)
-					&& gameScore.getTotal() - moneyDeduction * barbedWire_lvl >= 0
+					&& gameScore.getTotal() - upgrade_01_cost_amount >= 0
 					&& barbedWire_lvl < 10)			// Upgrades barbed wire
 				{
-					gameScore.setTotal(gameScore.getTotal() - moneyDeduction * barbedWire_lvl);
+					gameScore.setTotal(gameScore.getTotal() - upgrade_01_cost_amount);
 					barbedWire_lvl++;
 					tower.at(0).upgradeHealth();
 					if (barbedWire_lvl > 3)
@@ -641,10 +641,10 @@ int GameScreen::Run(sf::RenderWindow &window)
 					upgradeSound.play();
 				}
 				else if (buttonIsClicked(&upgrade_02_btn, &window)
-					&& gameScore.getTotal() - moneyDeduction * barricade_lvl >= 0
+					&& gameScore.getTotal() - upgrade_02_cost_amount >= 0
 					&& barricade_lvl < 10)			// Upgrades barricade
 				{
-					gameScore.setTotal(gameScore.getTotal() - moneyDeduction * barricade_lvl);
+					gameScore.setTotal(gameScore.getTotal() - upgrade_02_cost_amount);
 					barricade_lvl++;
 					tower.at(1).upgradeHealth();
 					if (barricade_lvl > 3)
@@ -662,10 +662,10 @@ int GameScreen::Run(sf::RenderWindow &window)
 					upgradeSound.play();
 				}
 				else if (buttonIsClicked(&upgrade_03_btn, &window)
-					&& gameScore.getTotal() - moneyDeduction * shootingTower_lvl >= 0
+					&& gameScore.getTotal() - upgrade_03_cost_amount >= 0
 					&& shootingTower_lvl < 10)			// Upgrades shooty tower
 				{
-					gameScore.setTotal(gameScore.getTotal() - moneyDeduction * shootingTower_lvl);
+					gameScore.setTotal(gameScore.getTotal() - upgrade_03_cost_amount);
 					shootingTower_lvl++;
 					tower.at(2).upgradeHealth();
 					if (shootingTower_lvl > 3)
@@ -684,11 +684,11 @@ int GameScreen::Run(sf::RenderWindow &window)
 					upgradeSound.play();
 				}
 				else if (buttonIsClicked(&upgrade_04_btn, &window)
-					&& gameScore.getTotal() - moneyDeduction * incomeRate_lvl >= 0
+					&& gameScore.getTotal() - upgrade_04_cost_amount >= 0
 					&& incomeRate_lvl < 10)			// Upgrades income rate
 				{
 					incomeRate = incomeRateDefault * incomeRate_lvl;
-					gameScore.setTotal(gameScore.getTotal() - moneyDeduction * incomeRate_lvl);
+					gameScore.setTotal(gameScore.getTotal() - upgrade_04_cost_amount);
 					incomeRate_lvl++;
 					clicked = true;
 					upgradeSound.play();
@@ -1014,23 +1014,30 @@ void GameScreen::createButtons()
 	upgrade_04_cost.setFillColor(sf::Color(196, 39, 39, 255));
 
 	// Set costs
-	upgrade_01_cost.setString("$" + std::to_string(moneyDeduction * barbedWire_lvl));
-	upgrade_02_cost.setString("$" + std::to_string(moneyDeduction * barricade_lvl));
-	upgrade_03_cost.setString("$" + std::to_string(moneyDeduction * shootingTower_lvl));
-	upgrade_04_cost.setString("$" + std::to_string(moneyDeduction * incomeRate_lvl));
+	upgrade_01_cost.setString("$" + std::to_string(upgrade_01_cost_amount));
+	upgrade_02_cost.setString("$" + std::to_string(upgrade_02_cost_amount));
+	upgrade_03_cost.setString("$" + std::to_string(upgrade_03_cost_amount));
+	upgrade_04_cost.setString("$" + std::to_string(upgrade_04_cost_amount));
 	// Set position
-	upgrade_01_cost.setPosition(upgrade_01_btn.getPosition().x - upgrade_01_btn.getGlobalBounds().width / 2 + 13, upgrade_01_btn.getPosition().y + 15);
-	upgrade_02_cost.setPosition(upgrade_02_btn.getPosition().x - upgrade_02_btn.getGlobalBounds().width / 2 + 13, upgrade_02_btn.getPosition().y + 15);
-	upgrade_03_cost.setPosition(upgrade_03_btn.getPosition().x - upgrade_03_btn.getGlobalBounds().width / 2 + 13, upgrade_03_btn.getPosition().y + 15);
-	upgrade_04_cost.setPosition(upgrade_04_btn.getPosition().x - upgrade_04_btn.getGlobalBounds().width / 2 + 13, upgrade_04_btn.getPosition().y + 15);
+	upgrade_01_cost.setPosition(upgrade_01_btn.getPosition().x - 5 - upgrade_01_btn.getGlobalBounds().width / 2 + 13, upgrade_01_btn.getPosition().y + 15);
+	upgrade_02_cost.setPosition(upgrade_02_btn.getPosition().x - 5 - upgrade_02_btn.getGlobalBounds().width / 2 + 13, upgrade_02_btn.getPosition().y + 15);
+	upgrade_03_cost.setPosition(upgrade_03_btn.getPosition().x - 5 - upgrade_03_btn.getGlobalBounds().width / 2 + 13, upgrade_03_btn.getPosition().y + 15);
+	upgrade_04_cost.setPosition(upgrade_04_btn.getPosition().x - 5 - upgrade_04_btn.getGlobalBounds().width / 2 + 13, upgrade_04_btn.getPosition().y + 15);
 }
 
 void GameScreen::updateCostButtons()
 {
-	upgrade_01_cost.setString("$" + std::to_string(moneyDeduction * barbedWire_lvl));
-	upgrade_02_cost.setString("$" + std::to_string(moneyDeduction * barricade_lvl));
-	upgrade_03_cost.setString("$" + std::to_string(moneyDeduction * shootingTower_lvl));
-	upgrade_04_cost.setString("$" + std::to_string(moneyDeduction * incomeRate_lvl));
+	// Updating the variables
+	upgrade_01_cost_amount = moneyDeduction * barbedWire_lvl;
+	upgrade_02_cost_amount = moneyDeduction * barricade_lvl;
+	upgrade_03_cost_amount = (int)(moneyDeduction * 1.5 * shootingTower_lvl);
+	upgrade_04_cost_amount = moneyDeduction * 2 * incomeRate_lvl;
+
+	// Updating the text
+	upgrade_01_cost.setString("$" + std::to_string(upgrade_01_cost_amount));
+	upgrade_02_cost.setString("$" + std::to_string(upgrade_02_cost_amount));
+	upgrade_03_cost.setString("$" + std::to_string(upgrade_03_cost_amount));
+	upgrade_04_cost.setString("$" + std::to_string(upgrade_04_cost_amount));
 
 	// Set color
 	if (gameScore.getTotal() < moneyDeduction * barbedWire_lvl) upgrade_01_cost.setFillColor(sf::Color(81, 39, 22, 255));

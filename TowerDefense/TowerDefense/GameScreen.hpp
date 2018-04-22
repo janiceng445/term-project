@@ -114,6 +114,10 @@ private:
 	sf::Text upgrade_02_cost;
 	sf::Text upgrade_03_cost;
 	sf::Text upgrade_04_cost;
+	int upgrade_01_cost_amount = moneyDeduction * barbedWire_lvl;
+	int upgrade_02_cost_amount = moneyDeduction * barricade_lvl;
+	int upgrade_03_cost_amount = (int)(moneyDeduction * 1.5 * shootingTower_lvl);
+	int upgrade_04_cost_amount = moneyDeduction * 2 * incomeRate_lvl;
 	bool clicked = false;
 
 	// Textures
@@ -162,7 +166,7 @@ private:
 	// Rounds
 	std::vector<Wave*> waves;
 	const static int numLevels = 10;
-	int waveRound = 9; // add 1
+	int waveRound = 0; // add 1
 	int skellyAmount[numLevels] = { 3, 4, 5, 5, 7, 7, 0, 0, 9, 10 };
 	int rhinoAmount[numLevels] = { 0, 2, 3, 5, 3, 3, 10, 9, 5, 4 };
 	int lancerAmount[numLevels] = { 0, 0, 1, 2, 2, 3, 4, 7, 3, 3 };
