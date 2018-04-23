@@ -350,11 +350,11 @@ bool Monster::isUsingSpecial()
 }
 
 
-void Monster::bossPushBack() 
+void Monster::bossPushBack()
 {
 	return; //does nothing if not boss, otherwise overriden by boss subclass
-=======
 // Recoil dmg if recoil is activated
+}
 void Monster::recoilDmg()
 {
 	HP -= recoilDMG;
