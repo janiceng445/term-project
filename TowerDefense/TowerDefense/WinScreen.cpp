@@ -12,8 +12,8 @@ int WinScreen::Run(sf::RenderWindow &window)
 
 	int selected = 0;
 
-	dimensions.x = window.getSize().x;
-	dimensions.y = window.getSize().y;
+	dimensions.x = (float) window.getSize().x;
+	dimensions.y = (float) window.getSize().y;
 
 	//loading background
 	if (!winBack.loadFromFile("Images/menuback.png"))
@@ -58,10 +58,10 @@ int WinScreen::Run(sf::RenderWindow &window)
 	restartGameText.setString("Replay Game");
 	exitGameText.setString("Exit Game");
 
-	int rg_width = restartGameText.getGlobalBounds().width;
-	int rg_height = restartGameText.getGlobalBounds().height;
-	int eg_width = exitGameText.getGlobalBounds().width;
-	int eg_height = exitGameText.getGlobalBounds().height;
+	int rg_width = (int) restartGameText.getGlobalBounds().width;
+	int rg_height = (int)restartGameText.getGlobalBounds().height;
+	int eg_width = (int)exitGameText.getGlobalBounds().width;
+	int eg_height = (int) exitGameText.getGlobalBounds().height;
 
 	int x_offset = rg_width / 2;
 	int y_offset = 60;
