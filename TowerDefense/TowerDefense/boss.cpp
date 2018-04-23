@@ -46,6 +46,10 @@ void boss::attackMove() {
 		//second argument moves boss in y direction 
 		//((0.6) * (((65 + this->y) - sf::Mouse::getPosition(*window).y) + 450) - 0.3));
 		//5 / ((65 + this->y) - sf::Mouse::getPosition(*window).y));
+
+		if (this->x > this->stoppingPoint - 10 && this->aniSprite.getCurrentFrame() == 3) {
+			attack();
+		}
 	}
 }
 void boss::bossPushBack() {
