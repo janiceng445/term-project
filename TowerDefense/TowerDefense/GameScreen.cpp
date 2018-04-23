@@ -7,6 +7,7 @@ int GameScreen::Run(sf::RenderWindow &window)
 {
 	sf::Event event;
 	bool running = true;
+	bool muted = false;
 
 	// Loading files
 	if (!backgroundTexture.loadFromFile("images/background.png"))
@@ -645,8 +646,10 @@ int GameScreen::Run(sf::RenderWindow &window)
 					{
 						gameMusic.pause();
 					}
-					else
+					else if (!muted)
+					{
 						gameMusic.play();
+					}
 
 					exitBoxVisible = false;
 				}
@@ -758,6 +761,7 @@ int GameScreen::Run(sf::RenderWindow &window)
 						towershotSound.setVolume(0);
 						upgradeSound.setVolume(0);
 						damageSound.setVolume(0);
+						muted = true;
 					}
 					else
 					{
@@ -767,6 +771,7 @@ int GameScreen::Run(sf::RenderWindow &window)
 						towershotSound.setVolume(20);
 						upgradeSound.setVolume(50);
 						damageSound.setVolume(30);
+						muted = false;
 					}
 
 					std::swap(mute_texture_on, mute_texture_off);
@@ -781,7 +786,7 @@ int GameScreen::Run(sf::RenderWindow &window)
 					paused = false;
 					exitBoxVisible = false;
 
-					if (gameMusic.getStatus() != sf::SoundSource::Playing)
+					if (gameMusic.getStatus() != sf::SoundSource::Playing && !muted)
 					{
 						gameMusic.play();
 					}
