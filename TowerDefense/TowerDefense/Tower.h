@@ -1,6 +1,8 @@
 #pragma once
 #include <SFML\Graphics.hpp>
 #include <iostream>
+#include <SFML\Audio.hpp>
+
 class Tower
 {
 
@@ -10,6 +12,7 @@ private:
 	int* HP;
 	int atk;
 	int defense;
+	int upgradeLv;
 	float posX;
 	float posY;
 	bool alive;
@@ -21,9 +24,11 @@ private:
 	sf::RenderWindow* renWin;
 	int windowWidth;
 
+	sf::Sound* damageSound;
+
 	// Health bar
 	sf::RectangleShape bar;
-	int barMaxWidth;
+	float barMaxWidth;
 	sf::RectangleShape barOutline;
 	int spriteWidth;
 	int spriteHeight;
@@ -34,9 +39,8 @@ private:
 public:
 
 
-	Tower(sf::RenderWindow* renWin, int hitpoints, int atk, sf::Sprite sprite, float xPos, float yPos);
+	Tower(sf::RenderWindow* renWin, int hitpoints, int atk, sf::Sprite sprite, float xPos, float yPos, sf::Sound* damageSound);
 
-	void assignTexture();
 
 	int getXPosition();
 
@@ -44,13 +48,23 @@ public:
 
 	int* getHP(); // returns pointer to health
 
+	int getmaxHP();
+
 	void draw();
+
+	int getDmg();
+
+	void upgradeDmg();
 
 	void takeDamage();
 
 	void die();
 
 	bool amIAlive();
+
+	void upgradeHealth();
+
+	void updateSprite(sf::Texture* newTex);
 
 	sf::Sprite getSprite();
 
@@ -59,7 +73,6 @@ public:
 	/////////////////////////////////////////// Health Bar ///////////////////////////////////////////
 	void addHealthBar();
 	void updateHealthBar();
-
 
 	~Tower();
 

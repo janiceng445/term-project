@@ -1,7 +1,8 @@
 #include "Tower.h"
 
-Tower::Tower(sf::RenderWindow* renderWin, int hitpoints, int attack, sf::Sprite towerSprite, float xPos, float yPos)
+Tower::Tower(sf::RenderWindow* renderWin, int hitpoints, int attack, sf::Sprite towerSprite, float xPos, float yPos, sf::Sound* damageSound)
 {
+
 	//changeable attributes
 	this->maxHealth = hitpoints;
 	this->health = maxHealth;
@@ -13,8 +14,9 @@ Tower::Tower(sf::RenderWindow* renderWin, int hitpoints, int attack, sf::Sprite 
 	this->posX = xPos;
 	this->posY = yPos;
 	this->sprite = towerSprite;
-	spriteWidth = sprite.getGlobalBounds().width;
-	spriteHeight = sprite.getGlobalBounds().height;
+	this->upgradeLv = 1;
+	spriteWidth = (int)(sprite.getGlobalBounds().width);
+	spriteHeight = (int)(sprite.getGlobalBounds().height);
 
 	this->sprite.setPosition(this->posX, this->posY);
 
@@ -23,11 +25,14 @@ Tower::Tower(sf::RenderWindow* renderWin, int hitpoints, int attack, sf::Sprite 
 	originSprite.y = sprite.getPosition().y + sprite.getGlobalBounds().height;
 	addHealthBar();
 	HP = &health;
+
+	// Sound
+	this->damageSound = damageSound;
 }
 
 int Tower::getXPosition()
 {
-	return this->posX;
+	return (int)(this->posX);
 }
 
 int Tower::getHealth()
@@ -40,10 +45,11 @@ int* Tower::getHP()
 	return HP;
 }
 
-void Tower::assignTexture()
+int Tower::getmaxHP()
 {
-	this->towerTexture.loadFromFile("images/Towers/BasicBarrier.png");
+	return this->maxHealth;
 }
+
 
 void Tower::draw()
 {
@@ -77,7 +83,13 @@ sf::FloatRect Tower::getSpriteGlobalBounds()
 
 void Tower::takeDamage()
 {
+	if (damageSound->getStatus() != sf::SoundSource::Playing && *HP < health)
+	{
+		damageSound->play();
+	}
+
 	health = *HP;
+
 	if (this->health <= 0)
 	{
 		*HP = 0;
@@ -86,11 +98,32 @@ void Tower::takeDamage()
 	}
 }
 
+int Tower::getDmg()
+{
+	return this->atk;
+}
+
+void Tower::upgradeDmg()
+{
+	this->atk += 10;
+}
+
+void Tower::upgradeHealth()
+{
+	this->maxHealth += 10;
+	*HP += 10;
+}
+
+void Tower::updateSprite(sf::Texture* newTex)
+{
+	this->sprite.setTexture(*newTex);
+}
+
 /////////////////////////////////////////// Health Bar ///////////////////////////////////////////
 
 void Tower::addHealthBar()
 {
-	barMaxWidth = spriteWidth * 1.2;
+	barMaxWidth = spriteWidth * 1.2f;
 	barOutline.setSize(sf::Vector2f(barMaxWidth, 15));
 	barOutline.setOrigin(barOutline.getSize().x / 2, barOutline.getSize().y / 2);
 	barOutline.setPosition(originSprite.x, originSprite.y - spriteHeight - 20);
@@ -105,7 +138,7 @@ void Tower::addHealthBar()
 }
 void Tower::updateHealthBar()
 {
-	float hp = ((float) *HP / (float) maxHealth) * barMaxWidth;
+	float hp = ((float)*HP / (float)maxHealth) * barMaxWidth;
 	// Changing color of bar if < 50%
 	hp > 0.50 * this->spriteWidth ? bar.setFillColor(sf::Color::Green) :
 		bar.setFillColor(sf::Color::Red);

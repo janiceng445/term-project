@@ -27,7 +27,7 @@ Monster* Gunner::findLancer()
 	Monster* lancer = nullptr;
 	float dist = 10000.0f;
 
-	for (int i = 0; i < wave->size(); i++)
+	for (unsigned int i = 0; i < wave->size(); i++)
 	{
 		Monster* monster = wave->at(i);
 		float dist2 = absVal(monster->getCurrentLocation().x - x);
@@ -64,14 +64,14 @@ void Gunner::attackMove()
 		// Gravitates towards lancer
 		if (lancer != nullptr)
 		{
-			stoppingPoint = lancer->getCurrentLocation().x;
+			stoppingPoint = (int) (lancer->getCurrentLocation().x);
 		}
 		// Default stopping place
 		else
 		{
 			stoppingPoint = stoppingPoint - randomPoint;
 		}
-		
+
 		// Attack if at place
 		if (this->aniSprite.getCurrentFrame() == 3 && x > shootingPoint - 10)
 		{

@@ -1,8 +1,9 @@
 #pragma once
 #include "cScreen.hpp"
 
-class LoseScreen : public cScreen {
-	private:
+class LoseScreen : public cScreen
+{
+private:
 	sf::Vector2f dimensions;
 	sf::Texture loseBack;
 	sf::Sprite loseBackSprite;
@@ -10,8 +11,12 @@ class LoseScreen : public cScreen {
 	sf::Text exitGameText;
 	sf::Font pixeled;
 	sf::CircleShape menuCursor;
+	bool hasClicked;
+	//Audio
+	sf::SoundBuffer menuSelect_buffer;
+	sf::Sound menuSelect;
 
-	public:
-	LoseScreen();
+public:
+	LoseScreen(void);
 	int Run(sf::RenderWindow &window);
 };

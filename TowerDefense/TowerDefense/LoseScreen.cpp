@@ -4,14 +4,16 @@
 
 LoseScreen::LoseScreen() {}
 
-int LoseScreen::Run(sf::RenderWindow &window) {
+int LoseScreen::Run(sf::RenderWindow &window)
+{
 	sf::Event event;
 	bool running = true;
+	hasClicked = false;
 
 	int selected = 0;
 
-	dimensions.x = window.getSize().x;
-	dimensions.y = window.getSize().y;
+	dimensions.x = (float) window.getSize().x;
+	dimensions.y = (float) window.getSize().y;
 
 	//loading background
 	if (!loseBack.loadFromFile("Images/menuback.png"))
@@ -27,6 +29,14 @@ int LoseScreen::Run(sf::RenderWindow &window) {
 		std::cerr << "pixeled failed to load" << std::endl;
 		return -1;
 	}
+
+	//loading audio
+	if (!menuSelect_buffer.loadFromFile("Audio/menuSelect.wav"))
+	{
+		std::cerr << "menuSelect sound failed to load" << std::endl;
+		return -1;
+	}
+	menuSelect.setBuffer(menuSelect_buffer);
 
 	// setting up black transparent box
 	sf::RectangleShape box;
@@ -48,16 +58,16 @@ int LoseScreen::Run(sf::RenderWindow &window) {
 	restartGameText.setString("Restart Game");
 	exitGameText.setString("Exit Game");
 
-	int ft_width = restartGameText.getGlobalBounds().width;
-	int ft_height = restartGameText.getGlobalBounds().height;
-	int eg_width = exitGameText.getGlobalBounds().width;
-	int eg_height = exitGameText.getGlobalBounds().height;
+	int rg_width = (int) restartGameText.getGlobalBounds().width;
+	int rg_height = (int)restartGameText.getGlobalBounds().height;
+	int eg_width = (int) exitGameText.getGlobalBounds().width;
+	int eg_height = (int) exitGameText.getGlobalBounds().height;
 
-	int x_offset = ft_width / 2;
+	int x_offset = rg_width / 2;
 	int y_offset = 60;
 
 	restartGameText.setPosition((dimensions.x / 2) - x_offset, (dimensions.y / 2) - y_offset);
-	exitGameText.setPosition((dimensions.x / 2) - x_offset, (dimensions.y / 2) + ft_height + eg_height / 2 - y_offset);
+	exitGameText.setPosition((dimensions.x / 2) - x_offset, (dimensions.y / 2) + rg_height + eg_height / 2 - y_offset);
 
 	//preparing menu cursor
 	menuCursor.setRadius(6.0);
@@ -66,6 +76,7 @@ int LoseScreen::Run(sf::RenderWindow &window) {
 
 	while (running)
 	{
+		window.setMouseCursorVisible(true);
 		while (window.pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed)
@@ -76,44 +87,79 @@ int LoseScreen::Run(sf::RenderWindow &window) {
 			{
 				switch (event.key.code)
 				{
-					case sf::Keyboard::Up:
-						if (selected == 0)
-						{
-							selected = 1;
-							menuCursor.setPosition(restartGameText.getPosition().x - 30, exitGameText.getPosition().y);
-						}
-						else if (selected == 1)
-						{
-							selected = 0;
-							menuCursor.setPosition(restartGameText.getPosition().x - 30, restartGameText.getPosition().y);
-						}
-						break;
+				case sf::Keyboard::Up:
+					if (selected == 0)
+					{
+						menuSelect.play();
+						selected = 1;
+						menuCursor.setPosition(restartGameText.getPosition().x - 30, exitGameText.getPosition().y);
+					}
+					else if (selected == 1)
+					{
+						selected = 0;
+						menuCursor.setPosition(restartGameText.getPosition().x - 30, restartGameText.getPosition().y);
+					}
+					break;
 
-					case sf::Keyboard::Down:
-						if (selected == 0)
-						{
-							selected = 1;
-							menuCursor.setPosition(restartGameText.getPosition().x - 30, exitGameText.getPosition().y);
-						}
-						else if (selected == 1)
-						{
-							selected = 0;
-							menuCursor.setPosition(restartGameText.getPosition().x - 30, restartGameText.getPosition().y);
-						}
-						break;
+				case sf::Keyboard::Down:
+					if (selected == 0)
+					{
+						menuSelect.play();
+						selected = 1;
+						menuCursor.setPosition(restartGameText.getPosition().x - 30, exitGameText.getPosition().y);
+					}
+					else if (selected == 1)
+					{
+						menuSelect.play();
+						selected = 0;
+						menuCursor.setPosition(restartGameText.getPosition().x - 30, restartGameText.getPosition().y);
+					}
+					break;
 
-					case sf::Keyboard::Return:
-						if (selected == 0)
-						{
-							window.clear();
-							return 1;
-						}
-						else if (selected == 1) return -1;
-						break;
+				case sf::Keyboard::Return:
+					if (selected == 0)
+					{
+						menuSelect.play();
+						window.clear();
+						return 1;
+					}
+					else if (selected == 1) return -1;
+					break;
 
-					default:
-						break;
+				default:
+					break;
 				}
+			}
+
+			else if (event.type == sf::Event::MouseMoved)
+			{
+				if (sf::Mouse::getPosition(window).y < restartGameText.getPosition().y + rg_height)
+				{
+					menuSelect.play();
+					selected = 0;
+					menuCursor.setPosition(restartGameText.getPosition().x - 30, restartGameText.getPosition().y);
+				}
+				else
+				{
+					menuSelect.play();
+					selected = 1;
+					menuCursor.setPosition(exitGameText.getPosition().x - 30, exitGameText.getPosition().y);
+				}
+			}
+			else if (event.type == sf::Event::MouseButtonReleased && hasClicked)
+			{
+				if (selected == 0)
+				{
+					menuSelect.play();
+					window.clear();
+					return 1;
+				}
+				else if (selected == 1) return -1;
+			}
+			else if (event.type == sf::Event::MouseButtonPressed)
+			{
+				menuSelect.play();
+				hasClicked = true;
 			}
 		}
 		//drawing menu objects

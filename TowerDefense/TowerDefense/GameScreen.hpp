@@ -20,8 +20,9 @@
 #include "Gunner.h"
 #include "boss.h"
 
-class GameScreen : public cScreen {
-	private:
+class GameScreen : public cScreen
+{
+private:
 	// Global constants
 	const double PI = 3.141592653589793238463;
 	const float SKELLY_SPWN_TIMER = 5.0f;
@@ -31,6 +32,9 @@ class GameScreen : public cScreen {
 	const float GUNNER_SPWN_TIMER = 5.0f;
 	const float BOSS_SPWN_TIMER = 5.0f;
 	const int fireTimer = 300;
+	const int TOWER_POS_WEIGHT = 1;
+	const int TOWER_HP_WEIGHT = -1;
+	const int TOWER_DMG_WEIGHT = 1;
 
 	// Spawner
 	std::vector<Monster*> wave;
@@ -54,13 +58,14 @@ class GameScreen : public cScreen {
 
 	unsigned int boundary = (int) dimensions.x;
 
+
 	// Tower Power
 	unsigned int barbedWire_HP = 70;
 	unsigned int basicTower_HP = 125;
 	unsigned int shootyTower_HP = 150;
-	unsigned int barbedWire_DMG = 0;
+	unsigned int barbedWire_DMG = 5;
 	unsigned int basicTower_DMG = 0;
-	unsigned int shootyTower_DMG = 0;
+	unsigned int shootyTower_DMG = 25;
 
 	// Declarations
 	bool paused = false;
@@ -80,13 +85,23 @@ class GameScreen : public cScreen {
 	int incomeRateDefault = 5;
 	int incomeRate = 10;
 
+	// Exit Pop up
+	bool exitBoxVisible = false;
+	sf::Text exit_question;
+	sf::Texture exit_texture;
+	sf::Texture yes_texture;
+	sf::Texture no_texture;
+	sf::Sprite exit_box;
+	sf::Sprite yes_btn;
+	sf::Sprite no_btn;
+
 	// Upgrades
 	int barbedWire_lvl = 1;
 	int barricade_lvl = 1;
 	int shootingTower_lvl = 1;
 	int incomeRate_lvl = 1;
 	int moneyDeduction = 100;
-	
+
 	// Buttons
 	sf::Texture upgrade_01_texture;
 	sf::Texture upgrade_02_texture;
@@ -101,6 +116,14 @@ class GameScreen : public cScreen {
 	sf::Sprite upgrade_04_btn;
 	sf::Sprite quit_btn;
 	sf::Sprite mute_btn;
+	sf::Text upgrade_01_cost;
+	sf::Text upgrade_02_cost;
+	sf::Text upgrade_03_cost;
+	sf::Text upgrade_04_cost;
+	int upgrade_01_cost_amount = moneyDeduction * barbedWire_lvl;
+	int upgrade_02_cost_amount = moneyDeduction * barricade_lvl;
+	int upgrade_03_cost_amount = (int)(moneyDeduction * 1.5 * shootingTower_lvl);
+	int upgrade_04_cost_amount = moneyDeduction * 2 * incomeRate_lvl;
 	bool clicked = false;
 
 	// Textures
@@ -115,8 +138,14 @@ class GameScreen : public cScreen {
 	sf::Texture gunner_texture;
 	sf::Texture boss_texture;
 	sf::Texture basicTowerTx;
+	sf::Texture basicTowerlv2Tx;
+	sf::Texture basicTowerlv3Tx;
 	sf::Texture shootyTowerTx;
+	sf::Texture shootyTowerlv2Tx;
+	sf::Texture shootyTowerlv3Tx;
 	sf::Texture barbedWireTx;
+	sf::Texture barbedWirelv2Tx;
+	sf::Texture barbedWirelv3Tx;
 
 	sf::Vector2f dimensions;
 
@@ -147,9 +176,9 @@ class GameScreen : public cScreen {
 	const static int numLevels = 10;
 	int waveRound = 0; // add 1
 	int skellyAmount[numLevels] = { 3, 4, 5, 5, 7, 7, 0, 0, 9, 10 };
-	int rhinoAmount[numLevels] =  { 0, 2, 3, 5, 3, 3, 10, 9, 5, 4 };
+	int rhinoAmount[numLevels] = { 0, 2, 3, 5, 3, 3, 10, 9, 5, 4 };
 	int lancerAmount[numLevels] = { 0, 0, 1, 2, 2, 3, 4, 7, 3, 3 };
-	int demonAmount[numLevels] =  { 0, 0, 0, 3, 4, 3, 7, 5, 5, 5 };
+	int demonAmount[numLevels] = { 0, 0, 0, 3, 4, 3, 7, 5, 5, 5 };
 	int gunnerAmount[numLevels] = { 0, 0, 2, 3, 4, 5, 6, 7, 3, 5 };
 	int bossAmount[numLevels] =   { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 };
 	int breakCounter = 0;
@@ -180,8 +209,14 @@ class GameScreen : public cScreen {
 
 	// Tower Sprites
 	sf::Sprite basicTowerSpr;
+	sf::Sprite basicTowerlvl2Spr;
+	sf::Sprite basicTowerlvl3Spr;
 	sf::Sprite shootyTowerSpr;
+	sf::Sprite shootyTowerlvl2Spr;
+	sf::Sprite shootyTowerlvl3Spr;
 	sf::Sprite barbedWireSpr;
+	sf::Sprite barbedWirelvl2Spr;
+	sf::Sprite barbedWirelvl3Spr;
 
 	// Joe Projectiles
 	std::vector<sf::Sprite> ammo;
@@ -203,13 +238,20 @@ class GameScreen : public cScreen {
 	sf::SoundBuffer gunshot_buffer;
 	sf::SoundBuffer reload_buffer;
 	sf::SoundBuffer towershot_buffer;
+	sf::SoundBuffer upgrade_buffer;
+	sf::SoundBuffer damageBuffer;
+
 	sf::Sound towershotSound;
 	sf::Sound gunshotSound;
 	sf::Sound reloadSound;
+	sf::Sound upgradeSound;
+	sf::Sound damageSound;
+
 	sf::Music gameMusic;
+
 	bool sound;
 
-	public:
+public:
 	// Declaring functions
 	GameScreen(void);
 	virtual int Run(sf::RenderWindow &window);
@@ -219,6 +261,7 @@ class GameScreen : public cScreen {
 		std::vector<Animation>* ani, int dmg, int hp, int boundary, int* targetHP, MonsterType name, Score* score);
 	void createPauseScreen();
 	void drawPauseScreen(sf::RenderWindow* win);
+	void drawExitScreen(sf::RenderWindow* win);
 	void drawRound(sf::RenderWindow* win);
 
 	// Set up rounds and waves configuration
@@ -226,5 +269,6 @@ class GameScreen : public cScreen {
 
 	// Create buttons
 	void createButtons();
+	void updateCostButtons();
 	bool buttonIsClicked(sf::Sprite* sprite, sf::RenderWindow* win);
 };

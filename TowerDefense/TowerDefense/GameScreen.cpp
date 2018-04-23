@@ -3,43 +3,53 @@
 
 GameScreen::GameScreen(void) {}
 
-int GameScreen::Run(sf::RenderWindow &window){
+int GameScreen::Run(sf::RenderWindow &window)
+{
 	sf::Event event;
 	bool running = true;
+	bool muted = false;
 
 	// Loading files
-	if (!backgroundTexture.loadFromFile("images/background.png")) {
+	if (!backgroundTexture.loadFromFile("images/background.png"))
+	{
 		std::cerr << "background failed" << std::endl;
 		return -1;
 	}
-	if (!joeTexture.loadFromFile("images/revolverJoe.png")) {
+	if (!joeTexture.loadFromFile("images/revolverJoe.png"))
+	{
 		std::cerr << "revolverJoe failed" << std::endl;
 		return -1;
 	}
-	if (!armTexture.loadFromFile("images/arm.png")) {
+	if (!armTexture.loadFromFile("images/arm.png"))
+	{
 		std::cerr << "arm failed" << std::endl;
 		return -1;
 	}
-	if (!bulletTexture.loadFromFile("images/bullet.png")) {
+	if (!bulletTexture.loadFromFile("images/bullet.png"))
+	{
 		std::cerr << "bullet failed" << std::endl;
 		return -1;
 	}
 
 	//////////////////////////////// Load enemy textures ////////////////////////////////
 
-	if (!skelly_texture.loadFromFile("images/enemies/skelly.png")) {
+	if (!skelly_texture.loadFromFile("images/enemies/skelly.png"))
+	{
 		std::cerr << "skelly_spriteSheet failed" << std::endl;
 		return -1;
 	}
-	if (!rhino_texture.loadFromFile("images/enemies/rhino.png")) {
+	if (!rhino_texture.loadFromFile("images/enemies/rhino.png"))
+	{
 		std::cerr << "rhino_spriteSheet failed" << std::endl;
 		return -1;
 	}
-	if (!lancer_texture.loadFromFile("images/enemies/lancer.png")) {
+	if (!lancer_texture.loadFromFile("images/enemies/lancer.png"))
+	{
 		std::cerr << "lancer_spriteSheet failed" << std::endl;
 		return -1;
 	}
-	if (!demon_texture.loadFromFile("images/enemies/demon.png")) {
+	if (!demon_texture.loadFromFile("images/enemies/demon.png"))
+	{
 		std::cerr << "demon_spriteSheet failed" << std::endl;
 		return -1;
 	}
@@ -56,19 +66,49 @@ int GameScreen::Run(sf::RenderWindow &window){
 
 	//////////////////////////////// Load tower textures ////////////////////////////////
 
-	if (!basicTowerTx.loadFromFile("images/Towers/NewBasicTower.png"))
+	if (!basicTowerTx.loadFromFile("images/Towers/BoxesLvl1.png"))
 	{
 		std::cout << "Basic tower could not be loaded. Check filepath" << std::endl;
 		return -1;
 	}
-	if (!shootyTowerTx.loadFromFile("images/Towers/ShootyTower.png"))
+	if (!basicTowerlv2Tx.loadFromFile("images/Towers/BoxesLvl2.png"))
+	{
+		std::cout << "Basic tower could not be loaded. Check filepath" << std::endl;
+		return -1;
+	}
+	if (!basicTowerlv3Tx.loadFromFile("images/Towers/BoxesLvl3.png"))
+	{
+		std::cout << "Basic tower could not be loaded. Check filepath" << std::endl;
+		return -1;
+	}
+	if (!shootyTowerTx.loadFromFile("images/Towers/ShootyTowerLvl1.png"))
 	{
 		std::cout << "Shooty tower could not be loaded. Check filepath" << std::endl;
 		return -1;
 	}
-	if (!barbedWireTx.loadFromFile("images/Towers/NewBarbedWire.png"))
+	if (!shootyTowerlv2Tx.loadFromFile("images/Towers/ShootyTowerLvl2.png"))
+	{
+		std::cout << "Shooty tower lvl 2 could not be loaded. Check filepath" << std::endl;
+		return -1;
+	}
+	if (!shootyTowerlv3Tx.loadFromFile("images/Towers/ShootyTowerLvl3.png"))
+	{
+		std::cout << "Shooty tower lvl 3 could not be loaded. Check filepath" << std::endl;
+		return -1;
+	}
+	if (!barbedWireTx.loadFromFile("images/Towers/ZapperLvl1.png"))
 	{
 		std::cout << "Barbed Wire could not be loaded. Check filepath" << std::endl;
+		return -1;
+	}
+	if (!barbedWirelv2Tx.loadFromFile("images/Towers/ZapperLvl2.png"))
+	{
+		std::cout << "Barbed Wire  lvl 2 could not be loaded. Check filepath" << std::endl;
+		return -1;
+	}
+	if (!barbedWirelv3Tx.loadFromFile("images/Towers/ZapperLvl3.png"))
+	{
+		std::cout << "Barbed Wire  lvl 3 could not be loaded. Check filepath" << std::endl;
 		return -1;
 	}
 	//////////////////////////////// Load audio files ////////////////////////////////
@@ -80,15 +120,15 @@ int GameScreen::Run(sf::RenderWindow &window){
 	gameMusic.setLoop(true);
 	gameMusic.setVolume(50);
 	gameMusic.play();
-	
-	if (!gunshot_buffer.loadFromFile("Audio/gunshotSound.wav")) 
+
+	if (!gunshot_buffer.loadFromFile("Audio/gunshotSound.wav"))
 	{
 		std::cout << "Gunshot sound could not be loaded. Check filepath" << std::endl;
 	}
 	gunshotSound.setBuffer(gunshot_buffer);
 	gunshotSound.setVolume(30);
 
-	if (!reload_buffer.loadFromFile("Audio/reloadSound.wav")) 
+	if (!reload_buffer.loadFromFile("Audio/reloadSound.wav"))
 	{
 		std::cout << "Reload sound could not be loaded. Check filepath" << std::endl;
 	}
@@ -101,6 +141,21 @@ int GameScreen::Run(sf::RenderWindow &window){
 	}
 	towershotSound.setBuffer(towershot_buffer);
 	towershotSound.setVolume(20);
+
+	if (!damageBuffer.loadFromFile("Audio/gunshotSound.wav"))
+	{
+		std::cout << "Damage sound could not be loaded. Check filepath" << std::endl;
+	}
+	damageSound.setBuffer(damageBuffer);
+	damageSound.setVolume(30);
+
+
+	if (!upgrade_buffer.loadFromFile("Audio/upgradeSound.wav"))
+	{
+		std::cout << "Upgrade sound could not be loaded. Check filepath" << std::endl;
+	}
+	upgradeSound.setBuffer(upgrade_buffer);
+	upgradeSound.setVolume(50);
 	////////////////////////////// Create window //////////////////////////////
 
 	dimensions.x = 1080;
@@ -132,12 +187,13 @@ int GameScreen::Run(sf::RenderWindow &window){
 	///////////////////////////////// Projectiles ////////////////////////////////////
 
 	//projectile initialization
-	Projectile p1(3.0);
-	Projectile p2(3.0);
+	Projectile p1(3.0, true);
+	Projectile p2(3.0, false);
 
 	sf::Sprite bulletSprite(bulletTexture);
 
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < 6; i++)
+	{
 		ammo.push_back(bulletSprite);
 	}
 
@@ -154,20 +210,20 @@ int GameScreen::Run(sf::RenderWindow &window){
 	shootyTowerSpr.setTexture(shootyTowerTx);
 	barbedWireSpr.setTexture(barbedWireTx);
 
-	Tower barbedWire(&window, barbedWire_HP, barbedWire_DMG, barbedWireSpr, dimensions.x * 0.5f, dimensions.y * 0.82f);				//deals damage to enemies who are walking through it
-	Tower basicTower(&window, basicTower_HP, basicTower_DMG, basicTowerSpr, dimensions.x * 0.6f, dimensions.y * 0.85f);				//a simple barricade
-	Tower shootyTower(&window, shootyTower_HP, shootyTower_DMG, shootyTowerSpr, dimensions.x * 0.7f, dimensions.y * 0.7f);			//shoots the enemies
-	
+	Tower barbedWire(&window, barbedWire_HP, barbedWire_DMG, barbedWireSpr, dimensions.x * 0.5f, dimensions.y * 0.8f, &damageSound);				//deals damage to enemies who are walking through it
+	Tower basicTower(&window, basicTower_HP, basicTower_DMG, basicTowerSpr, dimensions.x * 0.6f, dimensions.y * 0.74f, &damageSound);				//a simple barricade
+	Tower shootyTower(&window, shootyTower_HP, shootyTower_DMG, shootyTowerSpr, dimensions.x * 0.7f, dimensions.y * 0.72f, &damageSound);			//shoots the enemies
+
 	towersHP.push_back(barbedWire.getHP());
 	towersHP.push_back(basicTower.getHP());
 	towersHP.push_back(shootyTower.getHP());
-	towersLocation.push_back( (int) (barbedWire.getXPosition() - basicTower.getSpriteGlobalBounds().width / 2));
-	towersLocation.push_back( (int) (basicTower.getXPosition() - basicTower.getSpriteGlobalBounds().width / 2));
-	towersLocation.push_back( (int) (shootyTower.getXPosition() - shootyTower.getSpriteGlobalBounds().width / 2 + 10));
+	towersLocation.push_back((int)(barbedWire.getXPosition() - basicTower.getSpriteGlobalBounds().width / 2));
+	towersLocation.push_back((int)(basicTower.getXPosition() - basicTower.getSpriteGlobalBounds().width / 2));
+	towersLocation.push_back((int)(shootyTower.getXPosition() - shootyTower.getSpriteGlobalBounds().width / 2 + 10));
 	tower.push_back(barbedWire);
 	tower.push_back(basicTower);
 	tower.push_back(shootyTower);
-																																	
+
 	////////////////////////////// Add animations //////////////////////////////
 
 	setSpriteAnimations(&skellyAni, &skelly_texture, 's', "Skelly");
@@ -184,7 +240,8 @@ int GameScreen::Run(sf::RenderWindow &window){
 
 	int scoreTimer = 1000;
 
-	if (!pixeled.loadFromFile("fonts/Pixeled.ttf")) {
+	if (!pixeled.loadFromFile("fonts/Pixeled.ttf"))
+	{
 		std::cerr << "Font failed to load." << std::endl;
 		return -1;
 	}
@@ -201,8 +258,8 @@ int GameScreen::Run(sf::RenderWindow &window){
 	joeSprite.setTexture(joeTexture);
 	joeSprite.setPosition(0.92f * dimensions.x, 0.62f * dimensions.y);
 	armSprite.setTexture(armTexture);
-	armSprite.setPosition(joeSprite.getPosition().x + joeSprite.getGlobalBounds().width / 2 - 3,
-		joeSprite.getPosition().y + joeSprite.getGlobalBounds().height / 2 + 5);
+	armSprite.setPosition(joeSprite.getPosition().x + joeSprite.getGlobalBounds().width / 2 - 6,
+		joeSprite.getPosition().y + joeSprite.getGlobalBounds().height / 2 - 4);
 	armSprite.setOrigin(armSprite.getGlobalBounds().width, armSprite.getGlobalBounds().height / 2);
 	bulletSprite.setTexture(bulletTexture);
 
@@ -230,7 +287,7 @@ int GameScreen::Run(sf::RenderWindow &window){
 		{
 			window.setMouseCursorVisible(false);
 			//sets rotation of arm based on mouse location (gun points at mouse pointer)
-			armSprite.setRotation((float) ((180.0 / PI) * atan2(0.52 * dimensions.y - sf::Mouse::getPosition(window).y, 0.76f * dimensions.x - sf::Mouse::getPosition(window).x)));
+			armSprite.setRotation((float)((180.0 / PI) * atan2(0.52 * dimensions.y - sf::Mouse::getPosition(window).y, 0.76f * dimensions.x - sf::Mouse::getPosition(window).x)));
 
 			// Score
 			scoreTimer--;
@@ -246,16 +303,16 @@ int GameScreen::Run(sf::RenderWindow &window){
 			mousePos = sf::Vector2f(sf::Mouse::getPosition(window));
 			mouseAimDir = mousePos - center;
 			mouseAimDirNorm = mouseAimDir / sqrt(pow(mouseAimDir.x, 2) + pow(mouseAimDir.y, 2));
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Left) 
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)
 				&& sf::Mouse::getPosition(window).y > menuBar.getGlobalBounds().height
-				&& projTimer == maxProjTimer && reloading == false 
+				&& projTimer == maxProjTimer && reloading == false
 				&& !ammo.empty())
 			{
 				gunshotSound.play();
 				shot = true;
 				ammo.pop_back();
 				if (ammo.empty()) reloading = true;
-				p1.bullet.setPosition(center + sf::Vector2f(19, 4));
+				p1.bullet.setPosition(center + sf::Vector2f(-5, 0));
 				p1.vel = (mouseAimDirNorm * p1.getMaxVel());
 				currentProj.push_back(Projectile(p1));
 			}
@@ -285,7 +342,7 @@ int GameScreen::Run(sf::RenderWindow &window){
 					currentProj[i].bullet.move(currentProj[i].vel);
 
 					// Checks collision with enemies from the bullet scope
-					if (currentProj[i].checkCollision(&wave)) currentProj.erase(currentProj.begin() + i);
+					if (currentProj[i].checkCollision(&wave, 25)) currentProj.erase(currentProj.begin() + i);
 
 					// Ends the loop if the bullet vector is empty and reading attempt is made to see next element in empty vector
 					if (currentProj.empty())
@@ -332,7 +389,8 @@ int GameScreen::Run(sf::RenderWindow &window){
 				}
 			}
 			// Targets of mobs and targeted health
-			if (!tower.at(currentTarget).amIAlive()) {
+			if (!tower.at(currentTarget).amIAlive())
+			{
 				if (currentTarget < 2)
 				{
 					currentTarget++;
@@ -345,13 +403,13 @@ int GameScreen::Run(sf::RenderWindow &window){
 				wave[i]->setTarget(towersLocation.at(currentTarget), towersHP.at(currentTarget));
 				if (currentTarget == 2 && !tower.at(currentTarget).amIAlive())
 				{
-					wave[i]->setTarget((int) (dimensions.x - 175), new int(1));
+					wave[i]->setTarget((int)(dimensions.x - 175), new int(1));
 				}
 				wave[i]->run();
 				wave[i]->attackMove();
 				if (wave[i]->isDead())
 				{
-					if(waves.at(waveRound)->getNumMobs() > 0) waves.at(waveRound)->deductMob();
+					if (waves.at(waveRound)->getNumMobs() > 0) waves.at(waveRound)->deductMob();
 					wave.erase(wave.begin() + i);
 				}
 			}
@@ -365,35 +423,67 @@ int GameScreen::Run(sf::RenderWindow &window){
 				{
 					tower.at(currentTarget).updateHealthBar();
 				}
-
-				if (wave.at(i)->isAliveFunc())
+			}
+			//checks to see if any enemies should take damage from the barbed wire
+			if (tower.at(0).amIAlive())
+			{
+				for (unsigned int i = 0; i < wave.size(); i++)
 				{
-					//checks to see if any enemies should take damage from the barbed wire
-					if (wave.at(i)->getSpriteGlobalBounds().intersects(barbedWire.getSpriteGlobalBounds()))
+					if (wave.at(i)->isAliveFunc() && wave.at(i)->getSpriteGlobalBounds().intersects(tower.at(0).getSpriteGlobalBounds()))
 					{
-						if (barbedTimer.getElapsedTime().asSeconds() > 0.5f)
-						{
-							wave.at(i)->takeDamage(barbedWire_DMG);
-							barbedTimer.restart();
-						}
+						wave.at(i)->setRecoilDmg(tower.at(0).getDmg());
+						wave.at(i)->enableRecoil(true);
 					}
+					else if (!wave.at(i)->getSpriteGlobalBounds().intersects(tower.at(0).getSpriteGlobalBounds()))
+					{
+						wave.at(i)->enableRecoil(false);
+					}
+				}
+			}
+			else
+			{
+				for (unsigned int i = 0; i < wave.size(); i++)
+				{
+					wave.at(i)->enableRecoil(false);
 				}
 			}
 
 			unsigned int enemyCounter = 0;
+			int targetValue = 0;
 			// Shoot only when wave is not empty
 			if (tower.at(2).amIAlive() && !wave.empty())
 			{
-				// Keeps a counter of how many enemies are alive
-				while (enemyCounter < wave.size() && wave.at(enemyCounter)->isAliveFunc() == false)
+				for (unsigned int m = 0; m < wave.size(); m++)
 				{
-					enemyCounter++;
+					Monster* targetTemp = wave.at(m);
+					int targetValueTemp = (int)(targetTemp->getCurrentLocation().x * TOWER_POS_WEIGHT + targetTemp->getHealth() * TOWER_HP_WEIGHT
+						+ targetTemp->getDamage() * TOWER_DMG_WEIGHT);
+
+					if (targetValueTemp > targetValue && targetTemp->isAliveFunc())
+					{
+						enemyCounter = m;
+						targetValue = targetValueTemp;
+					}
 				}
+
 				// Initializes aiming mechanics
 				if (enemyCounter < wave.size())
 				{
-					towerOrigin.x = shootyTower.getSprite().getPosition().x + 30;
-					towerOrigin.y = shootyTower.getSprite().getPosition().y + 35;
+					if (shootingTower_lvl <= 3)
+					{
+						towerOrigin.x = shootyTower.getSprite().getPosition().x + 21;
+						towerOrigin.y = shootyTower.getSprite().getPosition().y + 40;
+					}
+					else if (shootingTower_lvl > 3 && shootingTower_lvl <= 6)
+					{
+						towerOrigin.x = shootyTower.getSprite().getPosition().x + 30;
+						towerOrigin.y = shootyTower.getSprite().getPosition().y + 35;
+					}
+					else
+					{
+						towerOrigin.x = shootyTower.getSprite().getPosition().x + 7;
+						towerOrigin.y = shootyTower.getSprite().getPosition().y + 15;
+					}
 					enemyPosition = sf::Vector2f(wave.at(enemyCounter)->getCurrentLocation());
 					towerAimDirection = enemyPosition - towerOrigin;
 					towerAimDirNorm = towerAimDirection / sqrt(pow(towerAimDirection.x, 2) + pow(towerAimDirection.y, 2));
@@ -430,7 +520,7 @@ int GameScreen::Run(sf::RenderWindow &window){
 						window.draw(towerProjectiles[i].bullet);
 
 						// Checks collision with enemies from the bullet scope
-						if (towerProjectiles[i].checkCollision(&wave))
+						if (towerProjectiles[i].checkCollision(&wave, tower.at(2).getDmg()))
 						{
 							towerProjectiles.erase(towerProjectiles.begin() + i);
 						}
@@ -500,59 +590,11 @@ int GameScreen::Run(sf::RenderWindow &window){
 		window.draw(upgrade_04_btn);
 		window.draw(quit_btn);
 		window.draw(mute_btn);
-
-		//************// Button clicking events //************//
-		if (!clicked)
-		{
-			if (buttonIsClicked(&upgrade_01_btn, &window) 
-				&& gameScore.getTotal() - moneyDeduction * barbedWire_lvl >= 0)			// Upgrades barbed wire
-			{
-				barbedWire_lvl++;
-				std::cout << "btn01 is pressed" << std::endl;
-				clicked = true;
-			}
-			if (buttonIsClicked(&upgrade_02_btn, &window)
-				&& gameScore.getTotal() - moneyDeduction * barricade_lvl >= 0)			// Upgrades barricade
-			{
-				barricade_lvl++;
-				std::cout << "btn02 is pressed" << std::endl;
-				clicked = true;
-			}
-			if (buttonIsClicked(&upgrade_03_btn, &window)
-				&& gameScore.getTotal() - moneyDeduction * shootingTower_lvl >= 0)			// Upgrades shooty tower
-			{
-				shootingTower_lvl++;
-				std::cout << "btn03 is pressed" << std::endl;
-				clicked = true;
-			}
-			if (buttonIsClicked(&upgrade_04_btn, &window)
-				&& gameScore.getTotal() - moneyDeduction * incomeRate_lvl >= 0)			// Upgrades income rate
-			{
-				incomeRate_lvl++;
-				incomeRate = incomeRateDefault * incomeRate_lvl;
-				std::cout << "income rate: " << incomeRate << std::endl;
-				gameScore.setTotal(gameScore.getTotal() - moneyDeduction * incomeRate_lvl);
-				clicked = true;
-			}
-			if (buttonIsClicked(&quit_btn, &window))				// Exits game
-			{
-				return -1;
-			}
-			if (buttonIsClicked(&mute_btn, &window))				// Mutes sound
-			{
-				std::swap(mute_texture_on, mute_texture_off);
-				clicked = true;
-			}
-		}
-		if (clicked)
-		{
-			btnTimer--;
-			if (btnTimer <= 0)
-			{
-				clicked = false;
-				btnTimer = maxBtnTimer;
-			}
-		}
+		//************// Buttons' Text //************//
+		window.draw(upgrade_01_cost);
+		window.draw(upgrade_02_cost);
+		window.draw(upgrade_03_cost);
+		window.draw(upgrade_04_cost);
 
 		//************// Bullet Reload Images //************//
 		for (unsigned int i = 0; i < ammo.size(); i++)
@@ -561,13 +603,26 @@ int GameScreen::Run(sf::RenderWindow &window){
 			window.draw(ammo[i]);
 		}
 
+		// Update cost display on buttons
+		updateCostButtons();
+
+		// Draws the pause screen
+		if (paused)
+		{
+			drawPauseScreen(&window);
+		}
+
+		// Draws exit box
+		if (exitBoxVisible)
+		{
+			paused = true;
+			drawExitScreen(&window);
+		}
+
 		//************// Mouse cursor //************//
 		mouse.setPosition(static_cast<sf::Vector2f>(sf::Mouse::getPosition(window)));
 		window.setView(fixed);
 		window.draw(mouse);
-
-		// Draws the pause screen
-		if (paused)	{ drawPauseScreen(&window); }
 
 		//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
 
@@ -580,8 +635,10 @@ int GameScreen::Run(sf::RenderWindow &window){
 				window.close();
 				return -1;
 			}
-			else if (event.type == sf::Event::MouseWheelMoved) {
-				if (reloaded != 6 && reloading == true) {
+			else if (event.type == sf::Event::MouseWheelMoved)
+			{
+				if (reloaded != 6 && reloading == true)
+				{
 					reloadSound.play();
 					reloaded++;
 					ammo.push_back(bulletSprite);
@@ -593,22 +650,161 @@ int GameScreen::Run(sf::RenderWindow &window){
 				if (event.key.code == sf::Keyboard::Escape)
 				{
 					paused = !paused;
+					if (gameMusic.getStatus() == sf::SoundSource::Playing && paused)
+					{
+						gameMusic.pause();
+					}
+					else if (!muted && !paused)
+					{
+						gameMusic.play();
+					}
+
+					exitBoxVisible = false;
 				}
 				/////////test commands for win and lose screens delete after win/lose conditions implemented
-				else if (event.key.code == sf::Keyboard::W) {
+				else if (event.key.code == sf::Keyboard::W)
+				{
 					return 2;
 				}
-				else if (event.key.code == sf::Keyboard::L) {
+				else if (event.key.code == sf::Keyboard::L)
+				{
 					return 3;
 				}
 				else if (event.key.code == sf::Keyboard::C) // Increase monster AD
 				{
-					//skelly_DMG = 500;
-					skelly_HP = 1000;
+					gameScore.setTotal(10000);
 				}
 				////////////////////////////////////////////////////////////////////////////////////////////
 			}
+			else if (event.type == sf::Event::MouseButtonReleased)
+			{
+				if (buttonIsClicked(&upgrade_01_btn, &window)
+					&& gameScore.getTotal() - upgrade_01_cost_amount >= 0
+					&& barbedWire_lvl < 10)			// Upgrades barbed wire
+				{
+					gameScore.setTotal(gameScore.getTotal() - upgrade_01_cost_amount);
+					barbedWire_lvl++;
+					tower.at(0).upgradeHealth();
+					if (barbedWire_lvl > 3)
+					{
+						tower.at(0).updateSprite(&barbedWirelv2Tx);
+					}
+					if (barbedWire_lvl > 6)
+					{
+						tower.at(0).updateSprite(&barbedWirelv3Tx);
+					}
+					tower.at(0).updateHealthBar();
+					clicked = true;
+					upgradeSound.play();
+				}
+				else if (buttonIsClicked(&upgrade_02_btn, &window)
+					&& gameScore.getTotal() - upgrade_02_cost_amount >= 0
+					&& barricade_lvl < 10)			// Upgrades barricade
+				{
+					gameScore.setTotal(gameScore.getTotal() - upgrade_02_cost_amount);
+					barricade_lvl++;
+					tower.at(1).upgradeHealth();
+					if (barricade_lvl > 3)
+					{
+						tower.at(1).updateSprite(&basicTowerlv2Tx);
 
+					}
+					if (barricade_lvl > 6)
+					{
+						tower.at(1).updateSprite(&basicTowerlv3Tx);
+
+					}
+					tower.at(1).updateHealthBar();
+					clicked = true;
+					upgradeSound.play();
+				}
+				else if (buttonIsClicked(&upgrade_03_btn, &window)
+					&& gameScore.getTotal() - upgrade_03_cost_amount >= 0
+					&& shootingTower_lvl < 10)			// Upgrades shooty tower
+				{
+					gameScore.setTotal(gameScore.getTotal() - upgrade_03_cost_amount);
+					shootingTower_lvl++;
+					tower.at(2).upgradeHealth();
+					if (shootingTower_lvl > 3)
+					{
+						tower.at(2).updateSprite(&shootyTowerlv2Tx);
+
+					}
+					if (shootingTower_lvl > 6)
+					{
+						tower.at(2).updateSprite(&shootyTowerlv3Tx);
+
+					}
+					tower.at(2).updateHealthBar();
+					tower.at(2).upgradeDmg();
+					clicked = true;
+					upgradeSound.play();
+				}
+				else if (buttonIsClicked(&upgrade_04_btn, &window)
+					&& gameScore.getTotal() - upgrade_04_cost_amount >= 0
+					&& incomeRate_lvl < 10)			// Upgrades income rate
+				{
+					incomeRate = incomeRateDefault * incomeRate_lvl;
+					gameScore.setTotal(gameScore.getTotal() - upgrade_04_cost_amount);
+					incomeRate_lvl++;
+					clicked = true;
+					upgradeSound.play();
+				}
+				else if (buttonIsClicked(&quit_btn, &window))				// Exits game
+				{
+					if (gameMusic.getStatus() == sf::SoundSource::Playing)
+					{
+						gameMusic.pause();
+					}
+
+					exitBoxVisible = true;
+				}
+				else if (buttonIsClicked(&mute_btn, &window))				// Mutes sound
+				{
+					if (gameMusic.getStatus() == sf::SoundSource::Playing || !muted)
+					{
+						gameMusic.pause();
+						gunshotSound.setVolume(0);
+						reloadSound.setVolume(0);
+						towershotSound.setVolume(0);
+						upgradeSound.setVolume(0);
+						damageSound.setVolume(0);
+						muted = true;
+					}
+					else
+					{
+						
+						if (!paused)
+						{
+							gameMusic.play();
+						}
+
+						gunshotSound.setVolume(30);
+						reloadSound.setVolume(50);
+						towershotSound.setVolume(20);
+						upgradeSound.setVolume(50);
+						damageSound.setVolume(30);
+						muted = false;
+					}
+
+					std::swap(mute_texture_on, mute_texture_off);
+					clicked = true;
+				}
+				else if (buttonIsClicked(&yes_btn, &window) && exitBoxVisible) // Yes
+				{
+					return -1;
+				}
+				else if (buttonIsClicked(&no_btn, &window) && exitBoxVisible) // No
+				{
+					paused = false;
+					exitBoxVisible = false;
+
+					if (gameMusic.getStatus() != sf::SoundSource::Playing && !muted)
+					{
+						gameMusic.play();
+					}
+				}
+			}
 		}
 
 		window.clear();
@@ -617,9 +813,11 @@ int GameScreen::Run(sf::RenderWindow &window){
 	return -1;
 }
 
-void GameScreen::setSpriteAnimations(std::vector<Animation>* ani, sf::Texture* texture, char size, std::string name) {
+void GameScreen::setSpriteAnimations(std::vector<Animation>* ani, sf::Texture* texture, char size, std::string name)
+{
 	int size_x;
 	int size_y;
+
 	switch (size) {
 		case 's':
 			size_x = 40;
@@ -651,14 +849,16 @@ void GameScreen::setSpriteAnimations(std::vector<Animation>* ani, sf::Texture* t
 
 	Animation attack;
 	attack.setSpriteSheet(*texture);
-	if (name == "Lancer") {
+	if (name == "Lancer")
+	{
 		attack.addFrame(sf::IntRect(0, size_y, size_x, size_y));
 		attack.addFrame(sf::IntRect(size_x, size_y, size_x, size_y));
 		attack.addFrame(sf::IntRect(size_x * 2, size_y, size_x * 2, size_y));
 		attack.addFrame(sf::IntRect(size_x * 2, size_y, size_x * 2, size_y));
 		attack.addFrame(sf::IntRect(size_x * 4, size_y, size_x, size_y));
 	}
-	else {
+	else
+	{
 		attack.addFrame(sf::IntRect(0, size_y, size_x, size_y));
 		attack.addFrame(sf::IntRect(size_x, size_y, size_x, size_y));
 		attack.addFrame(sf::IntRect(size_x * 2, size_y, size_x, size_y));
@@ -676,7 +876,8 @@ void GameScreen::setSpriteAnimations(std::vector<Animation>* ani, sf::Texture* t
 	death.addFrame(sf::IntRect(size_x * 4, size_y * 2, size_x, size_y));
 	ani->push_back(death);
 
-	if (size == 'm' || size == 'l') {
+	if (size == 'm' || size == 'l')
+	{
 		Animation special;
 		special.setSpriteSheet(*texture);
 		special.addFrame(sf::IntRect(0, size_y * 3, size_x, size_y));
@@ -687,9 +888,11 @@ void GameScreen::setSpriteAnimations(std::vector<Animation>* ani, sf::Texture* t
 		ani->push_back(special);
 	}
 }
-void GameScreen::runSpawners(int* maxSpawn, sf::Clock* clock, float spwn_timer, std::vector<Monster*>* wave, sf::RenderWindow* win, std::vector<Animation>* ani, int dmg, int hp, int boundary, int* targetHP, MonsterType name, Score* score) {
+void GameScreen::runSpawners(int* maxSpawn, sf::Clock* clock, float spwn_timer, std::vector<Monster*>* wave, sf::RenderWindow* win, std::vector<Animation>* ani, int dmg, int hp, int boundary, int* targetHP, MonsterType name, Score* score)
+{
 	int r = (rand() % 6) - 3;
-	if (clock->getElapsedTime().asSeconds() > spwn_timer + r && *maxSpawn != 0) {
+	if (clock->getElapsedTime().asSeconds() > spwn_timer + r && *maxSpawn != 0)
+	{
 		if (name == LANCER)
 		{
 			Lancer* spawn = new Lancer(win, *ani, dmg, hp, score, name);
@@ -741,12 +944,56 @@ void GameScreen::createPauseScreen()
 	pauseText.setFillColor(sf::Color::White);
 	pauseText.setString("PAUSED");
 	pauseText.setPosition(dimensions.x / 2 - width / 2, dimensions.y / 2 + height / 2);
-	
+
 }
 void GameScreen::drawPauseScreen(sf::RenderWindow* win)
 {
 	win->draw(pauseScreen);
 	win->draw(pauseText);
+}
+void GameScreen::drawExitScreen(sf::RenderWindow* win)
+{
+	// Load textures
+	if (!exit_texture.loadFromFile("images/menu/exit.png"))
+	{
+		std::cout << "Unable to load exit_texture. Check file path." << std::endl;
+	}
+	if (!yes_texture.loadFromFile("images/menu/yes.png"))
+	{
+		std::cout << "Unable to load yes_texture. Check file path." << std::endl;
+	}
+	if (!no_texture.loadFromFile("images/menu/no.png"))
+	{
+		std::cout << "Unable to load no_texture. Check file path." << std::endl;
+	}
+
+	// Setting texture for sprite
+	exit_box.setTexture(exit_texture);
+	yes_btn.setTexture(yes_texture);
+	no_btn.setTexture(no_texture);
+
+	// Setting text
+	exit_question.setString("Are you sure you want to quit?");
+	exit_question.setCharacterSize(14);
+	exit_question.setFont(pixeled);
+	exit_question.setOrigin(exit_question.getGlobalBounds().width / 2, exit_question.getGlobalBounds().height / 2);
+
+	// Setting Origins
+	exit_box.setOrigin(exit_box.getGlobalBounds().width / 2, exit_box.getGlobalBounds().height / 2);
+	yes_btn.setOrigin(yes_btn.getGlobalBounds().width / 2, yes_btn.getGlobalBounds().height / 2);
+	no_btn.setOrigin(no_btn.getGlobalBounds().width / 2, no_btn.getGlobalBounds().height / 2);
+
+	// Setting positions
+	int distance = 40;
+	exit_box.setPosition(dimensions.x / 2, dimensions.y / 2);
+	yes_btn.setPosition(exit_box.getPosition().x - distance * 2, exit_box.getPosition().y + distance);
+	no_btn.setPosition(exit_box.getPosition().x + distance * 2, exit_box.getPosition().y + distance);
+	exit_question.setPosition(exit_box.getPosition().x, exit_box.getPosition().y - distance);
+
+	win->draw(exit_box);
+	win->draw(yes_btn);
+	win->draw(no_btn);
+	win->draw(exit_question);
 }
 void GameScreen::drawRound(sf::RenderWindow* win)
 {
@@ -807,11 +1054,11 @@ void GameScreen::createButtons()
 		std::cout << "Unable to load mute_texture_02. Check file path." << std::endl;
 	}
 
-	float center_y_menuBar = (float) (menuBar.getGlobalBounds().height / 2);
+	float center_y_menuBar = (float)(menuBar.getGlobalBounds().height / 2);
 	int width = 60;
 	int height = 60;
-	float center_x_btn = (float) width / 2;
-	float center_y_btn = (float) height / 2;
+	float center_x_btn = (float)width / 2;
+	float center_y_btn = (float)height / 2;
 	int offset_x = 100;
 	int gap = 100;
 
@@ -832,13 +1079,86 @@ void GameScreen::createButtons()
 	mute_btn.setOrigin(center_x_btn, center_y_btn);
 
 	// Set positions of sprites
-	upgrade_01_btn.setPosition((float) gap + (float) width, center_y_menuBar);
+	upgrade_01_btn.setPosition((float)gap + (float)width, center_y_menuBar);
 	upgrade_02_btn.setPosition((float)gap + (float)width * 2 + 10, center_y_menuBar);
 	upgrade_03_btn.setPosition((float)gap + (float)width * 3 + 20, center_y_menuBar);
 	upgrade_04_btn.setPosition((float)gap + (float)width * 4 + 30, center_y_menuBar);
 	quit_btn.setPosition((float)gap + (float)width * 5 + 40, center_y_menuBar);
 	mute_btn.setPosition((float)gap + (float)width * 6 + 50, center_y_menuBar);
+
+	// Set font
+	upgrade_01_cost.setFont(pixeled);
+	upgrade_02_cost.setFont(pixeled);
+	upgrade_03_cost.setFont(pixeled);
+	upgrade_04_cost.setFont(pixeled);
+	upgrade_01_cost.setCharacterSize(10);
+	upgrade_02_cost.setCharacterSize(10);
+	upgrade_03_cost.setCharacterSize(10);
+	upgrade_04_cost.setCharacterSize(10);
+	upgrade_01_cost.setFillColor(sf::Color(196, 39, 39, 255));
+	upgrade_02_cost.setFillColor(sf::Color(196, 39, 39, 255));
+	upgrade_03_cost.setFillColor(sf::Color(196, 39, 39, 255));
+	upgrade_04_cost.setFillColor(sf::Color(196, 39, 39, 255));
+
+	// Set costs
+	upgrade_01_cost.setString("$" + std::to_string(upgrade_01_cost_amount));
+	upgrade_02_cost.setString("$" + std::to_string(upgrade_02_cost_amount));
+	upgrade_03_cost.setString("$" + std::to_string(upgrade_03_cost_amount));
+	upgrade_04_cost.setString("$" + std::to_string(upgrade_04_cost_amount));
+	// Set position
+	upgrade_01_cost.setPosition(upgrade_01_btn.getPosition().x - 5 - upgrade_01_btn.getGlobalBounds().width / 2 + 13, upgrade_01_btn.getPosition().y + 15);
+	upgrade_02_cost.setPosition(upgrade_02_btn.getPosition().x - 5 - upgrade_02_btn.getGlobalBounds().width / 2 + 13, upgrade_02_btn.getPosition().y + 15);
+	upgrade_03_cost.setPosition(upgrade_03_btn.getPosition().x - 5 - upgrade_03_btn.getGlobalBounds().width / 2 + 13, upgrade_03_btn.getPosition().y + 15);
+	upgrade_04_cost.setPosition(upgrade_04_btn.getPosition().x - 5 - upgrade_04_btn.getGlobalBounds().width / 2 + 13, upgrade_04_btn.getPosition().y + 15);
 }
+
+void GameScreen::updateCostButtons()
+{
+	// Updating the variables
+	upgrade_01_cost_amount = moneyDeduction * barbedWire_lvl;
+	upgrade_02_cost_amount = moneyDeduction * barricade_lvl;
+	upgrade_03_cost_amount = (int)(moneyDeduction * 1.5 * shootingTower_lvl);
+	upgrade_04_cost_amount = moneyDeduction * 2 * incomeRate_lvl;
+
+	// Updating the text
+	upgrade_01_cost.setString("$" + std::to_string(upgrade_01_cost_amount));
+	upgrade_02_cost.setString("$" + std::to_string(upgrade_02_cost_amount));
+	upgrade_03_cost.setString("$" + std::to_string(upgrade_03_cost_amount));
+	upgrade_04_cost.setString("$" + std::to_string(upgrade_04_cost_amount));
+
+	// Set color
+	if (gameScore.getTotal() < upgrade_01_cost_amount) upgrade_01_cost.setFillColor(sf::Color(81, 39, 22, 255));
+	else upgrade_01_cost.setFillColor(sf::Color::Green);
+	if (gameScore.getTotal() < upgrade_02_cost_amount) upgrade_02_cost.setFillColor(sf::Color(81, 39, 22, 255));
+	else upgrade_02_cost.setFillColor(sf::Color::Green);
+	if (gameScore.getTotal() < upgrade_03_cost_amount) upgrade_03_cost.setFillColor(sf::Color(81, 39, 22, 255));
+	else upgrade_03_cost.setFillColor(sf::Color::Green);
+	if (gameScore.getTotal() < upgrade_04_cost_amount) upgrade_04_cost.setFillColor(sf::Color(81, 39, 22, 255));
+	else upgrade_04_cost.setFillColor(sf::Color::Green);
+
+	// Set to "Max" if lvl 9
+	if (barbedWire_lvl == 10)
+	{
+		upgrade_01_cost.setString("MAX");
+		upgrade_01_cost.setFillColor(sf::Color::White);
+	}
+	if (barricade_lvl == 10)
+	{
+		upgrade_02_cost.setString("MAX");
+		upgrade_02_cost.setFillColor(sf::Color::White);
+	}
+	if (shootingTower_lvl == 10)
+	{
+		upgrade_03_cost.setString("MAX");
+		upgrade_03_cost.setFillColor(sf::Color::White);
+	}
+	if (incomeRate_lvl == 10)
+	{
+		upgrade_04_cost.setString("MAX");
+		upgrade_04_cost.setFillColor(sf::Color::White);
+	}
+}
+
 bool GameScreen::buttonIsClicked(sf::Sprite* sprite, sf::RenderWindow* window)
 {
 	float x1 = sprite->getPosition().x - sprite->getGlobalBounds().width / 2;
@@ -847,11 +1167,7 @@ bool GameScreen::buttonIsClicked(sf::Sprite* sprite, sf::RenderWindow* window)
 	float y2 = y1 + sprite->getGlobalBounds().height;
 	int mouse_x = sf::Mouse::getPosition(*window).x;
 	int mouse_y = sf::Mouse::getPosition(*window).y;
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)
-		&& mouse_x > x1
-		&& mouse_x < x2
-		&& mouse_y > y1
-		&& mouse_y < y2)
+	if (mouse_x > x1 && mouse_x < x2 && mouse_y > y1 && mouse_y < y2)
 	{
 		return true;
 	}

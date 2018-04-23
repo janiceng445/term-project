@@ -1,7 +1,7 @@
 //#include "main.h"
 #include "Screens.hpp"
 
-enum screenType { start = 0, game = 1, win = 2, lose = 3};
+enum screenType { start = 0, game = 1, win = 2, lose = 3 };
 
 int main()
 {
@@ -15,22 +15,26 @@ int main()
 	while (screen >= 0)
 	{
 		//screen = screens[screen]->Run(window);
-		if (screen == screenType::start) {
+		if (screen == screenType::start)
+		{
 			StartScreen* start = new StartScreen;
 			screen = start->Run(window);
 			delete start;
 		}
-		else if (screen == screenType::game) {
+		else if (screen == screenType::game)
+		{
 			GameScreen* game = new GameScreen;
 			screen = game->Run(window);
 			delete game;
 		}
-		else if (screen == screenType::win) {
+		else if (screen == screenType::win)
+		{
 			WinScreen* win = new WinScreen;
 			screen = win->Run(window);
 			delete win;
 		}
-		else if (screen == screenType::lose) {
+		else if (screen == screenType::lose)
+		{
 			LoseScreen* lose = new LoseScreen;
 			screen = lose->Run(window);
 			delete lose;

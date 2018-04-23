@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <ctime>
 #include <iostream>
 #include <vector>
@@ -14,9 +15,10 @@ const int sprite_yTimer = 325;
 
 enum MonsterType {SKELLY, RHINO, LANCER, DEMON, GUNNER, BOSS};
 
+
 class Monster
 {
-	protected:
+protected:
 	// Attributes
 	int AD;
 	int HP;
@@ -30,6 +32,8 @@ class Monster
 	bool special;
 	int stoppingPoint; // Tower locations
 	int decay_timer; // Time it takes for sprite to disappear
+
+
 
 	// Graphics/Animations
 	int type; // small | medium | large enemies
@@ -68,9 +72,13 @@ class Monster
 	Score* score;
 	int c;
 
-	public:
+	int recoilDMG;
+	bool recoil;
+
+public:
 	Monster();
 	Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP, Score* score, MonsterType monsterType);
+
 
 	// Animation
 	void playAnimation();
@@ -84,6 +92,7 @@ class Monster
 	void addHealthBar();
 	void updateHealthBar();
 	void showHealthBar();
+	int getHealth();
 	// Hitbox
 	void drawHitbox();
 	void showHitbox();
@@ -108,6 +117,10 @@ class Monster
 	bool isAliveFunc();
 	bool isDead();
 	bool virtual isUsingSpecial(); // should only be true for Lancer
+
+	void recoilDmg();
+	void setRecoilDmg(int dmg);
+	void enableRecoil(bool t);
 
 	// Other
 	virtual void bossPushBack();
