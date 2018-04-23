@@ -58,7 +58,7 @@ int GameScreen::Run(sf::RenderWindow &window)
 		std::cerr << "gunner_spriteSheet failed" << std::endl;
 		return -1;
 	}
-	if (!boss_texture.loadFromFile("images/background.png"))	// replace with boss
+	if (!boss_texture.loadFromFile("images/enemies/boss.png"))	// replace with boss
 	{
 		std::cerr << "boss_spriteSheet failed" << std::endl;
 		return -1;
@@ -825,8 +825,8 @@ void GameScreen::setSpriteAnimations(std::vector<Animation>* ani, sf::Texture* t
 			size_y = 60;
 			break;
 		case 'b':
-			size_x = 204;
-			size_y = 195;
+			size_x = 136;
+			size_y = 140;
 			break;
 	}
 	Animation idle;
