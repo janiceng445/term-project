@@ -151,7 +151,7 @@ class GameScreen : public cScreen {
 	int lancerAmount[numLevels] = { 0, 0, 1, 2, 2, 3, 4, 7, 3, 3 };
 	int demonAmount[numLevels] =  { 0, 0, 0, 3, 4, 3, 7, 5, 5, 5 };
 	int gunnerAmount[numLevels] = { 0, 0, 2, 3, 4, 5, 6, 7, 3, 5 };
-	int bossAmount[numLevels] =   { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1 };
+	int bossAmount[numLevels] =   { 0, 0, 0, 0, 0, 0, 0, 1, 1, 1 };
 	int breakCounter = 0;
 	int breakTimer = 500;
 	sf::Text roundText;

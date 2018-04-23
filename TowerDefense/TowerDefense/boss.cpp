@@ -41,7 +41,8 @@ void boss::attackMove() {
 		else if (65 + this->y - sf::Mouse::getPosition(*window).y < 0) {
 			this->aniSprite.move((((0.1 - 0.05) * (500 - this->HP)) / 500) + 0.1, -0.1 * (450 - abs(65 + this->y - sf::Mouse::getPosition(*window).y)) / 450);
 		}
-
+		updateHealthBar();
+		if (hitboxVisibility) drawHitbox();
 		//first argument moves boss in x dir between 0.1 and 0.3, scaled to amount of damage done to boss
 		//second argument moves boss in y direction 
 		//((0.6) * (((65 + this->y) - sf::Mouse::getPosition(*window).y) + 450) - 0.3));
