@@ -241,7 +241,6 @@ void Monster::attackMove()
 		}
 		if (this->x > this->stoppingPoint - 10 && this->aniSprite.getCurrentFrame() == 3)
 		{
-			//towerhitSound.play();
 			isMoving = false;
 			attack();
 		}
@@ -280,7 +279,6 @@ void Monster::setTarget(int x, int* targetedHealth)
 // Attacks a targeted health
 void Monster::attack()
 {
-	//towerhitSound.play();
 	if (isAlive)
 	{
 		isAttacking = true;
