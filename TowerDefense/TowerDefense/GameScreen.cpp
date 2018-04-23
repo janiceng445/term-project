@@ -58,7 +58,7 @@ int GameScreen::Run(sf::RenderWindow &window)
 		std::cerr << "gunner_spriteSheet failed" << std::endl;
 		return -1;
 	}
-	if (!boss_texture.loadFromFile("images/enemies/boss.png"))	// replace with boss
+	if (!boss_texture.loadFromFile("images/enemies/boss.png"))
 	{
 		std::cerr << "boss_spriteSheet failed" << std::endl;
 		return -1;
