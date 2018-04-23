@@ -70,11 +70,11 @@ int GameScreen::Run(sf::RenderWindow &window)
 		std::cout << "Basic tower could not be loaded. Check filepath" << std::endl;
 		return -1;
 	}
-	/*if (!basicTowerlv3Tx.loadFromFile("images/Towers/BoxesLvl3.png"))
+	if (!basicTowerlv3Tx.loadFromFile("images/Towers/BoxesLvl3.png"))
 	{
 		std::cout << "Basic tower could not be loaded. Check filepath" << std::endl;
 		return -1;
-	}*/
+	}
 	if (!shootyTowerTx.loadFromFile("images/Towers/ShootyTowerLvl1.png"))
 	{
 		std::cout << "Shooty tower could not be loaded. Check filepath" << std::endl;
@@ -205,7 +205,7 @@ int GameScreen::Run(sf::RenderWindow &window)
 	barbedWireSpr.setTexture(barbedWireTx);
 
 	Tower barbedWire(&window, barbedWire_HP, barbedWire_DMG, barbedWireSpr, dimensions.x * 0.5f, dimensions.y * 0.8f, &damageSound);				//deals damage to enemies who are walking through it
-	Tower basicTower(&window, basicTower_HP, basicTower_DMG, basicTowerSpr, dimensions.x * 0.6f, dimensions.y * 0.8f, &damageSound);				//a simple barricade
+	Tower basicTower(&window, basicTower_HP, basicTower_DMG, basicTowerSpr, dimensions.x * 0.6f, dimensions.y * 0.74f, &damageSound);				//a simple barricade
 	Tower shootyTower(&window, shootyTower_HP, shootyTower_DMG, shootyTowerSpr, dimensions.x * 0.7f, dimensions.y * 0.72f, &damageSound);			//shoots the enemies
 
 	towersHP.push_back(barbedWire.getHP());
@@ -460,8 +460,21 @@ int GameScreen::Run(sf::RenderWindow &window)
 				// Initializes aiming mechanics
 				if (enemyCounter < wave.size())
 				{
-					towerOrigin.x = shootyTower.getSprite().getPosition().x + 30;
-					towerOrigin.y = shootyTower.getSprite().getPosition().y + 35;
+					if (shootingTower_lvl <= 3)
+					{
+						towerOrigin.x = shootyTower.getSprite().getPosition().x + 21;
+						towerOrigin.y = shootyTower.getSprite().getPosition().y + 40;
+					}
+					else if (shootingTower_lvl > 3 && shootingTower_lvl <= 6)
+					{
+						towerOrigin.x = shootyTower.getSprite().getPosition().x + 30;
+						towerOrigin.y = shootyTower.getSprite().getPosition().y + 35;
+					}
+					else
+					{
+						towerOrigin.x = shootyTower.getSprite().getPosition().x + 7;
+						towerOrigin.y = shootyTower.getSprite().getPosition().y + 15;
+					}
 					enemyPosition = sf::Vector2f(wave.at(enemyCounter)->getCurrentLocation());
 					towerAimDirection = enemyPosition - towerOrigin;
 					towerAimDirNorm = towerAimDirection / sqrt(pow(towerAimDirection.x, 2) + pow(towerAimDirection.y, 2));
