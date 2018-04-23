@@ -1,4 +1,4 @@
-#include "Boss.h"
+#include "boss.h"
 
 
 boss::boss(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, int HP, Score* score, MonsterType monsterType)
@@ -28,19 +28,22 @@ void boss::attackMove() {
 		if (pushBack && pushBackNum < 100) {
 			aniSprite.move(-0.1, 0);
 			++pushBackNum;
-			return;
 		}
-		if (this->y >= 600) { //move boss downwards if boss gets too high up
-			this->aniSprite.move((((0.3 - 0.1) * (500 - this->HP)) / 500) + 0.1, -0.5);  
-			return;
+		else if (this->y >= 600) { //move boss downwards if boss gets too high up
+			this->aniSprite.move((((0.1 - 0.05) * (500 - this->HP)) / 500) + 0.1, -0.5);  
 		}
-		if (this->y <= 150) { //move boss upwards if boss gets too low
-			this->aniSprite.move((((0.3 - 0.1) * (500 - this->HP)) / 500) + 0.1, 0.5);
-			return;
+		else if (this->y <= 150) { //move boss upwards if boss gets too low
+			this->aniSprite.move((((0.1 - 0.01) * (500 - this->HP)) / 500) + 0.1, 0.5);
 		}
+		else if (65 + this->y - sf::Mouse::getPosition(*window).y > 0) {
+			this->aniSprite.move((((0.1 - 0.05) * (500 - this->HP)) / 500) + 0.1, 0.1 * (450 - abs(65 + this->y - sf::Mouse::getPosition(*window).y)) / 450);
+		}
+		else if (65 + this->y - sf::Mouse::getPosition(*window).y < 0) {
+			this->aniSprite.move((((0.1 - 0.05) * (500 - this->HP)) / 500) + 0.1, -0.1 * (450 - abs(65 + this->y - sf::Mouse::getPosition(*window).y)) / 450);
+		}
+
 		//first argument moves boss in x dir between 0.1 and 0.3, scaled to amount of damage done to boss
 		//second argument moves boss in y direction 
-		this->aniSprite.move((((0.3 - 0.1) * (500 - this->HP)) / 500) + 0.1, 3 / ((65 + this->y) - sf::Mouse::getPosition(*window).y));
 		//((0.6) * (((65 + this->y) - sf::Mouse::getPosition(*window).y) + 450) - 0.3));
 		//5 / ((65 + this->y) - sf::Mouse::getPosition(*window).y));
 	}
