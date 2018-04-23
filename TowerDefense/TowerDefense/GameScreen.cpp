@@ -70,11 +70,11 @@ int GameScreen::Run(sf::RenderWindow &window)
 		std::cout << "Basic tower could not be loaded. Check filepath" << std::endl;
 		return -1;
 	}
-	/*if (!basicTowerlv3Tx.loadFromFile("images/Towers/BoxesLvl3.png"))
+	if (!basicTowerlv3Tx.loadFromFile("images/Towers/BoxesLvl3.png"))
 	{
 		std::cout << "Basic tower could not be loaded. Check filepath" << std::endl;
 		return -1;
-	}*/
+	}
 	if (!shootyTowerTx.loadFromFile("images/Towers/ShootyTowerLvl1.png"))
 	{
 		std::cout << "Shooty tower could not be loaded. Check filepath" << std::endl;
@@ -728,6 +728,11 @@ int GameScreen::Run(sf::RenderWindow &window)
 				}
 				else if (buttonIsClicked(&quit_btn, &window))				// Exits game
 				{
+					if (gameMusic.getStatus() == sf::SoundSource::Playing)
+					{
+						gameMusic.pause();
+					}
+					
 					exitBoxVisible = true;
 				}
 				else if (buttonIsClicked(&mute_btn, &window))				// Mutes sound
@@ -762,6 +767,11 @@ int GameScreen::Run(sf::RenderWindow &window)
 				{
 					paused = false;
 					exitBoxVisible = false;
+					
+					if (gameMusic.getStatus() != sf::SoundSource::Playing)
+					{
+						gameMusic.play();
+					}
 				}
 			}
 		}
