@@ -26,27 +26,23 @@ void boss::attackMove() {
 	}
 	if (this->isAlive) {
 		if (pushBack && pushBackNum < 100) {
-			aniSprite.move(-0.1, 0);
+			aniSprite.move(-0.1f, 0);
 			++pushBackNum;
 		}
 		else if (this->y >= 600) { //move boss downwards if boss gets too high up
-			this->aniSprite.move((((0.1 - 0.05) * (500 - this->HP)) / 500) + 0.1, -0.5);
+			this->aniSprite.move((float) ((((0.1 - 0.05) * (500 - this->HP)) / 500) + 0.1), -0.5f);
 		}
 		else if (this->y <= 150) { //move boss upwards if boss gets too low
-			this->aniSprite.move((((0.1 - 0.01) * (500 - this->HP)) / 500) + 0.1, 0.5);
+			this->aniSprite.move((float) ((((0.1 - 0.01) * (500 - this->HP)) / 500) + 0.1), 0.5f);
 		}
 		else if (65 + this->y - sf::Mouse::getPosition(*window).y > 0) {
-			this->aniSprite.move((((0.1 - 0.05) * (500 - this->HP)) / 500) + 0.1, 0.1 * (450 - abs(65 + this->y - sf::Mouse::getPosition(*window).y)) / 450);
+			this->aniSprite.move((float) ((((0.1 - 0.05) * (500 - this->HP)) / 500) + 0.1), (float) (0.1 * (450 - abs(65 + this->y - sf::Mouse::getPosition(*window).y)) / 450));
 		}
 		else if (65 + this->y - sf::Mouse::getPosition(*window).y < 0) {
-			this->aniSprite.move((((0.1 - 0.05) * (500 - this->HP)) / 500) + 0.1, -0.1 * (450 - abs(65 + this->y - sf::Mouse::getPosition(*window).y)) / 450);
+			this->aniSprite.move((float) ((((0.1 - 0.05) * (500 - this->HP)) / 500) + 0.1), (float) (-0.1 * (450 - abs(65 + this->y - sf::Mouse::getPosition(*window).y)) / 450));
 		}
 		updateHealthBar();
 		if (hitboxVisibility) drawHitbox();
-		//first argument moves boss in x dir between 0.1 and 0.3, scaled to amount of damage done to boss
-		//second argument moves boss in y direction 
-		//((0.6) * (((65 + this->y) - sf::Mouse::getPosition(*window).y) + 450) - 0.3));
-		//5 / ((65 + this->y) - sf::Mouse::getPosition(*window).y));
 
 		if (this->x > this->stoppingPoint - 10 && this->aniSprite.getCurrentFrame() == 3) {
 			attack();
