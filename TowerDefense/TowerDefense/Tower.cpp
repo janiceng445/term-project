@@ -15,8 +15,8 @@ Tower::Tower(sf::RenderWindow* renderWin, int hitpoints, int attack, sf::Sprite 
 	this->posY = yPos;
 	this->sprite = towerSprite;
 	this->upgradeLv = 1;
-	spriteWidth = (int) (sprite.getGlobalBounds().width);
-	spriteHeight = (int) (sprite.getGlobalBounds().height);
+	spriteWidth = (int)(sprite.getGlobalBounds().width);
+	spriteHeight = (int)(sprite.getGlobalBounds().height);
 
 	this->sprite.setPosition(this->posX, this->posY);
 
@@ -32,7 +32,7 @@ Tower::Tower(sf::RenderWindow* renderWin, int hitpoints, int attack, sf::Sprite 
 
 int Tower::getXPosition()
 {
-	return (int) (this->posX);
+	return (int)(this->posX);
 }
 
 int Tower::getHealth()
@@ -87,7 +87,7 @@ void Tower::takeDamage()
 	{
 		damageSound->play();
 	}
-	
+
 	health = *HP;
 
 	if (this->health <= 0)

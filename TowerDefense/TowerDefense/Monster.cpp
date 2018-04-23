@@ -10,7 +10,7 @@ Monster::Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, 
 		size = 98;
 	}
 
-	
+
 
 	int r = (rand() % 41 - 20) * 2; // For random spawning y coordinate
 
@@ -18,7 +18,7 @@ Monster::Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, 
 	this->AD = AD / 2; // Explanation: attacks ticks twice
 	this->HP = HP;
 	this->max_HP = HP;
-	float s = rand() / (float)RAND_MAX * 0.15;
+	float s = rand() / (float)RAND_MAX * 0.15f;
 	this->movementSpeed = DEFAULT_MVMT_SPEED + s;
 	this->animationSpeed = DEFAULT_ANI_SPEED;
 	this->isAlive = true;
@@ -28,7 +28,7 @@ Monster::Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, 
 
 	// Location Default
 	this->x = -25;
-	this->y = 0.84 * win->getSize().y + (float)r + 5;
+	this->y = 0.84f * win->getSize().y + (float)r + 5;
 	sprite_yCounter = 0;
 
 	// Animation
@@ -60,11 +60,11 @@ Monster::Monster(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, 
 	// Sprite starting left or right stagger move
 	if (c == 1)
 	{
-		distance_y = -movementSpeed * 0.7;
+		distance_y = -movementSpeed * 0.7f;
 	}
 	else if (c == 2)
 	{
-		distance_y = movementSpeed * 0.7;
+		distance_y = movementSpeed * 0.7f;
 	}
 	else
 	{

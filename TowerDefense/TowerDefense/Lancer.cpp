@@ -17,7 +17,7 @@ Lancer::Lancer(sf::RenderWindow* win, std::vector<Animation> aniPack, int AD, in
 	radarActivated = true;
 
 	// Barrier animation
-	radiusMax = barrierHPMax;
+	radiusMax = (float) barrierHPMax;
 	barrier.setRadius(radiusMax / 10);
 	barrier.setOrigin(barrier.getGlobalBounds().width / 2, barrier.getGlobalBounds().height / 2);
 	barrierDurationMax = 500;
@@ -44,7 +44,7 @@ void Lancer::run()
 	{
 		canSpecial = true;
 		barrierHP = barrierHPMax;
-		radius = barrierHPMax;
+		radius = (float) barrierHPMax;
 		barrierRecharge = 0;
 	}
 	if (!stopRunning)
@@ -182,7 +182,7 @@ void Lancer::takeDamage(int dmg)
 {
 	if (usingSpecial && canSpecial)
 	{
-		this->barrierHP -= 0.1 * barrierHPMax;
+		this->barrierHP -= (int) (0.1 * barrierHPMax);
 	}
 	else
 	{

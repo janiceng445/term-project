@@ -230,13 +230,13 @@ private:
 	sf::SoundBuffer towershot_buffer;
 	sf::SoundBuffer upgrade_buffer;
 	sf::SoundBuffer damageBuffer;
-	
+
 	sf::Sound towershotSound;
 	sf::Sound gunshotSound;
 	sf::Sound reloadSound;
 	sf::Sound upgradeSound;
 	sf::Sound damageSound;
-	
+
 	sf::Music gameMusic;
 
 	bool sound;

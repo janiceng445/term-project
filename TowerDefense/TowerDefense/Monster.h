@@ -32,7 +32,7 @@ protected:
 	int stoppingPoint; // Tower locations
 	int decay_timer; // Time it takes for sprite to disappear
 
-	
+
 
 	// Graphics/Animations
 	int type; // small | medium | large enemies

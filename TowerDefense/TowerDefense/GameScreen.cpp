@@ -143,7 +143,7 @@ int GameScreen::Run(sf::RenderWindow &window)
 	damageSound.setBuffer(damageBuffer);
 	damageSound.setVolume(30);
 
-	
+
 	if (!upgrade_buffer.loadFromFile("Audio/upgradeSound.wav"))
 	{
 		std::cout << "Upgrade sound could not be loaded. Check filepath" << std::endl;
@@ -745,7 +745,7 @@ int GameScreen::Run(sf::RenderWindow &window)
 					{
 						gameMusic.pause();
 					}
-					
+
 					exitBoxVisible = true;
 				}
 				else if (buttonIsClicked(&mute_btn, &window))				// Mutes sound
@@ -780,7 +780,7 @@ int GameScreen::Run(sf::RenderWindow &window)
 				{
 					paused = false;
 					exitBoxVisible = false;
-					
+
 					if (gameMusic.getStatus() != sf::SoundSource::Playing)
 					{
 						gameMusic.play();
@@ -1138,8 +1138,7 @@ bool GameScreen::buttonIsClicked(sf::Sprite* sprite, sf::RenderWindow* window)
 	float y2 = y1 + sprite->getGlobalBounds().height;
 	int mouse_x = sf::Mouse::getPosition(*window).x;
 	int mouse_y = sf::Mouse::getPosition(*window).y;
-	if (//sf::Mouse::isButtonPressed(sf::Mouse::Left) &&
-		mouse_x > x1 && mouse_x < x2 && mouse_y > y1 && mouse_y < y2)
+	if (mouse_x > x1 && mouse_x < x2 && mouse_y > y1 && mouse_y < y2)
 	{
 		return true;
 	}
