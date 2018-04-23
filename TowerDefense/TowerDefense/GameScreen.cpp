@@ -642,11 +642,11 @@ int GameScreen::Run(sf::RenderWindow &window)
 				if (event.key.code == sf::Keyboard::Escape)
 				{
 					paused = !paused;
-					if (gameMusic.getStatus() == sf::SoundSource::Playing)
+					if (gameMusic.getStatus() == sf::SoundSource::Playing && paused)
 					{
 						gameMusic.pause();
 					}
-					else if (!muted)
+					else if (!muted && !paused)
 					{
 						gameMusic.play();
 					}
@@ -753,7 +753,7 @@ int GameScreen::Run(sf::RenderWindow &window)
 				}
 				else if (buttonIsClicked(&mute_btn, &window))				// Mutes sound
 				{
-					if (gameMusic.getStatus() == sf::SoundSource::Playing)
+					if (gameMusic.getStatus() == sf::SoundSource::Playing || !muted)
 					{
 						gameMusic.pause();
 						gunshotSound.setVolume(0);
@@ -765,7 +765,12 @@ int GameScreen::Run(sf::RenderWindow &window)
 					}
 					else
 					{
-						gameMusic.play();
+						
+						if (!paused)
+						{
+							gameMusic.play();
+						}
+
 						gunshotSound.setVolume(30);
 						reloadSound.setVolume(50);
 						towershotSound.setVolume(20);
