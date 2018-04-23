@@ -58,7 +58,7 @@ int GameScreen::Run(sf::RenderWindow &window)
 		std::cerr << "gunner_spriteSheet failed" << std::endl;
 		return -1;
 	}
-	if (!boss_texture.loadFromFile("images/enemies/boss.png")) 
+	if (!boss_texture.loadFromFile("images/background.png"))	// replace with boss
 	{
 		std::cerr << "boss_spriteSheet failed" << std::endl;
 		return -1;
@@ -386,6 +386,10 @@ int GameScreen::Run(sf::RenderWindow &window)
 					{
 						waveRound++;
 					}
+					else
+					{
+						return 2;
+					}
 				}
 			}
 			// Targets of mobs and targeted health
@@ -660,19 +664,6 @@ int GameScreen::Run(sf::RenderWindow &window)
 					}
 
 					exitBoxVisible = false;
-				}
-				/////////test commands for win and lose screens delete after win/lose conditions implemented
-				else if (event.key.code == sf::Keyboard::W)
-				{
-					return 2;
-				}
-				else if (event.key.code == sf::Keyboard::L)
-				{
-					return 3;
-				}
-				else if (event.key.code == sf::Keyboard::C) // Increase monster AD
-				{
-					gameScore.setTotal(10000);
 				}
 				////////////////////////////////////////////////////////////////////////////////////////////
 			}
