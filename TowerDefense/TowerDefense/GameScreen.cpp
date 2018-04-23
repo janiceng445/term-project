@@ -574,6 +574,13 @@ int GameScreen::Run(sf::RenderWindow &window)
 		window.draw(upgrade_03_cost);
 		window.draw(upgrade_04_cost);
 
+		//************// Bullet Reload Images //************//
+		for (unsigned int i = 0; i < ammo.size(); i++)
+		{
+			ammo[i].setPosition(sf::Vector2f((float)(i * 11) + 1 + 10, 15 + scoreText.getGlobalBounds().height));
+			window.draw(ammo[i]);
+		}
+
 		// Update cost display on buttons
 		updateCostButtons();
 
@@ -588,13 +595,6 @@ int GameScreen::Run(sf::RenderWindow &window)
 		{
 			paused = true;
 			drawExitScreen(&window);
-		}
-
-		//************// Bullet Reload Images //************//
-		for (unsigned int i = 0; i < ammo.size(); i++)
-		{
-			ammo[i].setPosition(sf::Vector2f((float)(i * 11) + 1 + 10, 15 + scoreText.getGlobalBounds().height));
-			window.draw(ammo[i]);
 		}
 
 		//************// Mouse cursor //************//
