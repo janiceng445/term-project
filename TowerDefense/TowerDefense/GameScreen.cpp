@@ -252,8 +252,8 @@ int GameScreen::Run(sf::RenderWindow &window)
 	joeSprite.setTexture(joeTexture);
 	joeSprite.setPosition(0.92f * dimensions.x, 0.62f * dimensions.y);
 	armSprite.setTexture(armTexture);
-	armSprite.setPosition(joeSprite.getPosition().x + joeSprite.getGlobalBounds().width / 2 - 3,
-		joeSprite.getPosition().y + joeSprite.getGlobalBounds().height / 2 + 5);
+	armSprite.setPosition(joeSprite.getPosition().x + joeSprite.getGlobalBounds().width / 2 - 6,
+		joeSprite.getPosition().y + joeSprite.getGlobalBounds().height / 2 - 4);
 	armSprite.setOrigin(armSprite.getGlobalBounds().width, armSprite.getGlobalBounds().height / 2);
 	bulletSprite.setTexture(bulletTexture);
 
