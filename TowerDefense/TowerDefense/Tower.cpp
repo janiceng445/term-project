@@ -1,6 +1,6 @@
 #include "Tower.h"
 
-Tower::Tower(sf::RenderWindow* renderWin, int hitpoints, int attack, sf::Sprite towerSprite, float xPos, float yPos)
+Tower::Tower(sf::RenderWindow* renderWin, int hitpoints, int attack, sf::Sprite towerSprite, float xPos, float yPos, sf::Sound* damageSound)
 {
 
 	//changeable attributes
@@ -27,14 +27,7 @@ Tower::Tower(sf::RenderWindow* renderWin, int hitpoints, int attack, sf::Sprite 
 	HP = &health;
 
 	// Sound
-
-	if (!damageBuffer.loadFromFile("Audio/gunshotSound.wav"))
-	{
-		std::cout << "Damage sound could not be loaded. Check filepath" << std::endl;
-	}
-
-	damageSound.setBuffer(damageBuffer);
-	damageSound.setVolume(30);
+	this->damageSound = damageSound;
 }
 
 int Tower::getXPosition()
@@ -90,6 +83,11 @@ sf::FloatRect Tower::getSpriteGlobalBounds()
 
 void Tower::takeDamage()
 {
+	if (damageSound->getStatus() != sf::SoundSource::Playing && *HP < health)
+	{
+		damageSound->play();
+	}
+	
 	health = *HP;
 
 	if (this->health <= 0)
@@ -97,10 +95,6 @@ void Tower::takeDamage()
 		*HP = 0;
 		this->health = 0;
 		die();
-	}
-	else if (damageSound.getStatus() != sf::SoundSource::Playing)
-	{
-		damageSound.play();
 	}
 }
 

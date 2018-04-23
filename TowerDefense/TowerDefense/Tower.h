@@ -24,8 +24,7 @@ private:
 	sf::RenderWindow* renWin;
 	int windowWidth;
 
-	sf::SoundBuffer damageBuffer;
-	sf::Sound damageSound;
+	sf::Sound* damageSound;
 
 	// Health bar
 	sf::RectangleShape bar;
@@ -40,7 +39,7 @@ private:
 public:
 
 
-	Tower(sf::RenderWindow* renWin, int hitpoints, int atk, sf::Sprite sprite, float xPos, float yPos);
+	Tower(sf::RenderWindow* renWin, int hitpoints, int atk, sf::Sprite sprite, float xPos, float yPos, sf::Sound* damageSound);
 
 
 	int getXPosition();

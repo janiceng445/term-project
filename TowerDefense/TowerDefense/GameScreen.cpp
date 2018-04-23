@@ -136,6 +136,13 @@ int GameScreen::Run(sf::RenderWindow &window)
 	towershotSound.setBuffer(towershot_buffer);
 	towershotSound.setVolume(20);
 
+	if (!damageBuffer.loadFromFile("Audio/gunshotSound.wav"))
+	{
+		std::cout << "Damage sound could not be loaded. Check filepath" << std::endl;
+	}
+	damageSound.setBuffer(damageBuffer);
+	damageSound.setVolume(30);
+
 	
 	if (!upgrade_buffer.loadFromFile("Audio/upgradeSound.wav"))
 	{
@@ -197,9 +204,9 @@ int GameScreen::Run(sf::RenderWindow &window)
 	shootyTowerSpr.setTexture(shootyTowerTx);
 	barbedWireSpr.setTexture(barbedWireTx);
 
-	Tower barbedWire(&window, barbedWire_HP, barbedWire_DMG, barbedWireSpr, dimensions.x * 0.5f, dimensions.y * 0.8f);				//deals damage to enemies who are walking through it
-	Tower basicTower(&window, basicTower_HP, basicTower_DMG, basicTowerSpr, dimensions.x * 0.6f, dimensions.y * 0.8f);				//a simple barricade
-	Tower shootyTower(&window, shootyTower_HP, shootyTower_DMG, shootyTowerSpr, dimensions.x * 0.7f, dimensions.y * 0.72f);			//shoots the enemies
+	Tower barbedWire(&window, barbedWire_HP, barbedWire_DMG, barbedWireSpr, dimensions.x * 0.5f, dimensions.y * 0.8f, &damageSound);				//deals damage to enemies who are walking through it
+	Tower basicTower(&window, basicTower_HP, basicTower_DMG, basicTowerSpr, dimensions.x * 0.6f, dimensions.y * 0.8f, &damageSound);				//a simple barricade
+	Tower shootyTower(&window, shootyTower_HP, shootyTower_DMG, shootyTowerSpr, dimensions.x * 0.7f, dimensions.y * 0.72f, &damageSound);			//shoots the enemies
 
 	towersHP.push_back(barbedWire.getHP());
 	towersHP.push_back(basicTower.getHP());
@@ -732,6 +739,7 @@ int GameScreen::Run(sf::RenderWindow &window)
 						reloadSound.setVolume(0);
 						towershotSound.setVolume(0);
 						upgradeSound.setVolume(0);
+						damageSound.setVolume(0);
 					}
 					else
 					{
@@ -740,6 +748,7 @@ int GameScreen::Run(sf::RenderWindow &window)
 						reloadSound.setVolume(50);
 						towershotSound.setVolume(20);
 						upgradeSound.setVolume(50);
+						damageSound.setVolume(30);
 					}
 
 					std::swap(mute_texture_on, mute_texture_off);
