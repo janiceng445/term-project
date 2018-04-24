@@ -51,7 +51,7 @@ bool Projectile::checkCollision(std::vector<Monster*>* m, int dmg)
 				m->at(i)->useSpecialAbility();
 			}
 			if (bullet.getGlobalBounds().intersects(m->at(i)->getSpriteGlobalBounds())) {
-				m->at(i)->takeDamage(25);
+				m->at(i)->takeDamage(dmg);
 				if (m->at(i)->monsterType == BOSS) {
 					m->at(i)->bossPushBack();
 				}
